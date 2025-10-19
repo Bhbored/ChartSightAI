@@ -1,4 +1,5 @@
-﻿using ChartSightAI.Services.Interfaces;
+﻿using ChartSightAI.Services;
+using ChartSightAI.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ChartSightAI
@@ -21,7 +22,9 @@ namespace ChartSightAI
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            builder.Services.RegisterDependencies();
             builder.Services.AddSingleton<IAuthService, Services.AuthService>();
+
             return builder.Build();
         }
     }

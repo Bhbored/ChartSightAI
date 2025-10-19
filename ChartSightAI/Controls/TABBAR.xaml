@@ -37,7 +37,6 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="TextColor" Value="{StaticResource TabText}" />
             <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <!--  Ensure vertical centering  -->
             <Setter Property="VerticalTextAlignment" Value="Center" />
         </Style>
 
@@ -54,12 +53,11 @@
         <!--  Floating pill bar  -->
         <Border
             Margin="16,0,16,0"
-            Padding="0,20,0,0"
-            Background="{StaticResource TabBarBg}"
+            Background="{StaticResource Brush.CardBgGradient}"
             HeightRequest="80"
             HorizontalOptions="Center"
             Shadow="{StaticResource SoftShadow}"
-            StrokeShape="RoundRectangle 30"
+            StrokeShape="RoundRectangle 35"
             VerticalOptions="Center"
             WidthRequest="400">
 
@@ -79,17 +77,24 @@
                             WidthRequest="22" />
                         <Label Style="{StaticResource TabTextStyle}" Text="Home" />
                     </VerticalStackLayout>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="//HomePage" />
+                    </Grid.GestureRecognizers>
                 </Grid>
 
                 <!--  Analysis (ACTIVE)  -->
                 <Grid Grid.Column="1">
                     <Border
                         Background="{StaticResource TealCapsuleGradient}"
-                        HeightRequest="60"
-                        StrokeShape="RoundRectangle 30"
-                        StrokeThickness="0">
+                        HeightRequest="65"
+                        HorizontalOptions="Center"
+                        StrokeShape="RoundRectangle 40"
+                        StrokeThickness="0"
+                        WidthRequest="120">
+                        <!--  Ensure the Border itself is centered  -->
                         <!--  Center the content inside the active tab border  -->
                         <VerticalStackLayout
+                            Margin="0,0,40,0"
                             HorizontalOptions="Center"
                             Spacing="8"
                             VerticalOptions="Center">
@@ -100,10 +105,13 @@
                             <Label Style="{StaticResource TabTextActiveStyle}" Text="Analysis" />
                         </VerticalStackLayout>
                     </Border>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="//Analytics" />
+                    </Grid.GestureRecognizers>
                 </Grid>
 
                 <!--  Presets + red badge  -->
-                <Grid Grid.Column="2">
+                <Grid Grid.Column="2" Margin="30,0,0,0">
                     <Grid>
                         <VerticalStackLayout
                             HorizontalOptions="Center"
@@ -123,7 +131,7 @@
                             StrokeShape="Ellipse"
                             StrokeThickness="0"
                             TranslationX="18"
-                            TranslationY="-6"
+                            TranslationY="0"
                             VerticalOptions="Start"
                             WidthRequest="16">
                             <Label
@@ -135,6 +143,9 @@
                                 VerticalTextAlignment="Center" />
                         </Border>
                     </Grid>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="//Presets" />
+                    </Grid.GestureRecognizers>
                 </Grid>
 
                 <!--  Profile  -->
@@ -149,7 +160,12 @@
                             WidthRequest="22" />
                         <Label Style="{StaticResource TabTextStyle}" Text="Profile" />
                     </VerticalStackLayout>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="//Profile" />
+                    </Grid.GestureRecognizers>
+
                 </Grid>
+
 
             </Grid>
         </Border>
@@ -157,36 +173,38 @@
         <!--  Center + button with white ring, overlapping pill  -->
         <!--  White ring  -->
         <Border
-            Margin="0,0,0,0"
             Background="White"
-            HeightRequest="86"
+            HeightRequest="80"
             HorizontalOptions="Center"
             Shadow="{StaticResource SoftShadow}"
             StrokeShape="Ellipse"
             StrokeThickness="0"
-            VerticalOptions="End"
-            WidthRequest="86" />
+            VerticalOptions="Center"
+            WidthRequest="80">
+            <Border
+                Background="{StaticResource TealFabGradient}"
+                HeightRequest="75"
+                HorizontalOptions="Center"
+                StrokeShape="Ellipse"
+                StrokeThickness="0"
+                VerticalOptions="Center"
+                WidthRequest="75">
+                <Grid>
+                    <Label
+                        FontFamily="NexaHeavy"
+                        FontSize="34"
+                        HorizontalTextAlignment="Center"
+                        Text="+"
+                        TextColor="White"
+                        VerticalTextAlignment="Center" />
+                </Grid>
+            </Border>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="//NewPrediction" />
+            </Border.GestureRecognizers>
+        </Border>
 
         <!--  Gradient circle on top  -->
-        <Border
-            Margin="0,0,0,6"
-            Background="{StaticResource TealFabGradient}"
-            HeightRequest="76"
-            HorizontalOptions="Center"
-            StrokeShape="Ellipse"
-            StrokeThickness="0"
-            VerticalOptions="End"
-            WidthRequest="76">
-            <Grid>
-                <Label
-                    FontFamily="NexaHeavy"
-                    FontSize="34"
-                    HorizontalTextAlignment="Center"
-                    Text="+"
-                    TextColor="White"
-                    VerticalTextAlignment="Center" />
-            </Grid>
-        </Border>
 
     </Grid>
 
