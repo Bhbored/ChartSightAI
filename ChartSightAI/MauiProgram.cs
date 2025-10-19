@@ -1,5 +1,6 @@
 ﻿using ChartSightAI.Services;
 using ChartSightAI.Services.Interfaces;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace ChartSightAI
@@ -11,6 +12,7 @@ namespace ChartSightAI
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -23,7 +25,7 @@ namespace ChartSightAI
     		builder.Logging.AddDebug();
 #endif
             builder.Services.RegisterDependencies();
-            builder.Services.AddSingleton<IAuthService, Services.AuthService>();
+            builder.Services.AddSingleton<IAuthService, AuthService>();
 
             return builder.Build();
         }

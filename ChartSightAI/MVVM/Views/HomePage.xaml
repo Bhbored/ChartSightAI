@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
 
@@ -19,18 +20,27 @@
 
             <!--  Row 0: Fixed Header  -->
             <HorizontalStackLayout Grid.Row="0" Padding="20,20,20,20">
-                <Image
-                    Aspect="AspectFit"
-                    HeightRequest="50"
-                    Source="logo.png"
-                    VerticalOptions="Center"
-                    WidthRequest="50" />
-                <Label
-                    Margin="0,0,0,0"
-                    StyleClass="h2"
-                    Text="ChartSightAI"
-                    VerticalOptions="Center" />
-                <HorizontalStackLayout Margin="60,0,0,0" HorizontalOptions="End">
+                <Grid x:Name="HeaderLayout">
+                    <HorizontalStackLayout>
+                        <Image
+                            Aspect="AspectFit"
+                            HeightRequest="50"
+                            Source="logo.png"
+                            VerticalOptions="Center"
+                            WidthRequest="50" />
+                        <Label
+                            Margin="0,0,0,0"
+                            StyleClass="h2"
+                            Text="ChartSightAI"
+                            VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                </Grid>
+
+                <HorizontalStackLayout
+                    x:Name="Settings"
+                    Margin="60,0,0,0"
+                    HorizontalOptions="End">
                     <Image
                         Aspect="AspectFit"
                         HeightRequest="20"
@@ -47,7 +57,10 @@
 
             <!--  Row 1: Scrollable Main Content  -->
             <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
-                <VerticalStackLayout Padding="20,0,20,0" Spacing="15">
+                <VerticalStackLayout
+                    x:Name="Body"
+                    Padding="20,0,20,0"
+                    Spacing="15">
                     <!--  Add left/right padding here  -->
 
                     <!--  Main Card  -->

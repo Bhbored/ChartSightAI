@@ -1,4 +1,5 @@
 ﻿using ChartSightAI.MVVM.Views;
+using ChartSightAI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,16 @@ namespace ChartSightAI.Services
             services.AddTransient<HomePage>();
             return services;
         }
+        public static IServiceCollection RegisterAuthServices(this IServiceCollection services)
+        {
+
+            services.AddSingleton<IAuthService, AuthService>();
+            return services;
+        }
         public static IServiceCollection RegisterDependencies(this IServiceCollection services)
         {
             return services
+                .RegisterAuthServices()
                 .RegisterViews()
                 .RegisterViewModels();
 

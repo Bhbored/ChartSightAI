@@ -1,4 +1,5 @@
-﻿using ChartSightAI.Services.Interfaces;
+﻿using ChartSightAI.MVVM.Views;
+using ChartSightAI.Services.Interfaces;
 ﻿using System.Web;
 ﻿
 ﻿namespace ChartSightAI
