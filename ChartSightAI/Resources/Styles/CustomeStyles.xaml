@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+
+
+    <!--  ===== Palette (keeps your keys) =====  -->
+    <Color x:Key="Primary">#00D4B5</Color>
+    <Color x:Key="Secondary">#E8F9F5</Color>
+    <Color x:Key="TextDark">#2D3748</Color>
+    <Color x:Key="TextLight">#718096</Color>
+    <Color x:Key="Border">#B2F0E6</Color>
+    <Color x:Key="CardBg">#FFFFFF</Color>
+
+    <!--  ===== Brushes / Gradients =====  -->
+    <LinearGradientBrush x:Key="Brush.ButtonGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#00D4B5" />
+        <GradientStop Offset="1" Color="#6FFFE9" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Brush.CardBgGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#FFFFFF" />
+        <GradientStop Offset="1" Color="#E8F9F5" />
+    </LinearGradientBrush>
+
+    <!--  ===== Background Gradient =====  -->
+    <LinearGradientBrush x:Key="Brush.BackgroundGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0.0" Color="#CCFFFF" />
+        <!--  Soft cyan top  -->
+        <GradientStop Offset="0.7" Color="#F8FFFF" />
+        <!--  Almost white, slightly tinted  -->
+        <GradientStop Offset="1.0" Color="White" />
+        <!--  Pure white bottom  -->
+    </LinearGradientBrush>
+    <!--  ===== Shadows =====  -->
+    <Shadow
+        x:Key="Sh.CardShadow"
+        Brush="{StaticResource Primary}"
+        Opacity="0.15"
+        Radius="15"
+        Offset="0,5" />
+
+
+    <!--#region Fonts-->
+    <!--  ===== Root typefaces =====  -->
+    <!--  Implicit: every Label uses NexaLight by default  -->
+    <Style TargetType="Label">
+        <Setter Property="FontFamily" Value="NexaLight" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+
+    <!--  Bold helper when you just want heavy font quickly  -->
+    <Style Class="bold" TargetType="Label">
+        <Setter Property="FontFamily" Value="NexaHeavy" />
+    </Style>
+
+    <!--  ===== Typography scales =====  -->
+    <Style Class="h1" TargetType="Label">
+        <Setter Property="FontFamily" Value="NexaHeavy" />
+        <!--  Heavy font  -->
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="Margin" Value="0,10,0,5" />
+    </Style>
+
+    <Style Class="h2" TargetType="Label">
+        <Setter Property="FontFamily" Value="NexaHeavy" />
+        <!--  Heavy font  -->
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="Margin" Value="0,10,0,5" />
+    </Style>
+
+    <Style Class="h3" TargetType="Label">
+        <Setter Property="FontFamily" Value="NexaHeavy" />
+        <!--  Heavy font  -->
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="Margin" Value="0,8,0,4" />
+    </Style>
+
+    <Style Class="h4" TargetType="Label">
+        <Setter Property="FontFamily" Value="NexaHeavy" />
+        <!--  Heavy font  -->
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="Margin" Value="0,6,0,3" />
+    </Style>
+
+    <Style Class="body" TargetType="Label">
+        <Setter Property="FontFamily" Value="NexaLight" />
+        <!--  Light font  -->
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="Margin" Value="0,0,0,5" />
+    </Style>
+
+    <Style Class="caption" TargetType="Label">
+        <Setter Property="FontFamily" Value="NexaLight" />
+        <!--  Light font  -->
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{StaticResource TextLight}" />
+        <Setter Property="Margin" Value="0,0,0,5" />
+    </Style>
+    <!--#endregion-->
+
+    <!--#region HomePage-->
+
+    <Style Class="CardStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource CardBg}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
+    </Style>
+
+    <Style Class="ButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontFamily" Value="NexaHeavy" />
+        <Setter Property="Padding" Value="20,10" />
+        <Setter Property="Margin" Value="0,20,0,10" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+    <!--#endregion-->
+
+
+    <!--#region Tabbar-->
+
+    <!--#endregion-->
+
+
+</ResourceDictionary>
+
+
+
+

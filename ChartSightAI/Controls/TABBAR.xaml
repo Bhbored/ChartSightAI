@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="ChartSightAI.Controls.TABBAR"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!--  Local-only resources; font = NexaHeavy  -->
+    <ContentView.Resources>
+        <!--  Colors  -->
+        <Color x:Key="TabBarBg">#FFFFFFFF</Color>
+        <Color x:Key="TabIcon">#7E8A98</Color>
+        <Color x:Key="TabText">#5A6673</Color>
+        <Color x:Key="BadgeRed">#FF3B30</Color>
+
+        <!--  Shadows  -->
+        <Shadow
+            x:Key="SoftShadow"
+            Brush="#33000000"
+            Opacity="0.55"
+            Radius="28"
+            Offset="0,10" />
+
+        <!--  Gradients  -->
+        <LinearGradientBrush x:Key="TealCapsuleGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Offset="0.0" Color="#37E6D7" />
+            <GradientStop Offset="1.0" Color="#00C4FF" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="TealFabGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Offset="0.0" Color="#00E0D6" />
+            <GradientStop Offset="1.0" Color="#12A9FF" />
+        </LinearGradientBrush>
+
+        <!--  Label styles (NexaHeavy)  -->
+        <Style x:Key="TabTextStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="NexaHeavy" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextColor" Value="{StaticResource TabText}" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <!--  Ensure vertical centering  -->
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+        </Style>
+
+        <Style
+            x:Key="TabTextActiveStyle"
+            BasedOn="{StaticResource TabTextStyle}"
+            TargetType="Label">
+            <Setter Property="TextColor" Value="White" />
+        </Style>
+    </ContentView.Resources>
+
+    <Grid VerticalOptions="Center">
+
+        <!--  Floating pill bar  -->
+        <Border
+            Margin="16,0,16,0"
+            Padding="0,20,0,0"
+            Background="{StaticResource TabBarBg}"
+            HeightRequest="80"
+            HorizontalOptions="Center"
+            Shadow="{StaticResource SoftShadow}"
+            StrokeShape="RoundRectangle 30"
+            VerticalOptions="Center"
+            WidthRequest="400">
+
+            <!--  4 logical columns (Home, Analysis, Presets, Profile)  -->
+            <Grid ColumnDefinitions="*,*,*,*" VerticalOptions="Center">
+
+                <!--  Home  -->
+                <Grid Grid.Column="0">
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="6"
+                        VerticalOptions="Center">
+                        <!--  replace with your icon  -->
+                        <Image
+                            HeightRequest="22"
+                            Source="home.png"
+                            WidthRequest="22" />
+                        <Label Style="{StaticResource TabTextStyle}" Text="Home" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!--  Analysis (ACTIVE)  -->
+                <Grid Grid.Column="1">
+                    <Border
+                        Background="{StaticResource TealCapsuleGradient}"
+                        HeightRequest="60"
+                        StrokeShape="RoundRectangle 30"
+                        StrokeThickness="0">
+                        <!--  Center the content inside the active tab border  -->
+                        <VerticalStackLayout
+                            HorizontalOptions="Center"
+                            Spacing="8"
+                            VerticalOptions="Center">
+                            <Image
+                                HeightRequest="22"
+                                Source="analytics.png"
+                                WidthRequest="22" />
+                            <Label Style="{StaticResource TabTextActiveStyle}" Text="Analysis" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!--  Presets + red badge  -->
+                <Grid Grid.Column="2">
+                    <Grid>
+                        <VerticalStackLayout
+                            HorizontalOptions="Center"
+                            Spacing="6"
+                            VerticalOptions="Center">
+                            <Image
+                                HeightRequest="22"
+                                Source="preset.png"
+                                WidthRequest="22" />
+                            <Label Style="{StaticResource TabTextStyle}" Text="Presets" />
+                        </VerticalStackLayout>
+
+                        <Border
+                            Background="{StaticResource BadgeRed}"
+                            HeightRequest="16"
+                            HorizontalOptions="Center"
+                            StrokeShape="Ellipse"
+                            StrokeThickness="0"
+                            TranslationX="18"
+                            TranslationY="-6"
+                            VerticalOptions="Start"
+                            WidthRequest="16">
+                            <Label
+                                FontFamily="NexaHeavy"
+                                FontSize="10"
+                                HorizontalTextAlignment="Center"
+                                Text="1"
+                                TextColor="White"
+                                VerticalTextAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <!--  Profile  -->
+                <Grid Grid.Column="3">
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="6"
+                        VerticalOptions="Center">
+                        <Image
+                            HeightRequest="22"
+                            Source="profile.png"
+                            WidthRequest="22" />
+                        <Label Style="{StaticResource TabTextStyle}" Text="Profile" />
+                    </VerticalStackLayout>
+                </Grid>
+
+            </Grid>
+        </Border>
+
+        <!--  Center + button with white ring, overlapping pill  -->
+        <!--  White ring  -->
+        <Border
+            Margin="0,0,0,0"
+            Background="White"
+            HeightRequest="86"
+            HorizontalOptions="Center"
+            Shadow="{StaticResource SoftShadow}"
+            StrokeShape="Ellipse"
+            StrokeThickness="0"
+            VerticalOptions="End"
+            WidthRequest="86" />
+
+        <!--  Gradient circle on top  -->
+        <Border
+            Margin="0,0,0,6"
+            Background="{StaticResource TealFabGradient}"
+            HeightRequest="76"
+            HorizontalOptions="Center"
+            StrokeShape="Ellipse"
+            StrokeThickness="0"
+            VerticalOptions="End"
+            WidthRequest="76">
+            <Grid>
+                <Label
+                    FontFamily="NexaHeavy"
+                    FontSize="34"
+                    HorizontalTextAlignment="Center"
+                    Text="+"
+                    TextColor="White"
+                    VerticalTextAlignment="Center" />
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</ContentView>

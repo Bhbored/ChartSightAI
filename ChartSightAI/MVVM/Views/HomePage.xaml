@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ChartSightAI.MVVM.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Controls="clr-namespace:ChartSightAI.Controls"
+    Background="{StaticResource Brush.BackgroundGradient}"
+    Shell.NavBarIsVisible="False">
+
+    <!--  Root Grid: Header, Scrollable Content, TabBar  -->
+    <Grid RowDefinitions="Auto, *, Auto" RowSpacing="0">
+        <!--  Row 0: Fixed Header  -->
+        <HorizontalStackLayout Grid.Row="0" Padding="20,20,20,20">
+            <Image
+                Aspect="AspectFit"
+                HeightRequest="50"
+                Source="logo.png"
+                VerticalOptions="Center"
+                WidthRequest="50" />
+            <Label
+                Margin="0,0,0,0"
+                StyleClass="h2"
+                Text="ChartSightAI"
+                VerticalOptions="Center" />
+            <HorizontalStackLayout Margin="60,0,0,0" HorizontalOptions="End">
+                <Image
+                    Aspect="AspectFit"
+                    HeightRequest="20"
+                    Source="history.png"
+                    WidthRequest="20" />
+                <Image
+                    Margin="30,0"
+                    Aspect="AspectFit"
+                    HeightRequest="20"
+                    Source="settings.png"
+                    WidthRequest="20" />
+            </HorizontalStackLayout>
+        </HorizontalStackLayout>
+
+        <!--  Row 1: Scrollable Main Content  -->
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="20,0,20,0" Spacing="15">
+                <!--  Add left/right padding here  -->
+
+                <!--  Main Card  -->
+                <Border StyleClass="CardStyle">
+                    <VerticalStackLayout Spacing="15">
+                        <Label StyleClass="h1" Text="Start a new                                    chart analysis" />
+                        <Label StyleClass="caption" Text="Choose your market and upload a chart to begin" />
+
+                        <Button
+                            Background="{StaticResource Brush.ButtonGradient}"
+                            StyleClass="ButtonStyle"
+                            Text="+ New Analysis" />
+
+                        <Label
+                            HorizontalOptions="Center"
+                            StyleClass="caption"
+                            Text="Supports Forex, Stocks, and Crypto charts" />
+
+                        <!--  Placeholder for Animation Shape  -->
+                        <Border
+                            Margin="0,20,0,0"
+                            BackgroundColor="{StaticResource Secondary}"
+                            HeightRequest="150"
+                            HorizontalOptions="Center"
+                            StrokeShape="RoundRectangle 30"
+                            VerticalOptions="Center">
+                            <Label
+                                HorizontalOptions="Center"
+                                StyleClass="caption"
+                                Text="📊 Animated Chart Preview"
+                                VerticalOptions="Center" />
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  Tip Box  -->
+                <Border StyleClass="CardStyle">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Image
+                            Grid.Column="0"
+                            Margin="0,0,10,0"
+                            Aspect="AspectFit"
+                            HeightRequest="40"
+                            IsAnimationPlaying="True"
+                            Source="idea.gif"
+                            VerticalOptions="Center"
+                            WidthRequest="40" />
+                        <Label
+                            Grid.Column="1"
+                            LineBreakMode="WordWrap"
+                            MaxLines="2"
+                            StyleClass="body"
+                            Text="Tip: For accurate results, make sure your chart shows price candles clearly." />
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!--  Row 2: Custom TabBar (Occupies bottom row)  -->
+        <Controls:TABBAR
+            Grid.Row="2"
+            Margin="0,0,0,20"
+            HorizontalOptions="Fill"
+            VerticalOptions="End" />
+
+    </Grid>
+
+</ContentPage>
