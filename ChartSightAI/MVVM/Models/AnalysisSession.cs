@@ -7,22 +7,25 @@ using static ChartSightAI.MVVM.Models.Enums;
 
 namespace ChartSightAI.MVVM.Models
 {
-   public class AnalysisSession
+    public class AnalysisSession
     {
         public int Id { get; set; }
 
         public MarketType MarketType { get; set; }
         public TimeFrame TimeFrame { get; set; }
-        public string? Preset { get; set; } // Keep string for flexibility ("Recommended", "Scalping", etc.)
 
-        public string? ImagePath { get; set; }
+        public Preset? Preset { get; set; }
+
+        public TradeDirection TradeDirection { get; set; }
+
+        public string ImagePath => TradeDirection == TradeDirection.Long
+            ? "images/long_trade.png"
+            : "images/short_trade.png";
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public bool IsFavorite { get; set; }
 
-        // AI-related
-        public string? AiModelUsed { get; set; }
-        public string? AiResponseRaw { get; set; }
-        public AiAnalysisResult? ParsedResult { get; set; }
+        public AiAnalysisResult? Result { get; set; }
     }
+
+
 }

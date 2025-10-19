@@ -7,10 +7,199 @@
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
     <AbsoluteLayout>
-        <Grid
+        <!--  Scrollable card area  -->
+        <ScrollView
+            Padding="0,100,0,70"
             AbsoluteLayout.LayoutBounds="0,0,1,1"
-            AbsoluteLayout.LayoutFlags="All"
-            RowDefinitions="Auto,*" />
+            AbsoluteLayout.LayoutFlags="All">
+
+            <Border StyleClass="na-card">
+                <Grid
+                    ColumnDefinitions="*"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                    RowSpacing="14">
+
+                    <!--  Header  -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <VerticalStackLayout Spacing="2">
+                            <Label StyleClass="h2" Text="New Analysis Setup" />
+                            <Label StyleClass="caption" Text="Enter details and upload your chart to begin." />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!--  Market Type  -->
+                    <Label
+                        Grid.Row="1"
+                        StyleClass="h4"
+                        Text="Market Type" />
+
+                    <Grid Grid.Row="2" ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button StyleClass="na-chip, na-chip-selected" Text="Stocks" />
+                        <Button
+                            Grid.Column="1"
+                            StyleClass="na-chip"
+                            Text="Forex" />
+                        <Button
+                            Grid.Column="2"
+                            StyleClass="na-chip"
+                            Text="Crypto" />
+                    </Grid>
+
+                    <!--  Chart Timeframe  -->
+                    <Label
+                        Grid.Row="3"
+                        StyleClass="h4"
+                        Text="Chart Timeframe" />
+                    <FlexLayout
+                        Grid.Row="4"
+                        Direction="Row"
+                        JustifyContent="Start"
+                        Wrap="Wrap">
+                        <Button StyleClass="na-chip" Text="15s" />
+                        <Button StyleClass="na-chip" Text="5m" />
+                        <Button StyleClass="na-chip" Text="15m" />
+                        <Button StyleClass="na-chip" Text="4H" />
+                        <Button StyleClass="na-chip, na-chip-selected" Text="1D" />
+                        <Button StyleClass="na-chip" Text="1W" />
+                        <Button StyleClass="na-chip" Text="Custom" />
+                    </FlexLayout>
+
+                    <!--  Indicator Preset  -->
+                    <Label
+                        Grid.Row="5"
+                        StyleClass="h4"
+                        Text="Indicator Preset" />
+                    <Border Grid.Row="6" StyleClass="na-field">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Picker Title="Recommended" StyleClass="na-picker" />
+                            <Label
+                                Grid.Column="1"
+                                Margin="8,0,0,0"
+                                Text="▾"
+                                VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!--  Strategy Focus  -->
+                    <Label
+                        Grid.Row="7"
+                        StyleClass="h4"
+                        Text="Strategy Focus" />
+                    <FlexLayout
+                        Grid.Row="8"
+                        Direction="Row"
+                        Wrap="Wrap">
+                        <Button StyleClass="na-badge" Text="Technical" />
+                        <Button StyleClass="na-badge" Text="Pattern Recognition" />
+                        <Button StyleClass="na-badge" Text="AI Prediction" />
+                    </FlexLayout>
+                    <Label
+                        Grid.Row="9"
+                        StyleClass="caption"
+                        Text="Supports TradingView, Binance, and MT4 screenshots." />
+
+                    <!--  Advanced + Upload & Options (wrap on small screens)  -->
+                    <FlexLayout
+                        Grid.Row="10"
+                        AlignItems="Start"
+                        Direction="Row"
+                        JustifyContent="Start"
+                        Wrap="Wrap">
+                        <!--  Left block  -->
+                        <VerticalStackLayout FlexLayout.Basis="340" Spacing="12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Switch IsToggled="True" StyleClass="na-switch" />
+                                <Label
+                                    Grid.Column="1"
+                                    StyleClass="na-nowrap"
+                                    Text="Advanced Options"
+                                    VerticalOptions="Center" />
+                            </Grid>
+
+                            <Border StyleClass="na-dropzone">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border StyleClass="na-pill">
+                                        <Label
+                                            HorizontalOptions="Center"
+                                            Text="☁"
+                                            VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="Upload chart image or take a photo" />
+                                        <Label StyleClass="caption" Text="Tap to upload" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!--  Right block  -->
+                        <Border
+                            Margin="16,0,0,0"
+                            FlexLayout.Basis="260"
+                            StyleClass="na-checkcard">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <CheckBox IsChecked="True" Color="{StaticResource Primary}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        StyleClass="na-nowrap"
+                                        Text="Auto-detect chart area" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <CheckBox IsChecked="True" Color="{StaticResource Primary}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        StyleClass="na-nowrap"
+                                        Text="Crop before analysis" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <CheckBox Color="{StaticResource Primary}" />
+                                    <Label
+                                        Grid.Column="1"
+                                        StyleClass="na-nowrap"
+                                        Text="Include indicator overlays" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </FlexLayout>
+
+                    <!--  CTA  -->
+                    <Grid Grid.Row="11" Margin="0,4,0,0">
+                        <Button StyleClass="na-cta" Text="Analyze Chart" />
+                        <Label
+                            Margin="0,10,0,0"
+                            HorizontalTextAlignment="Center"
+                            StyleClass="caption"
+                            Text="Cancel" />
+                    </Grid>
+
+                </Grid>
+            </Border>
+        </ScrollView>
+
+        <!--  Floating TabBar stays on top  -->
         <Controls:TABBAR
             Margin="0,0,0,20"
             AbsoluteLayout.LayoutBounds="0.5,1,1,76"

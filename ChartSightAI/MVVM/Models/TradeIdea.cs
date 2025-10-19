@@ -11,7 +11,7 @@ namespace ChartSightAI.MVVM.Models
         public double Entry { get; set; }
         public double StopLoss { get; set; }
         public List<double> Targets { get; set; } = new();
-        public string Rationale { get; set; }
+        public string? Rationale { get; set; }
     }
 
 }

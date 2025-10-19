@@ -7,10 +7,7 @@
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
     <AbsoluteLayout>
-        <Grid
-            AbsoluteLayout.LayoutBounds="0,0,1,1"
-            AbsoluteLayout.LayoutFlags="All"
-            RowDefinitions="Auto,*" />
+
         <Controls:TABBAR
             Margin="0,0,0,20"
             AbsoluteLayout.LayoutBounds="0.5,1,1,76"
@@ -18,3 +15,5 @@
             ZIndex="1000" />
     </AbsoluteLayout>
 </ContentPage>
+
+

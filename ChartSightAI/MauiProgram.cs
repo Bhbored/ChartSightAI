@@ -2,6 +2,7 @@
 using ChartSightAI.Services.Interfaces;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace ChartSightAI
 {
@@ -12,6 +13,7 @@ namespace ChartSightAI
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .ConfigureSyncfusionToolkit()
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {

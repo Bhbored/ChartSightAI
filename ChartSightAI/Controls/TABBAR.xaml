@@ -32,20 +32,25 @@
         </LinearGradientBrush>
 
         <!--  Label styles (NexaHeavy)  -->
-        <Style x:Key="TabTextStyle" TargetType="Label">
+        <Style Class="TabTextStyle" TargetType="Label">
             <Setter Property="FontFamily" Value="NexaHeavy" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="TextColor" Value="{StaticResource TabText}" />
             <Setter Property="HorizontalTextAlignment" Value="Center" />
             <Setter Property="VerticalTextAlignment" Value="Center" />
         </Style>
-
-        <Style
-            x:Key="TabTextActiveStyle"
-            BasedOn="{StaticResource TabTextStyle}"
-            TargetType="Label">
-            <Setter Property="TextColor" Value="White" />
+        <Style Class="InActiveImage" TargetType="Image">
+            <Setter Property="WidthRequest" Value="22" />
+            <Setter Property="HeightRequest" Value="22" />
         </Style>
+
+        <Style Class="InActiveRed" TargetType="Border">
+            <Setter Property="HeightRequest" Value="12" />
+            <Setter Property="WidthRequest" Value="12" />
+            <Setter Property="TranslationX" Value="9" />
+            <Setter Property="TranslationY" Value="5" />
+        </Style>
+
     </ContentView.Resources>
 
     <Grid VerticalOptions="Center">
@@ -72,11 +77,15 @@
                         VerticalOptions="Center">
                         <!--  replace with your icon  -->
                         <Image
-                            HeightRequest="22"
+                            x:Name="HomeImage"
                             Source="home.png"
-                            WidthRequest="22" />
-                        <Label Style="{StaticResource TabTextStyle}" Text="Home" />
+                            StyleClass="InActiveImage" />
+                        <Label
+                            x:Name="HomeText"
+                            StyleClass="TabTextStyle"
+                            Text="Home" />
                     </VerticalStackLayout>
+
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="//HomePage" />
                     </Grid.GestureRecognizers>
@@ -99,10 +108,14 @@
                             Spacing="8"
                             VerticalOptions="Center">
                             <Image
-                                HeightRequest="22"
+                                x:Name="AnalImage"
                                 Source="analytics.png"
-                                WidthRequest="22" />
-                            <Label Style="{StaticResource TabTextActiveStyle}" Text="Analysis" />
+                                StyleClass="InActiveImage" />
+                            <Label
+                                x:Name="AnalText"
+                                StyleClass="TabTextStyle"
+                                Text="Analysis"
+                                TextColor="White" />
                         </VerticalStackLayout>
                     </Border>
                     <Grid.GestureRecognizers>
@@ -118,22 +131,23 @@
                             Spacing="6"
                             VerticalOptions="Center">
                             <Image
-                                HeightRequest="22"
+                                x:Name="PresetImage"
                                 Source="preset.png"
-                                WidthRequest="22" />
-                            <Label Style="{StaticResource TabTextStyle}" Text="Presets" />
+                                StyleClass="InActiveImage" />
+                            <Label
+                                x:Name="PresetText"
+                                StyleClass="TabTextStyle"
+                                Text="Presets" />
                         </VerticalStackLayout>
 
                         <Border
+                            x:Name="RedBorder"
                             Background="{StaticResource BadgeRed}"
-                            HeightRequest="16"
                             HorizontalOptions="Center"
                             StrokeShape="Ellipse"
                             StrokeThickness="0"
-                            TranslationX="18"
-                            TranslationY="0"
-                            VerticalOptions="Start"
-                            WidthRequest="16">
+                            StyleClass="InActiveRed"
+                            VerticalOptions="Start">
                             <Label
                                 FontFamily="NexaHeavy"
                                 FontSize="10"
@@ -155,21 +169,21 @@
                         Spacing="6"
                         VerticalOptions="Center">
                         <Image
-                            HeightRequest="22"
+                            x:Name="ProfileImage"
                             Source="profile.png"
-                            WidthRequest="22" />
-                        <Label Style="{StaticResource TabTextStyle}" Text="Profile" />
+                            StyleClass="InActiveImage" />
+                        <Label
+                            x:Name="ProfileText"
+                            StyleClass="TabTextStyle"
+                            Text="Profile" />
                     </VerticalStackLayout>
                     <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="//Profile" />
                     </Grid.GestureRecognizers>
 
                 </Grid>
-
-
             </Grid>
         </Border>
-
         <!--  Center + button with white ring, overlapping pill  -->
         <!--  White ring  -->
         <Border
@@ -190,13 +204,11 @@
                 VerticalOptions="Center"
                 WidthRequest="75">
                 <Grid>
-                    <Label
-                        FontFamily="NexaHeavy"
-                        FontSize="34"
-                        HorizontalTextAlignment="Center"
-                        Text="+"
-                        TextColor="White"
-                        VerticalTextAlignment="Center" />
+                    <Image
+                        HeightRequest="30"
+                        Source="plus.png"
+                        VerticalOptions="Center"
+                        WidthRequest="30" />
                 </Grid>
             </Border>
             <Border.GestureRecognizers>

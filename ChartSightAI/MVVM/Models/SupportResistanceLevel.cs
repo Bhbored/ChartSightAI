@@ -11,6 +11,6 @@ namespace ChartSightAI.MVVM.Models
     {
         public SupportType Type { get; set; }
         public double Price { get; set; }
-        public double Confidence { get; set; }  // Optional confidence score (0–100%)
+        public double Confidence { get; set; }  
     }
 }

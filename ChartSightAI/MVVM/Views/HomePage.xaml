@@ -3,8 +3,12 @@
     x:Class="ChartSightAI.MVVM.Views.HomePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Animations="clr-namespace:ChartSightAI.Animations"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:VM="clr-namespace:ChartSightAI.MVVM.ViewModels"
+    xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:DataType="VM:HomeVM"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
 
@@ -20,8 +24,14 @@
 
             <!--  Row 0: Fixed Header  -->
             <HorizontalStackLayout Grid.Row="0" Padding="20,20,20,20">
-                <Grid x:Name="HeaderLayout">
-                    <HorizontalStackLayout>
+                <Border
+                    x:Name="HeaderLayout"
+                    Margin="-70,0,0,0"
+                    Background="{StaticResource Brush.HeaderGradient}"
+                    StrokeShape="RoundRectangle 30"
+                    StrokeThickness="0"
+                    WidthRequest="300">
+                    <HorizontalStackLayout Margin="0,0,5,0" HorizontalOptions="End">
                         <Image
                             Aspect="AspectFit"
                             HeightRequest="50"
@@ -34,8 +44,7 @@
                             Text="ChartSightAI"
                             VerticalOptions="Center" />
                     </HorizontalStackLayout>
-
-                </Grid>
+                </Border>
 
                 <HorizontalStackLayout
                     x:Name="Settings"
@@ -51,7 +60,11 @@
                         Aspect="AspectFit"
                         HeightRequest="20"
                         Source="settings.png"
-                        WidthRequest="20" />
+                        WidthRequest="20">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToSettingsCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
                 </HorizontalStackLayout>
             </HorizontalStackLayout>
 
@@ -73,7 +86,15 @@
                                 Background="{StaticResource Brush.ButtonGradient}"
                                 Shadow="{StaticResource Sh.CardShadow}"
                                 StyleClass="ButtonStyle"
-                                Text="+ New Analysis" />
+                                Text="+ New Analysis">
+                                <Button.Behaviors>
+                                    <mct:AnimationBehavior EventName="Clicked">
+                                        <mct:AnimationBehavior.AnimationType>
+                                            <Animations:SampleScaleAnimation Easing="{x:Static Easing.Linear}" Length="100" />
+                                        </mct:AnimationBehavior.AnimationType>
+                                    </mct:AnimationBehavior>
+                                </Button.Behaviors>
+                            </Button>
 
                             <Label
                                 HorizontalOptions="Center"
@@ -83,16 +104,16 @@
                             <!--  Placeholder for Animation Shape  -->
                             <Border
                                 Margin="0,20,0,0"
-                                BackgroundColor="{StaticResource Secondary}"
+                                BackgroundColor="Transparent"
                                 HeightRequest="150"
                                 HorizontalOptions="Center"
                                 StrokeShape="RoundRectangle 30"
+                                StrokeThickness="0"
                                 VerticalOptions="Center">
-                                <Label
-                                    HorizontalOptions="Center"
-                                    StyleClass="caption"
-                                    Text="📊 Animated Chart Preview"
-                                    VerticalOptions="Center" />
+                                <Image
+                                    Aspect="AspectFit"
+                                    IsAnimationPlaying="True"
+                                    Source="growth.gif" />
                             </Border>
 
                         </VerticalStackLayout>
@@ -121,7 +142,6 @@
 
                 </VerticalStackLayout>
             </ScrollView>
-
         </Grid>
 
         <!--  Fixed TabBar (Occupies bottom of screen)  -->

@@ -5,18 +5,29 @@ namespace ChartSightAI.Controls;
 
 public partial class TABBAR : ContentView
 {
-	public TABBAR()
-	{
+
+    public TABBAR()
+    {
         InitializeComponent();
         BindingContext = this;
         NavigateCommand = new Command<string>(async route =>
         {
             if (string.IsNullOrWhiteSpace(route)) return;
             if (Shell.Current is null) return;
-            await Shell.Current.GoToAsync(route);
-            Debug.WriteLine($"moved to {route.Substring(2)}");
+            try
+            {
+
+                await Shell.Current.GoToAsync(route);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
         });
     }
+
+
 
     public static readonly BindableProperty NavigateCommandProperty =
         BindableProperty.Create(nameof(NavigateCommand), typeof(ICommand), typeof(TABBAR));
@@ -25,4 +36,5 @@ public partial class TABBAR : ContentView
         get => (ICommand)GetValue(NavigateCommandProperty);
         set => SetValue(NavigateCommandProperty, value);
     }
+    
 }

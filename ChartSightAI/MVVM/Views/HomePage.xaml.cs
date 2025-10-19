@@ -1,11 +1,14 @@
+using ChartSightAI.MVVM.ViewModels;
+
 namespace ChartSightAI.MVVM.Views;
 
 public partial class HomePage : ContentPage
 {
-    public HomePage()
+    public HomePage(HomeVM vm)
     {
         InitializeComponent();
         this.Loaded += OnPageLoaded;
+        BindingContext = vm;
     }
     private void OnPageLoaded(object sender, EventArgs e)
     {

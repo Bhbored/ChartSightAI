@@ -32,6 +32,14 @@
         <GradientStop Offset="1.0" Color="White" />
         <!--  Pure white bottom  -->
     </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="Brush.HeaderGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#E8F9F5" />
+        <GradientStop Offset="0.3" Color="#CCFFFF" />
+        <GradientStop Offset="0.6" Color="#6FFFE9" />
+        <GradientStop Offset="1" Color="#00D4B5" />
+
+    </LinearGradientBrush>
     <!--  ===== Shadows =====  -->
     <Shadow
         x:Key="Sh.CardShadow"
@@ -130,7 +138,138 @@
     <!--#endregion-->
 
 
-    <!--#region Tabbar-->
+    <!--#region Analytics-->
+
+    <!--  ========== REGION: NewAnalysis helpers ==========  -->
+
+    <!--  Card / modal container  -->
+    <Style Class="na-card" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBg}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="50,50,0,0" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
+    </Style>
+
+    <!--  Gradient CTA  -->
+    <Style Class="na-cta" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="28" />
+        <Setter Property="HeightRequest" Value="52" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
+    </Style>
+
+    <!--  Segmented chips  -->
+    <Style Class="na-chip" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderColor" Value="{StaticResource Border}" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Margin" Value="0,0,8,8" />
+        <Setter Property="MinimumWidthRequest" Value="76" />
+    </Style>
+
+    <Style Class="na-chip-selected" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+        <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BorderWidth" Value="0" />
+    </Style>
+
+    <!--  Small badges  -->
+    <Style Class="na-badge" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Margin" Value="0,0,8,8" />
+    </Style>
+
+    <!--  Field wrapper (Picker etc.)  -->
+    <Style Class="na-field" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBg}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Padding" Value="12,8" />
+    </Style>
+
+    <Style Class="na-picker" TargetType="Picker">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="HeightRequest" Value="36" />
+        <Setter Property="HorizontalTextAlignment" Value="Start" />
+    </Style>
+
+    <!--  Dropzone  -->
+    <Style Class="na-dropzone" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Secondary}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="16" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <!--  Options card  -->
+    <Style Class="na-checkcard" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBg}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Padding" Value="14" />
+        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
+    </Style>
+
+    <!--  Switch  -->
+    <Style Class="na-switch" TargetType="Switch">
+        <Setter Property="Scale" Value="1.05" />
+        <Setter Property="OnColor" Value="{StaticResource Primary}" />
+        <Setter Property="ThumbColor" Value="White" />
+    </Style>
+
+    <!--  Icon holder  -->
+    <Style Class="na-pill" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Secondary}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <!--  One-line labels  -->
+    <Style Class="na-nowrap" TargetType="Label">
+        <Setter Property="LineBreakMode" Value="NoWrap" />
+    </Style>
+
+    <!--  ========== END REGION ==========  -->
+
+
 
     <!--#endregion-->
 

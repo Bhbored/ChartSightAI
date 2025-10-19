@@ -1,4 +1,5 @@
-﻿using ChartSightAI.MVVM.Views;
+﻿using ChartSightAI.MVVM.ViewModels;
+using ChartSightAI.MVVM.Views;
 using ChartSightAI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace ChartSightAI.Services
 
         public static IServiceCollection RegisterViewModels(this IServiceCollection services)
         {
+            services.AddTransient<HomeVM>();
             return services;
         }
 

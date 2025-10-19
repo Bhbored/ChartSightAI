@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ChartSightAI.MVVM.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Background="{StaticResource Brush.BackgroundGradient}"
+    Shell.NavBarIsVisible="False">
+    <!--  Main Content Grid  -->
+    <Grid HorizontalOptions="Center" VerticalOptions="Start">
+        <VerticalStackLayout
+            Margin="0,20,0,0"
+            Padding="20"
+            Spacing="20"
+            WidthRequest="350">
+
+            <!--  App Title  -->
+            <Label
+                HorizontalOptions="Center"
+                StyleClass="h2"
+                Text="ChartSightAI" />
+
+            <!--  Subtle Divider Line  -->
+            <BoxView
+                BackgroundColor="{StaticResource Primary}"
+                HeightRequest="2"
+                HorizontalOptions="Center"
+                WidthRequest="150" />
+
+            <!--  Login Form Card  -->
+            <Border
+                Margin="0,20,0,0"
+                Padding="20"
+                Background="{StaticResource Brush.CardBgGradient}"
+                HeightRequest="450"
+                Shadow="{StaticResource Sh.CardShadow}"
+                Stroke="{StaticResource Border}"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="1">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <!--  Email / Username Input  -->
+                    <Border
+                        Padding="10,5,10,5"
+                        BackgroundColor="{StaticResource CardBg}"
+                        Stroke="{StaticResource Border}"
+                        StrokeShape="RoundRectangle 15"
+                        StrokeThickness="1">
+                        <Entry
+                            FontFamily="NexaLight"
+                            FontSize="16"
+                            Placeholder="Email / Username"
+                            PlaceholderColor="{StaticResource TextLight}"
+                            TextColor="{StaticResource TextDark}"
+                            VerticalOptions="Center" />
+                    </Border>
+
+                    <!--  Password Input  -->
+                    <Border
+                        Padding="10,5,10,5"
+                        BackgroundColor="{StaticResource CardBg}"
+                        Stroke="{StaticResource Border}"
+                        StrokeShape="RoundRectangle 15"
+                        StrokeThickness="1">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Entry
+                                Grid.Column="0"
+                                FontFamily="NexaLight"
+                                FontSize="16"
+                                IsPassword="True"
+                                Placeholder="Password"
+                                PlaceholderColor="{StaticResource TextLight}"
+                                TextColor="{StaticResource TextDark}"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Column="1"
+                                Margin="10,0,10,0"
+                                HorizontalOptions="End"
+                                StyleClass="caption"
+                                Text="Forgot Password?"
+                                VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!--  Login Button  -->
+                    <Button
+                        Margin="0,10,0,0"
+                        Background="{StaticResource Brush.ButtonGradient}"
+                        CornerRadius="25"
+                        FontFamily="NexaHeavy"
+                        FontSize="18"
+                        HorizontalOptions="Fill"
+                        Text="Login"
+                        TextColor="White"
+                        VerticalOptions="Center" />
+
+                    <!--  "or continue with" separator  -->
+                    <HorizontalStackLayout
+                        Margin="0,15,0,10"
+                        HorizontalOptions="Center"
+                        Spacing="10">
+                        <BoxView
+                            BackgroundColor="{StaticResource TextLight}"
+                            HeightRequest="1"
+                            WidthRequest="60" />
+                        <Label
+                            StyleClass="caption"
+                            Text="or continue with"
+                            VerticalOptions="Center" />
+                        <BoxView
+                            BackgroundColor="{StaticResource TextLight}"
+                            HeightRequest="1"
+                            WidthRequest="60" />
+                    </HorizontalStackLayout>
+
+                    <!--  Social Login Icons  -->
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                        <!--  Google Icon  -->
+                        <Border
+                            BackgroundColor="{StaticResource CardBg}"
+                            HeightRequest="50"
+                            Stroke="{StaticResource Border}"
+                            StrokeShape="Ellipse"
+                            StrokeThickness="1"
+                            VerticalOptions="Center"
+                            WidthRequest="50">
+                            <Image Aspect="AspectFit" Source="google.png" />
+                        </Border>
+
+                        <!--  Apple Icon  -->
+                        <Border
+                            BackgroundColor="{StaticResource CardBg}"
+                            HeightRequest="50"
+                            Stroke="{StaticResource Border}"
+                            StrokeShape="Ellipse"
+                            StrokeThickness="1"
+                            VerticalOptions="Center"
+                            WidthRequest="50">
+                            <Image Aspect="AspectFit" Source="apple.png" />
+                        </Border>
+
+                        <!--  Microsoft/Account Icon  -->
+                        <Border
+                            BackgroundColor="{StaticResource CardBg}"
+                            HeightRequest="50"
+                            Stroke="{StaticResource Border}"
+                            StrokeShape="Ellipse"
+                            StrokeThickness="1"
+                            VerticalOptions="Center"
+                            WidthRequest="50">
+                            <Image Aspect="AspectFit" Source="microsoft.png" />
+                        </Border>
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </Border>
+            <!--  Sign Up Link  -->
+            <VerticalStackLayout
+                Margin="0,20,0,0"
+                HorizontalOptions="Center"
+                Spacing="5">
+                <Label
+                    HorizontalOptions="Center"
+                    StyleClass="caption"
+                    Text="Don't have an account?" />
+                <Label
+                    FontFamily="NexaHeavy"
+                    HorizontalOptions="Center"
+                    StyleClass="body"
+                    Text="Sign Up"
+                    TextColor="{StaticResource Primary}" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
