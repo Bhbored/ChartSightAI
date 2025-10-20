@@ -9,6 +9,5 @@ namespace ChartSightAI.Services.Interfaces
         Task<UserSession> Login(string email, string password);
         Task Logout();
         Task<UserSession> SignUp(string email, string password);
-        //Task<UserSession> GoogleLogin();
     }
 }

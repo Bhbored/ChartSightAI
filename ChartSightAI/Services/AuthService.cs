@@ -84,29 +84,6 @@ namespace ChartSightAI.Services
             return null;
         }
 
-        //public async Task<UserSession> GoogleLogin()
-        //{
-        //    var session = await _supabase.Auth.SignInWithOAuth(Supabase.Gotrue.Constants.Provider.Google, new Supabase.Gotrue.Client.SignInWithOAuthOptions
-        //    {
-        //        RedirectTo = "chartsightai://callback"
-        //    });
-
-        //    if (session != null)
-        //    {
-        //        var userSession = new UserSession
-        //        {
-        //            AccessToken = session.AccessToken,
-        //            RefreshToken = session.RefreshToken,
-        //            ExpiresAt = session.ExpiresAt(),
-        //            UserId = session.User.Id,
-        //            Email = session.User.Email
-        //        };
-
-        //        await SecureStorage.SetAsync("user_session", JsonSerializer.Serialize(userSession));
-        //        return userSession;
-        //    }
-
-        //    return null;
-        //}
+        
     }
 }

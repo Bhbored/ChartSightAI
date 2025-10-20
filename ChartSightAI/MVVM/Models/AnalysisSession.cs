@@ -21,7 +21,7 @@ namespace ChartSightAI.MVVM.Models
         public string ImagePath => TradeDirection == TradeDirection.Long
             ? "images/long_trade.png"
             : "images/short_trade.png";
-        public string? PreviewImage { get; set; }
+        public string? PreviewImage { get; set; }//from the device local storage
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public AiAnalysisResult? Result { get; set; }

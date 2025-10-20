@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChartSightAI.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,14 @@ namespace ChartSightAI.MVVM.Models
         public MarketType? MarketType { get; set; }
         public TimeFrame? TimeFrame { get; set; }
         public TradeDirection? TradeDirection { get; set; }
-        public List<string>? Indicators { get; set; }
+        public List<string> Indicators { get; private set; } = new();
+
+        public void SetIndicatorsByMarket()
+        {
+            if (MarketType.HasValue)
+                Indicators = MarketIndicatorHelper.GetDefaultIndicators(MarketType.Value);
+            else
+                Indicators.Clear();
+        }
     }
 }

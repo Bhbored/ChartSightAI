@@ -4,13 +4,263 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
+    xmlns:Models="clr-namespace:ChartSightAI.MVVM.Models"
+    xmlns:conv="clr-namespace:ChartSightAI.Converters"
+    xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
+    x:DataType="vm:PresetsVM"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:MarketTypeToTextConverter x:Key="MarketText" />
+            <conv:TimeFrameToTextConverter x:Key="TFText" />
+            <conv:TradeDirectionToTextConverter x:Key="DirText" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <AbsoluteLayout>
+
+        <!--  Main surface (header + content)  -->
         <Grid
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
-            RowDefinitions="Auto,*" />
+            RowDefinitions="Auto,*"
+            RowSpacing="0">
+
+            <!--  Modern Header  -->
+            <Border
+                Grid.Row="0"
+                Margin="24,20,24,12"
+                Padding="0"
+                Background="{StaticResource Brush.HeaderGradient}"
+                Shadow="{StaticResource Sh.CardShadow}"
+                StrokeShape="RoundRectangle 28"
+                StrokeThickness="0">
+
+                <Grid
+                    Padding="16,14"
+                    ColumnDefinitions="Auto,*,Auto"
+                    RowDefinitions="Auto,Auto">
+
+                    <!--  Logo pill  -->
+                    <Border
+                        Grid.RowSpan="2"
+                        Margin="0,0,12,0"
+                        Padding="10"
+                        Background="White"
+                        Opacity="0.92"
+                        StrokeShape="RoundRectangle 999"
+                        StrokeThickness="0">
+                        <!--  Swap to your real logo image if desired  -->
+                        <Image
+                            HeightRequest="28"
+                            Source="logo.png"
+                            WidthRequest="28" />
+                    </Border>
+
+                    <!--  Title  -->
+                    <Label
+                        Grid.Column="1"
+                        StyleClass="h2"
+                        Text="Presets"
+                        TextColor="{StaticResource TextDark}" />
+
+                    <!--  Count pill (modern)  -->
+                    <Border
+                        Grid.Column="2"
+                        Padding="12,6"
+                        Background="White"
+                        Opacity="0.95"
+                        StrokeShape="RoundRectangle 999"
+                        StrokeThickness="0">
+                        <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                            <Label
+                                StyleClass="caption"
+                                Text="Total"
+                                TextColor="{StaticResource TextLight}" />
+                            <Label
+                                FontAttributes="Bold"
+                                Text="{Binding Items.Count, StringFormat='{}{0} presets'}"
+                                TextColor="{StaticResource TextDark}" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!--  Subtitle  -->
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,4,0,0"
+                        StyleClass="caption"
+                        Text="Manage your saved setups"
+                        TextColor="{StaticResource TextLight}" />
+                </Grid>
+            </Border>
+
+            <!--  Content  -->
+            <Grid Grid.Row="1">
+                <CollectionView
+                    Margin="24,0,24,100"
+                    ItemsSource="{Binding Items}"
+                    SelectionMode="None"
+                    VerticalScrollBarVisibility="Never">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="14" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="Models:Preset">
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem
+                                            BackgroundColor="#00C9A6"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditPresetCommand}"
+                                            CommandParameter="{Binding .}"
+                                            IconImageSource="edit.png"
+                                            Text="Edit" />
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem
+                                            BackgroundColor="#F56565"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeletePresetCommand}"
+                                            CommandParameter="{Binding .}"
+                                            IconImageSource="trash.png"
+                                            Text="Delete" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                                <Grid>
+                                    <!--  gradient halo  -->
+                                    <Border
+                                        Margin="4,10,4,0"
+                                        Background="{StaticResource Brush.HeaderGradient}"
+                                        Opacity="0.18"
+                                        StrokeShape="RoundRectangle 24"
+                                        StrokeThickness="0" />
+
+                                    <!--  card  -->
+                                    <Border
+                                        Padding="16"
+                                        Background="{StaticResource Brush.CardBgGradient}"
+                                        Shadow="{StaticResource Sh.CardShadow}"
+                                        StrokeShape="RoundRectangle 18"
+                                        StrokeThickness="0">
+                                        <Grid RowDefinitions="Auto,Auto,Auto">
+
+                                            <!--  Title / subtitle  -->
+                                            <VerticalStackLayout Spacing="2">
+                                                <Label StyleClass="h4" Text="{Binding Name}" />
+                                                <Label
+                                                    StyleClass="caption"
+                                                    Text="{Binding Description, TargetNullValue=No description}"
+                                                    TextColor="{StaticResource TextLight}" />
+                                            </VerticalStackLayout>
+
+                                            <!--  Meta chips  -->
+                                            <Grid
+                                                Grid.Row="1"
+                                                Margin="0,10,0,0"
+                                                ColumnDefinitions="Auto,Auto,Auto"
+                                                ColumnSpacing="8">
+                                                <Button
+                                                    InputTransparent="True"
+                                                    IsEnabled="False"
+                                                    StyleClass="na-chip"
+                                                    Text="{Binding MarketType, Converter={StaticResource MarketText}}" />
+                                                <Button
+                                                    Grid.Column="1"
+                                                    InputTransparent="True"
+                                                    IsEnabled="False"
+                                                    StyleClass="na-chip"
+                                                    Text="{Binding TimeFrame, Converter={StaticResource TFText}}" />
+                                                <Button
+                                                    Grid.Column="2"
+                                                    InputTransparent="True"
+                                                    IsEnabled="False"
+                                                    StyleClass="na-chip"
+                                                    Text="{Binding TradeDirection, Converter={StaticResource DirText}}" />
+                                            </Grid>
+
+                                            <!--  Indicators  -->
+                                            <FlexLayout
+                                                Grid.Row="2"
+                                                Margin="0,12,0,0"
+                                                AlignContent="Start"
+                                                AlignItems="Start"
+                                                BindableLayout.ItemsSource="{Binding Indicators}"
+                                                Direction="Row"
+                                                JustifyContent="Start"
+                                                Wrap="Wrap">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <Button
+                                                            InputTransparent="True"
+                                                            IsEnabled="False"
+                                                            StyleClass="na-badge"
+                                                            Text="{Binding .}" />
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                                <FlexLayout.Triggers>
+                                                    <DataTrigger
+                                                        Binding="{Binding Indicators.Count}"
+                                                        TargetType="FlexLayout"
+                                                        Value="0">
+                                                        <Setter Property="IsVisible" Value="False" />
+                                                    </DataTrigger>
+                                                </FlexLayout.Triggers>
+                                            </FlexLayout>
+
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Grid>
+
+        <!--  Floating "New Preset" FAB  -->
+        <Border
+            AbsoluteLayout.LayoutBounds="1,1,160,56"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
+            Background="{StaticResource Brush.ButtonGradient}"
+            Shadow="{StaticResource Sh.CardShadow}"
+            StrokeShape="RoundRectangle 999"
+            StrokeThickness="0"
+            TranslationX="-24"
+            TranslationY="-110"
+            ZIndex="2000">
+            <HorizontalStackLayout
+                Padding="18,10"
+                HorizontalOptions="Center"
+                Spacing="10"
+                VerticalOptions="Center">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="22"
+                    Text="+"
+                    TextColor="White"
+                    VerticalTextAlignment="Center" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Text="New Preset"
+                    TextColor="White"
+                    VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding AddPresetCommand}" />
+            </Border.GestureRecognizers>
+
+        </Border>
+
+
+
+        <!--  Bottom TabBar  -->
         <Controls:TABBAR
             Margin="0,0,0,20"
             AbsoluteLayout.LayoutBounds="0.5,1,1,76"
