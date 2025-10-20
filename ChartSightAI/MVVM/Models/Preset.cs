@@ -13,6 +13,8 @@ namespace ChartSightAI.MVVM.Models
         public string Name { get; set; } = string.Empty; 
         public string? Description { get; set; } 
         public MarketType? MarketType { get; set; }
+        public TimeFrame? TimeFrame { get; set; }
+        public TradeDirection? TradeDirection { get; set; }
         public List<string>? Indicators { get; set; }
     }
 }

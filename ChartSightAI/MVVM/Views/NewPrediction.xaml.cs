@@ -9,4 +9,12 @@ public partial class NewPrediction : ContentPage
 		InitializeComponent();
 		BindingContext = vm;
 	}
+    protected override void OnAppearing()
+    {
+        if (BindingContext is NewPredictionVM vm)
+        {
+            vm.InitializeAsync();
+        }
+        base.OnAppearing();
+    }
 }

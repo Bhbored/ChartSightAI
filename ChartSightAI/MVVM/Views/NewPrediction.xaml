@@ -4,18 +4,19 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
-    xmlns:models="clr-namespace:ChartSightAI.MVVM.Models"
     xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
     x:DataType="vm:NewPredictionVM"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
+
     <AbsoluteLayout>
         <Grid
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
-            RowDefinitions="Auto, *"
+            RowDefinitions="Auto,*"
             RowSpacing="0">
-            <!--  Fixed Header  -->
+
+            <!--  Header  -->
             <Border
                 Grid.Row="0"
                 Margin="24,20,24,12"
@@ -24,7 +25,7 @@
                 Shadow="{StaticResource Sh.CardShadow}"
                 StrokeShape="RoundRectangle 30"
                 StrokeThickness="0">
-                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
                     <Image
                         HeightRequest="40"
                         IsAnimationPlaying="True"
@@ -41,169 +42,390 @@
                 </Grid>
             </Border>
 
-            <!--  Main scrollable content area  -->
+            <!--  Content  -->
             <ScrollView
                 Grid.Row="1"
                 Margin="0,0,0,70"
-                Padding="24,0,24,24">
+                Padding="10,0,10,24">
                 <StackLayout
                     HorizontalOptions="Center"
                     MaximumWidthRequest="720"
-                    Spacing="16">
+                    Spacing="5">
 
-                    <!--  Market Type  -->
-                    <Label
+                    <!--  Market Type Section  -->
+                    <Border
                         Margin="0,0,0,8"
-                        StyleClass="h4"
-                        Text="Market Type" />
-                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
-                        <Button
-                            Command="{Binding SelectMarketTypeForexCommand}"
-                            StyleClass="na-chip"
-                            Text="Forex Market" />
-                        <Button
-                            Grid.Column="1"
-                            Command="{Binding SelectMarketTypeStocksCommand}"
-                            StyleClass="na-chip"
-                            Text="Stock Market" />
-                        <Button
-                            Grid.Column="2"
-                            Command="{Binding SelectMarketTypeCryptoCommand}"
-                            StyleClass="na-chip"
-                            Text="Crypto Market" />
-                    </Grid>
-
-                    <!--  Chart Timeframe Buttons and Indicator Preset side-by-side  -->
-                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="16">
-                        <StackLayout Grid.Column="0" Spacing="8">
-                            <Label
-                                Margin="0,0,0,8"
-                                StyleClass="h4"
-                                Text="Chart Timeframe" />
-                            <!--  Smaller Grid for Timeframe buttons  -->
-                            <Grid
-                                ColumnDefinitions="*, *, *"
-                                ColumnSpacing="6"
-                                RowDefinitions="Auto"
-                                RowSpacing="6">
+                        Padding="16,12"
+                        Background="White"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0">
+                        <StackLayout Spacing="4">
+                            <!--  Reduced Spacing  -->
+                            <Label StyleClass="h4" Text="Market Type" />
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
                                 <Button
-                                    Grid.Column="0"
+                                    Command="{Binding SetMarketTypeFromStringCommand}"
+                                    CommandParameter="Forex"
                                     StyleClass="na-chip"
-                                    Text="1H" />
+                                    Text="Forex">
+                                    <Button.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsForexSelected}"
+                                            TargetType="Button"
+                                            Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="TextColor" Value="White" />
+                                            <Setter Property="BorderWidth" Value="0" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+
                                 <Button
                                     Grid.Column="1"
+                                    Command="{Binding SetMarketTypeFromStringCommand}"
+                                    CommandParameter="Stocks"
                                     StyleClass="na-chip"
-                                    Text="4H" />
+                                    Text="Stock Market">
+                                    <Button.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsStocksSelected}"
+                                            TargetType="Button"
+                                            Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="TextColor" Value="White" />
+                                            <Setter Property="BorderWidth" Value="0" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+
                                 <Button
                                     Grid.Column="2"
-                                    StyleClass="na-chip, na-chip-selected"
-                                    Text="1D" />
+                                    Command="{Binding SetMarketTypeFromStringCommand}"
+                                    CommandParameter="Crypto"
+                                    StyleClass="na-chip"
+                                    Text="Crypto">
+                                    <Button.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsCryptoSelected}"
+                                            TargetType="Button"
+                                            Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="TextColor" Value="White" />
+                                            <Setter Property="BorderWidth" Value="0" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
                             </Grid>
-
-                            <!--  Main TimeFrame Picker (under the buttons)  -->
-                            <Border Margin="0,8,0,0" StyleClass="na-field">
-                                <Grid ColumnDefinitions="*, Auto" ColumnSpacing="8">
-                                    <Picker
-                                        x:Name="TimeFramePicker"
-                                        Title="Select Timeframe"
-                                        ItemsSource="{Binding TimeFrameOptions}"
-                                        SelectedItem="{Binding AnalysisSession.TimeFrame, Mode=TwoWay}"
-                                        StyleClass="na-picker"
-                                        VerticalOptions="Fill" />
-                                    <Label
-                                        Grid.Column="1"
-                                        Text="▾"
-                                        VerticalOptions="Center" />
-                                </Grid>
-                            </Border>
                         </StackLayout>
-
-                        <StackLayout Grid.Column="1" Spacing="8">
-                            <Label
-                                Margin="0,0,0,8"
-                                StyleClass="h4"
-                                Text="Indicator Preset" />
-                            <Border StyleClass="na-field">
-                                <Grid ColumnDefinitions="*, Auto" ColumnSpacing="8">
-                                    <Picker
-                                        Title="Recommended"
-                                        StyleClass="na-picker"
-                                        VerticalOptions="Fill" />
-                                    <Label
-                                        Grid.Column="1"
-                                        Text="▾"
-                                        VerticalOptions="Center" />
-                                </Grid>
-                            </Border>
-                        </StackLayout>
-                    </Grid>
-
-                    <!--  Strategy Focus  -->
-                    <Label
-                        Margin="0,16,0,8"
-                        StyleClass="h4"
-                        Text="Strategy Focus" />
-                    <Grid
-                        ColumnDefinitions="*, *, *"
-                        ColumnSpacing="8"
-                        RowSpacing="8">
-                        <Button StyleClass="na-badge" Text="Technical" />
-                        <Button
-                            Grid.Column="1"
-                            StyleClass="na-badge"
-                            Text="Pattern Recognition" />
-                        <Button
-                            Grid.Column="2"
-                            StyleClass="na-badge"
-                            Text="AI Prediction" />
-                    </Grid>
-
-                    <!--  Trade Direction  -->
-                    <Label
-                        Margin="0,16,0,8"
-                        StyleClass="h4"
-                        Text="Trade Direction" />
-                    <Grid ColumnDefinitions="*, *" ColumnSpacing="8">
-                        <Button
-                            Command="{Binding SelectTradeDirectionLongCommand}"
-                            StyleClass="na-cta"
-                            Text="Long Trade" />
-                        <Button
-                            Grid.Column="1"
-                            Command="{Binding SelectTradeDirectionShortCommand}"
-                            StyleClass="na-cta"
-                            Text="Short Trade" />
-                    </Grid>
-                    <!--  Upload Dropzone  -->
-                    <Label
-                        Margin="0,16,0,8"
-                        StyleClass="h4"
-                        Text="Upload Chart" />
-                    <Border StyleClass="na-dropzone">
-                        <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12">
-                            <Border StyleClass="na-pill" VerticalOptions="Center">
-                                <Label
-                                    HorizontalOptions="Center"
-                                    Text="☁"
-                                    VerticalOptions="Center" />
-                            </Border>
-                            <VerticalStackLayout
-                                Grid.Column="1"
-                                Spacing="2"
-                                VerticalOptions="Center">
-                                <Label Text="Upload chart image or take a photo" />
-                                <Label StyleClass="caption" Text="Tap to upload" />
-                            </VerticalStackLayout>
-                        </Grid>
                     </Border>
 
-                    <!--  Supports screenshots label under the dropzone  -->
-                    <Label StyleClass="caption" Text="Supports screenshots from popular trading platforms (e.g., TradingView, Binance, MT4)." />
+                    <!--  Timeframe and Preset Section (Side-by-side)  -->
+                    <!--  Timeframe and Preset Section (Side-by-side, Separate Borders)  -->
+                    <Grid
+                        Margin="0,0,0,8"
+                        ColumnDefinitions="*, Auto"
+                        ColumnSpacing="8">
+                        <!--  Chart Timeframe Section  -->
+                        <Border
+                            Grid.Column="0"
+                            Padding="16,12"
+                            Background="White"
+                            Shadow="{StaticResource Sh.CardShadow}"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0">
+                            <StackLayout>
+                                <!--  Reduced Spacing  -->
+                                <Label StyleClass="h4" Text="Chart Timeframe" />
 
-                    <!--  Analyze and Cancel buttons side-by-side  -->
+                                <!--  Quick timeframe chips (stay visible for all markets)  -->
+                                <Grid
+                                    ColumnDefinitions="*,*,*"
+                                    RowDefinitions="Auto"
+                                    RowSpacing="10">
+                                    <Button
+                                        Grid.Column="0"
+                                        Command="{Binding SetTimeFrameFromStringCommand}"
+                                        CommandParameter="Hour1"
+                                        StyleClass="na-chip"
+                                        Text="1H">
+                                        <Button.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding IsTFH1}"
+                                                TargetType="Button"
+                                                Value="True">
+                                                <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                                <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                                <Setter Property="TextColor" Value="White" />
+                                                <Setter Property="BorderWidth" Value="0" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+
+                                    <Button
+                                        Grid.Column="1"
+                                        Command="{Binding SetTimeFrameFromStringCommand}"
+                                        CommandParameter="Hour4"
+                                        StyleClass="na-chip"
+                                        Text="4H">
+                                        <Button.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding IsTFH4}"
+                                                TargetType="Button"
+                                                Value="True">
+                                                <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                                <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                                <Setter Property="TextColor" Value="White" />
+                                                <Setter Property="BorderWidth" Value="0" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+
+                                    <Button
+                                        Grid.Column="2"
+                                        Command="{Binding SetTimeFrameFromStringCommand}"
+                                        CommandParameter="Day1"
+                                        StyleClass="na-chip"
+                                        Text="1D">
+                                        <Button.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding IsTFD1}"
+                                                TargetType="Button"
+                                                Value="True">
+                                                <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                                <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                                <Setter Property="TextColor" Value="White" />
+                                                <Setter Property="BorderWidth" Value="0" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+                                </Grid>
+
+                                <!--  Main TimeFrame Picker (pretty labels)  -->
+                                <Border Margin="0,8,0,0" StyleClass="na-field">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Picker
+                                            Title="Select Timeframe"
+                                            ItemDisplayBinding="{Binding Label}"
+                                            ItemsSource="{Binding TimeFrameChoices}"
+                                            SelectedItem="{Binding SelectedTimeFrameOption, Mode=TwoWay}"
+                                            StyleClass="na-picker" />
+                                        <Label
+                                            Grid.Column="1"
+                                            Text="▾"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </StackLayout>
+                        </Border>
+
+                        <!--  Indicator Preset Section  -->
+                        <Border
+                            Grid.Column="1"
+                            Padding="16,12"
+                            Background="White"
+                            Shadow="{StaticResource Sh.CardShadow}"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0">
+                            <StackLayout Spacing="4">
+                                <!--  Reduced Spacing  -->
+                                <Label StyleClass="h4" Text="Indicator Preset" />
+                                <Border Margin="0,15,0,0" StyleClass="na-field">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <Picker
+                                            Title="Recommended"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            ItemsSource="{Binding Presets}"
+                                            SelectedItem="{Binding SelectedPreset, Mode=TwoWay}"
+                                            StyleClass="na-picker" />
+                                        <Label
+                                            Grid.Column="1"
+                                            Text="▾"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </StackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!--  Strategy Focus Section  -->
+                    <Border
+                        Margin="0,0,0,8"
+                        Padding="16,12"
+                        Background="White"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0">
+                        <StackLayout Spacing="4">
+                            <!--  Reduced Spacing  -->
+                            <Label StyleClass="h4" Text="Strategy Focus" />
+                            <Grid
+                                ColumnDefinitions="*,*,*"
+                                ColumnSpacing="8"
+                                RowSpacing="8">
+                                <Button
+                                    Command="{Binding ToggleStrategyFocusCommand}"
+                                    CommandParameter="Technical"
+                                    StyleClass="na-chip"
+                                    Text="Technical">
+                                    <Button.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsTechnicalSelected}"
+                                            TargetType="Button"
+                                            Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="TextColor" Value="White" />
+                                            <Setter Property="BorderWidth" Value="0" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+
+                                <Button
+                                    Grid.Column="1"
+                                    Command="{Binding ToggleStrategyFocusCommand}"
+                                    CommandParameter="Pattern"
+                                    StyleClass="na-chip"
+                                    Text="Pattern">
+                                    <Button.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsPatternSelected}"
+                                            TargetType="Button"
+                                            Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="TextColor" Value="White" />
+                                            <Setter Property="BorderWidth" Value="0" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+
+                                <Button
+                                    Grid.Column="2"
+                                    Command="{Binding ToggleStrategyFocusCommand}"
+                                    CommandParameter="AI"
+                                    StyleClass="na-chip"
+                                    Text="AI Prediction">
+                                    <Button.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsAiSelected}"
+                                            TargetType="Button"
+                                            Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="TextColor" Value="White" />
+                                            <Setter Property="BorderWidth" Value="0" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                            </Grid>
+                        </StackLayout>
+                    </Border>
+
+                    <!--  Trade Direction Section  -->
+                    <Border
+                        Margin="0,0,0,8"
+                        Padding="16,12"
+                        Background="White"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0">
+                        <StackLayout Spacing="4">
+                            <!--  Reduced Spacing  -->
+                            <Label StyleClass="h4" Text="Trade Direction" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                <Button
+                                    Command="{Binding SetTradeDirectionFromStringCommand}"
+                                    CommandParameter="Long"
+                                    StyleClass="na-chip"
+                                    Text="Long Trade">
+                                    <Button.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsLongSelected}"
+                                            TargetType="Button"
+                                            Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="TextColor" Value="White" />
+                                            <Setter Property="BorderWidth" Value="0" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+
+                                <Button
+                                    Grid.Column="1"
+                                    Command="{Binding SetTradeDirectionFromStringCommand}"
+                                    CommandParameter="Short"
+                                    StyleClass="na-chip"
+                                    Text="Short Trade">
+                                    <Button.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding IsShortSelected}"
+                                            TargetType="Button"
+                                            Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                            <Setter Property="BorderColor" Value="{StaticResource Primary}" />
+                                            <Setter Property="TextColor" Value="White" />
+                                            <Setter Property="BorderWidth" Value="0" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                            </Grid>
+                        </StackLayout>
+                    </Border>
+
+                    <!--  Upload Section  -->
+                    <Border
+                        Padding="16,12"
+                        Background="White"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0">
+                        <StackLayout Spacing="4">
+                            <!--  Reduced Spacing  -->
+                            <Label StyleClass="h4" Text="Upload Chart" />
+                            <Border Background="LightCyan" StyleClass="na-dropzone">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                    <Border
+                                        Background="Transparent"
+                                        StyleClass="na-pill"
+                                        VerticalOptions="Center">
+                                        <Border
+                                            HorizontalOptions="Start"
+                                            StrokeShape="RoundRectangle 999"
+                                            StrokeThickness="0"
+                                            VerticalOptions="Start">
+                                            <Image
+                                                HeightRequest="80"
+                                                IsAnimationPlaying="True"
+                                                Source="search.gif"
+                                                WidthRequest="80" />
+                                        </Border>
+
+                                    </Border>
+                                    <VerticalStackLayout
+                                        Grid.Column="1"
+                                        Spacing="2"
+                                        VerticalOptions="Center">
+                                        <Label Text="Upload chart image or take a photo" />
+                                        <Label
+                                            StyleClass="caption"
+                                            Text="Tap to upload"
+                                            TextDecorations="Underline" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                            <Label StyleClass="caption" Text="Supports screenshots from TradingView, Binance, MT4, etc." />
+                        </StackLayout>
+                    </Border>
+
+                    <!--  CTA Section (No Border)  -->
                     <Grid
                         Margin="0,24,0,0"
-                        ColumnDefinitions="*, *"
+                        ColumnDefinitions="*,*"
                         ColumnSpacing="16">
                         <Button
                             Command="{Binding AnalyzeChartCommand}"
@@ -218,6 +440,7 @@
                 </StackLayout>
             </ScrollView>
         </Grid>
+
         <!--  Floating TabBar  -->
         <Controls:TABBAR
             Margin="0,0,0,20"
