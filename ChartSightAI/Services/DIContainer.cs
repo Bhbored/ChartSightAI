@@ -15,6 +15,7 @@ namespace ChartSightAI.Services
         public static IServiceCollection RegisterViewModels(this IServiceCollection services)
         {
             services.AddTransient<HomeVM>();
+            services.AddTransient<NewPredictionVM>();
             return services;
         }
 
@@ -22,6 +23,7 @@ namespace ChartSightAI.Services
         {
 
             services.AddTransient<HomePage>();
+            services.AddTransient<NewPrediction>();
             return services;
         }
         public static IServiceCollection RegisterAuthServices(this IServiceCollection services)
