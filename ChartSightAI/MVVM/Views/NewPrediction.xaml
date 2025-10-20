@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
-    xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+    xmlns:models="clr-namespace:ChartSightAI.MVVM.Models"
     xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
     x:DataType="vm:NewPredictionVM"
     Background="{StaticResource Brush.BackgroundGradient}"
@@ -57,15 +57,20 @@
                         StyleClass="h4"
                         Text="Market Type" />
                     <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
-                        <Button StyleClass="na-chip, na-chip-selected" Text="Stocks" />
+                        <Button
+                            Command="{Binding SelectMarketTypeForexCommand}"
+                            StyleClass="na-chip"
+                            Text="Forex Market" />
                         <Button
                             Grid.Column="1"
+                            Command="{Binding SelectMarketTypeStocksCommand}"
                             StyleClass="na-chip"
-                            Text="Forex" />
+                            Text="Stock Market" />
                         <Button
                             Grid.Column="2"
+                            Command="{Binding SelectMarketTypeCryptoCommand}"
                             StyleClass="na-chip"
-                            Text="Crypto" />
+                            Text="Crypto Market" />
                     </Grid>
 
                     <!--  Chart Timeframe Buttons and Indicator Preset side-by-side  -->
@@ -102,7 +107,7 @@
                                         x:Name="TimeFramePicker"
                                         Title="Select Timeframe"
                                         ItemsSource="{Binding TimeFrameOptions}"
-                                        SelectedItem="{Binding SelectedTimeFrame, Mode=TwoWay}"
+                                        SelectedItem="{Binding AnalysisSession.TimeFrame, Mode=TwoWay}"
                                         StyleClass="na-picker"
                                         VerticalOptions="Fill" />
                                     <Label
@@ -159,13 +164,16 @@
                         StyleClass="h4"
                         Text="Trade Direction" />
                     <Grid ColumnDefinitions="*, *" ColumnSpacing="8">
-                        <Button StyleClass="na-cta" Text="Long" />
+                        <Button
+                            Command="{Binding SelectTradeDirectionLongCommand}"
+                            StyleClass="na-cta"
+                            Text="Long Trade" />
                         <Button
                             Grid.Column="1"
+                            Command="{Binding SelectTradeDirectionShortCommand}"
                             StyleClass="na-cta"
-                            Text="Short" />
+                            Text="Short Trade" />
                     </Grid>
-
                     <!--  Upload Dropzone  -->
                     <Label
                         Margin="0,16,0,8"
@@ -197,9 +205,13 @@
                         Margin="0,24,0,0"
                         ColumnDefinitions="*, *"
                         ColumnSpacing="16">
-                        <Button StyleClass="na-cta" Text="Analyze Chart" />
+                        <Button
+                            Command="{Binding AnalyzeChartCommand}"
+                            StyleClass="na-cta"
+                            Text="Analyze Chart" />
                         <Button
                             Grid.Column="1"
+                            Command="{Binding CancelCommand}"
                             StyleClass="na-cta"
                             Text="Cancel" />
                     </Grid>
