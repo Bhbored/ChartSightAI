@@ -17,6 +17,7 @@ namespace ChartSightAI.Services
             services.AddTransient<HomeVM>();
             services.AddTransient<NewPredictionVM>();
             services.AddTransient<PresetsVM>();
+            services.AddTransient<NewPresetVM>();
             return services;
         }
 
@@ -26,6 +27,7 @@ namespace ChartSightAI.Services
             services.AddTransient<HomePage>();
             services.AddTransient<NewPrediction>();
             services.AddTransient<Presets>();
+            services.AddTransient<NewPreset>();
             return services;
         }
         public static IServiceCollection RegisterAuthServices(this IServiceCollection services)

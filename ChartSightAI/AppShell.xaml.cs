@@ -8,6 +8,8 @@ namespace ChartSightAI
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(Settings), typeof(Settings));
+            Routing.RegisterRoute(nameof(NewPreset), typeof(NewPreset));
+
         }
     }
 }

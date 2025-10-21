@@ -3,6 +3,7 @@
     x:Class="ChartSightAI.MVVM.Views.Settings"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
 
@@ -14,17 +15,39 @@
             RowDefinitions="Auto,*"
             RowSpacing="0">
 
-            <!--  Header  -->
+            <!--  Top wave background (behind header + content)  -->
+            <Grid Grid.Row="0" HeightRequest="240">
+                <!--  Wave 1  -->
+                <shapes:Path
+                    Aspect="Fill"
+                    Data="M0,0 L0,160 Q180,210 360,160 T720,160 L720,0 Z"
+                    Fill="{StaticResource Brush.HeaderGradient}"
+                    HorizontalOptions="Fill"
+                    InputTransparent="True"
+                    Opacity="1"
+                    VerticalOptions="Fill" />
+
+                <!--  Subtle overlay wave for depth  -->
+                <shapes:Path
+                    Aspect="Fill"
+                    Data="M0,0 L0,175 Q180,225 360,175 T720,175 L720,0 Z"
+                    Fill="White"
+                    HorizontalOptions="Fill"
+                    InputTransparent="True"
+                    Opacity="0.12"
+                    VerticalOptions="Fill" />
+            </Grid>
+
+            <!--  Header card on top of waves  -->
             <Border
                 Grid.Row="0"
-                Margin="24,20,24,12"
+                Margin="24,28,24,12"
                 Padding="0"
-                Background="{StaticResource Brush.HeaderGradient}"
-                Shadow="{StaticResource Sh.CardShadow}"
-                StrokeShape="RoundRectangle 28"
-                StrokeThickness="0">
+                Background="Transparent"
+                StrokeThickness="0"
+                ZIndex="10">
                 <Grid
-                    Padding="16,14"
+                    Padding="16,12"
                     ColumnDefinitions="Auto,*,Auto"
                     RowDefinitions="Auto,Auto">
 
@@ -34,17 +57,18 @@
                         Margin="0,0,12,0"
                         Padding="10"
                         Background="White"
-                        Opacity="0.92"
+                        Opacity="0.95"
                         StrokeShape="RoundRectangle 999"
                         StrokeThickness="0">
-                        <!--  Use your logo image if you have it  -->
+                        <!--  swap with your logo if available  -->
                         <Label
                             FontSize="20"
                             HorizontalTextAlignment="Center"
-                            Text="🎯"
+                            Text="⚙️"
                             VerticalTextAlignment="Center" />
                     </Border>
 
+                    <!--  Title  -->
                     <Label
                         Grid.Column="1"
                         StyleClass="h2"
@@ -56,10 +80,10 @@
                         Grid.Column="2"
                         Padding="12,6"
                         Background="White"
-                        Opacity="0.95"
+                        Opacity="0.92"
                         StrokeShape="RoundRectangle 999"
                         StrokeThickness="0">
-                        <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                             <Label
                                 StyleClass="caption"
                                 Text="Version"
@@ -71,6 +95,7 @@
                         </HorizontalStackLayout>
                     </Border>
 
+                    <!--  Subtitle  -->
                     <Label
                         Grid.Row="1"
                         Grid.Column="1"
@@ -84,12 +109,9 @@
             <!--  Content  -->
             <ScrollView
                 Grid.Row="1"
-                Margin="0,0,0,20"
-                Padding="24,0,24,24">
-                <VerticalStackLayout
-                    HorizontalOptions="Center"
-                    MaximumWidthRequest="720"
-                    Spacing="18">
+                Margin="20,0,20,20"
+                VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout MaximumWidthRequest="720" Spacing="18">
 
                     <!--  Profile  -->
                     <Border
@@ -160,7 +182,7 @@
                         StrokeThickness="0">
                         <VerticalStackLayout Spacing="0">
 
-                            <!--  Row: Dark Mode  -->
+                            <!--  Dark Mode  -->
                             <Grid
                                 Padding="6,0"
                                 ColumnDefinitions="Auto,*,Auto"
@@ -193,7 +215,7 @@
                                 HeightRequest="1"
                                 Color="{StaticResource Border}" />
 
-                            <!--  Row: Haptics  -->
+                            <!--  Haptics  -->
                             <Grid
                                 Padding="6,0"
                                 ColumnDefinitions="Auto,*,Auto"
@@ -220,12 +242,11 @@
                                     StyleClass="na-switch"
                                     VerticalOptions="Center" />
                             </Grid>
-
                         </VerticalStackLayout>
                     </Border>
 
                     <!--  Privacy & Data  -->
-                    <Label StyleClass="h4" Text="Privacy  Data" />
+                    <Label StyleClass="h4" Text="Privacy &amp; Data" />
                     <Border
                         Padding="10"
                         Background="{StaticResource CardBg}"
@@ -234,7 +255,7 @@
                         StrokeThickness="0">
                         <VerticalStackLayout Spacing="0">
 
-                            <!--  Row  -->
+                            <!--  Delete Local Data  -->
                             <Grid
                                 Padding="6,0"
                                 ColumnDefinitions="Auto,*,Auto"
@@ -268,6 +289,7 @@
                                 HeightRequest="1"
                                 Color="{StaticResource Border}" />
 
+                            <!--  Clear Cache  -->
                             <Grid
                                 Padding="6,0"
                                 ColumnDefinitions="Auto,*,Auto"
@@ -301,6 +323,7 @@
                                 HeightRequest="1"
                                 Color="{StaticResource Border}" />
 
+                            <!--  Export Data  -->
                             <Grid
                                 Padding="6,0"
                                 ColumnDefinitions="Auto,*,Auto"
@@ -328,7 +351,6 @@
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
                             </Grid>
-
                         </VerticalStackLayout>
                     </Border>
 
@@ -342,6 +364,7 @@
                         StrokeThickness="0">
                         <VerticalStackLayout Spacing="0">
 
+                            <!--  About App  -->
                             <Grid
                                 Padding="6,0"
                                 ColumnDefinitions="Auto,*,Auto"
@@ -375,6 +398,7 @@
                                 HeightRequest="1"
                                 Color="{StaticResource Border}" />
 
+                            <!--  Contact / Feedback  -->
                             <Grid
                                 Padding="6,0"
                                 ColumnDefinitions="Auto,*,Auto"
@@ -408,6 +432,7 @@
                                 HeightRequest="1"
                                 Color="{StaticResource Border}" />
 
+                            <!--  Rate App  -->
                             <Grid
                                 Padding="6,0"
                                 ColumnDefinitions="Auto,*,Auto"
@@ -435,7 +460,6 @@
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
                             </Grid>
-
                         </VerticalStackLayout>
                     </Border>
 

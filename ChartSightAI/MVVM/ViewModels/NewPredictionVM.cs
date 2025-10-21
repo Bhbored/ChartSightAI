@@ -171,12 +171,7 @@ namespace ChartSightAI.MVVM.ViewModels
         #endregion
 
         #region Methods
-        private void LoadPresetsFromFaker(int count = 10)
-        {
-            var list = PresetFaker.CreateList(count);
-            Presets = new ObservableCollection<Preset>(list);
-            OnPropertyChanged(nameof(Presets));
-        }
+       
         #endregion
 
         #region Tasks
@@ -190,9 +185,13 @@ namespace ChartSightAI.MVVM.ViewModels
             IsTechnicalSelected = true;
             IsPatternSelected = false;
             IsAiSelected = false;
-
-            LoadPresetsFromFaker(10);
-
+            Presets.Clear();
+            var List = PresetStore.Items;//change when backend is added
+            foreach (var item in List)
+            {
+                Presets.Add(item);
+            }
+          
             SelectedPreset = Presets.FirstOrDefault(p => p.MarketType == SelectedMarketType)
                              ?? Presets.FirstOrDefault();
 

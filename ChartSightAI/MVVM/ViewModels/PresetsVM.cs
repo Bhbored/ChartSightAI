@@ -1,10 +1,13 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using ChartSightAI.MVVM.Models;
+using ChartSightAI.MVVM.Views;
+using ChartSightAI.Utility;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ChartSightAI.TestData;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
@@ -12,38 +15,39 @@ namespace ChartSightAI.MVVM.ViewModels
     {
         #region Properties
         [ObservableProperty] private ObservableCollection<Preset> items = new();
+
         [ObservableProperty] private Preset? selectedPreset;
         #endregion
 
         #region Commands
-        [RelayCommand]
-        private void AddPreset()
-        {
-            var p = PresetFaker.CreateOne();
-            Items.Insert(0, p);
-            SelectedPreset = p;
-        }
+      
 
         [RelayCommand]
         private void DeletePreset(Preset? preset)
         {
             if (preset is null) return;
-            Items.Remove(preset);
-            if (SelectedPreset == preset) SelectedPreset = Items.FirstOrDefault();
+            items.Remove(preset);
+            SelectedPreset = PresetStore.Items.FirstOrDefault();
         }
 
         [RelayCommand]
-        private void EditPreset(Preset? preset)
+        private async Task EditPreset(Preset? preset)
         {
             if (preset is null) return;
-            SelectedPreset = preset;
+            PresetStore.TempPreset = preset;
+            await Shell.Current.GoToAsync("NewPreset", true);
         }
+
         #endregion
 
         #region Tasks
         public Task InitializeAsync()
         {
-            Items = new ObservableCollection<Preset>(PresetFaker.CreateList(10));
+            var list = PresetStore.Items;
+            Items.Clear();
+            foreach (var item in list) { 
+            Items.Add(item);
+            }
             SelectedPreset = Items.FirstOrDefault();
             return Task.CompletedTask;
         }

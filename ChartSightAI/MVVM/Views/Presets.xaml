@@ -223,42 +223,23 @@
             </Grid>
         </Grid>
 
-        <!--  Floating "New Preset" FAB  -->
-        <Border
+        <Button
+            x:Name="NewPresetFab"
+            Margin="0,0,30,220"
             AbsoluteLayout.LayoutBounds="1,1,160,56"
             AbsoluteLayout.LayoutFlags="PositionProportional"
             Background="{StaticResource Brush.ButtonGradient}"
+            BorderWidth="0"
+            Clicked="NewPresetFab_Clicked"
+            CornerRadius="999"
+            FontAttributes="Bold"
+            HeightRequest="56"
+            InputTransparent="False"
             Shadow="{StaticResource Sh.CardShadow}"
-            StrokeShape="RoundRectangle 999"
-            StrokeThickness="0"
-            TranslationX="-24"
-            TranslationY="-110"
-            ZIndex="2000">
-            <HorizontalStackLayout
-                Padding="18,10"
-                HorizontalOptions="Center"
-                Spacing="10"
-                VerticalOptions="Center">
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="22"
-                    Text="+"
-                    TextColor="White"
-                    VerticalTextAlignment="Center" />
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="16"
-                    Text="New Preset"
-                    TextColor="White"
-                    VerticalTextAlignment="Center" />
-            </HorizontalStackLayout>
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding AddPresetCommand}" />
-            </Border.GestureRecognizers>
-
-        </Border>
-
-
+            Text="+  New Preset"
+            TextColor="White"
+            WidthRequest="160"
+            ZIndex="9999" />
 
         <!--  Bottom TabBar  -->
         <Controls:TABBAR

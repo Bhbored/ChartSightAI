@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ChartSightAI.MVVM.Views.NewPreset"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
+    x:DataType="vm:NewPresetVM"
+    Background="{StaticResource Brush.BackgroundGradient}"
+    Shell.NavBarIsVisible="False">
+
+    <AbsoluteLayout>
+        <Grid
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            RowDefinitions="Auto,*"
+            RowSpacing="0">
+
+            <!--  Header  -->
+            <Border
+                Grid.Row="0"
+                Margin="-10,20,24,12"
+                Background="{StaticResource Brush.HeaderGradient}"
+                HeightRequest="80"
+                HorizontalOptions="Start"
+                Shadow="{StaticResource Sh.CardShadow}"
+                StrokeShape="RoundRectangle 0,50,0,50"
+                StrokeThickness="0"
+                WidthRequest="300">
+                <Grid
+                    Padding="14,5"
+                    ColumnDefinitions="Auto,*"
+                    RowDefinitions="Auto,Auto">
+
+                    <!--  Back arrow pill (placeholder image)  -->
+                    <Image
+                        Grid.RowSpan="2"
+                        Margin="0,0,10,0"
+                        HeightRequest="35"
+                        HorizontalOptions="End"
+                        Source="arrow.png"
+                        VerticalOptions="Center"
+                        WidthRequest="35">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CancelCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <VerticalStackLayout
+                        Grid.Column="1"
+                        HorizontalOptions="End"
+                        Spacing="2"
+                        VerticalOptions="Start">
+                        <Label
+                            StyleClass="h2"
+                            Text="New Preset"
+                            TextColor="{StaticResource TextDark}" />
+                        <Label
+                            Margin="0,0,10,0"
+                            StyleClass="caption"
+                            Text="Create and save a custom setup"
+                            TextColor="{StaticResource TextLight}" />
+                    </VerticalStackLayout>
+
+                </Grid>
+            </Border>
+
+            <!--  Card  -->
+            <ScrollView Grid.Row="1" Padding="24,0,24,24">
+                <Border StyleClass="na-card">
+                    <VerticalStackLayout Spacing="16">
+
+                        <!--  Name  -->
+                        <Label StyleClass="h4" Text="Preset Name" />
+                        <sf:SfTextInputLayout
+                            ContainerType="Outlined"
+                            HeightRequest="100"
+                            Hint="Preset Name"
+                            Stroke="Cyan">
+                            <Entry
+                                ClearButtonVisibility="WhileEditing"
+                                FontSize="14"
+                                Text="{Binding PresetName, Mode=TwoWay}" />
+                        </sf:SfTextInputLayout>
+
+                        <!--  Description  -->
+                        <Label StyleClass="h4" Text="Description" />
+                        <sf:SfTextInputLayout
+                            ContainerType="Outlined"
+                            HeightRequest="100"
+                            Hint="Description"
+                            Stroke="Cyan">
+                            <Entry
+                                ClearButtonVisibility="WhileEditing"
+                                FontSize="14"
+                                Text="{Binding Description, Mode=TwoWay}" />
+                        </sf:SfTextInputLayout>
+
+
+                        <!--  Market  -->
+                        <Label StyleClass="h4" Text="Market Type" />
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <Button
+                                Command="{Binding SetMarketTypeCommand}"
+                                CommandParameter="Forex"
+                                StyleClass="na-chip"
+                                Text="Forex">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsForexSelected}"
+                                        TargetType="Button"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                        <Setter Property="TextColor" Value="White" />
+                                        <Setter Property="BorderWidth" Value="0" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding SetMarketTypeCommand}"
+                                CommandParameter="Stocks"
+                                StyleClass="na-chip"
+                                Text="Stocks">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsStocksSelected}"
+                                        TargetType="Button"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                        <Setter Property="TextColor" Value="White" />
+                                        <Setter Property="BorderWidth" Value="0" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Button
+                                Grid.Column="2"
+                                Command="{Binding SetMarketTypeCommand}"
+                                CommandParameter="Crypto"
+                                StyleClass="na-chip"
+                                Text="Crypto">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsCryptoSelected}"
+                                        TargetType="Button"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                        <Setter Property="TextColor" Value="White" />
+                                        <Setter Property="BorderWidth" Value="0" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </Grid>
+
+                        <!--  Timeframe  -->
+                        <Label StyleClass="h4" Text="Time Frame" />
+                        <Border StyleClass="na-field">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Picker
+                                    Title="Select timeframe"
+                                    ItemDisplayBinding="{Binding Label}"
+                                    ItemsSource="{Binding TimeFrameChoices}"
+                                    SelectedItem="{Binding SelectedTimeFrameOption, Mode=TwoWay}"
+                                    StyleClass="na-picker" />
+                                <Label
+                                    Grid.Column="1"
+                                    Text="▾"
+                                    VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+
+                        <!--  Direction  -->
+                        <Label StyleClass="h4" Text="Trade Direction" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button
+                                Command="{Binding SetTradeDirectionCommand}"
+                                CommandParameter="Long"
+                                StyleClass="na-chip"
+                                Text="Long">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsLongSelected}"
+                                        TargetType="Button"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                        <Setter Property="TextColor" Value="White" />
+                                        <Setter Property="BorderWidth" Value="0" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding SetTradeDirectionCommand}"
+                                CommandParameter="Short"
+                                StyleClass="na-chip"
+                                Text="Short">
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsShortSelected}"
+                                        TargetType="Button"
+                                        Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+                                        <Setter Property="TextColor" Value="White" />
+                                        <Setter Property="BorderWidth" Value="0" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </Grid>
+
+                        <!--  Indicators (always filled, non-selectable)  -->
+                        <Label StyleClass="h4" Text="Indicators" />
+                        <CollectionView
+                            ItemsSource="{Binding AllIndicators}"
+                            SelectionMode="None"
+                            VerticalScrollBarVisibility="Never">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="3" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Button
+                                        Margin="0,8,8,0"
+                                        InputTransparent="True"
+                                        IsEnabled="False"
+                                        StyleClass="na-badge"
+                                        Text="{Binding .}" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <!--  Bottom CTAs  -->
+                        <Grid
+                            Margin="4,4,4,0"
+                            ColumnDefinitions="*,*"
+                            ColumnSpacing="14">
+                            <Button
+                                Command="{Binding CancelCommand}"
+                                StyleClass="na-cta"
+                                Text="Cancel" />
+                            <Button
+                                Grid.Column="1"
+                                Command="{Binding SaveCommand}"
+                                StyleClass="na-cta"
+                                Text="Save Preset" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+            </ScrollView>
+        </Grid>
+    </AbsoluteLayout>
+</ContentPage>
