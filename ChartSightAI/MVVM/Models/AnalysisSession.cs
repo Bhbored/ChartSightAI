@@ -25,6 +25,8 @@ namespace ChartSightAI.MVVM.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public AiAnalysisResult? Result { get; set; }
+        public bool IsRated { get; set; } = false;
+
     }
 
 

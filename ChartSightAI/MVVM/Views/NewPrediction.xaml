@@ -4,12 +4,23 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
+    xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:conv="clr-namespace:ChartSightAI.Converters"
+    xmlns:models="clr-namespace:ChartSightAI.MVVM.Models"
     xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
     x:DataType="vm:NewPredictionVM"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
-
+    <ContentPage.Resources>
+        <conv:ConfidenceToBrushConverter
+            x:Key="ConfidenceToBrush"
+            HighBrush="{StaticResource Primary}"
+            LowBrush="{StaticResource Muted}"
+            MidBrush="{StaticResource Warn}" />
+    </ContentPage.Resources>
     <AbsoluteLayout>
+
+        <!--  ========= MAIN CONTENT =========  -->
         <Grid
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
@@ -44,14 +55,13 @@
                 Background="Transparent"
                 StrokeThickness="0"
                 ZIndex="10">
-
                 <Grid
                     Padding="16,12"
                     ColumnDefinitions="Auto,*,Auto"
                     ColumnSpacing="12"
                     RowDefinitions="Auto,Auto">
 
-                    <!--  Back button pill  -->
+                    <!--  Back/Logo pill  -->
                     <Border
                         Grid.RowSpan="2"
                         Margin="0,0,10,0"
@@ -448,7 +458,7 @@
                                 <Image
                                     HeightRequest="50"
                                     IsAnimationPlaying="True"
-                                    Source="search.gif"
+                                    Source="search.png"
                                     WidthRequest="50" />
                             </Border>
 
@@ -487,7 +497,7 @@
                                                 HeightRequest="120"
                                                 HorizontalOptions="Center"
                                                 IsAnimationPlaying="True"
-                                                Source="bankruptcy.gif" />
+                                                Source="growth.gif" />
                                             <Label
                                                 HorizontalTextAlignment="Center"
                                                 StyleClass="caption"
@@ -544,13 +554,366 @@
                     </Grid>
                 </StackLayout>
             </ScrollView>
-        </Grid>
+            <!--  ========= AI ANALYSIS BOTTOM SHEET (sticky actions, guaranteed visible) =========  -->
+            <bottomSheet:SfBottomSheet
+                x:Name="AiSheet"
+                Grid.RowSpan="2"
+                AllowedState="All"
+                Background="#F8FFFF"
+                CollapsedHeight="160"
+                ContentPadding="0"
+                CornerRadius="28"
+                FullExpandedRatio="0.96"
+                GrabberAreaHeight="18"
+                GrabberBackground="{StaticResource Primary}"
+                GrabberWidth="56"
+                HalfExpandedRatio="0.64"
+                IsModal="True"
+                IsOpen="{Binding IsAiSheetOpen}"
+                ShowGrabber="True"
+                State="FullExpanded"
+                ZIndex="4000">
 
-        <!--  Floating TabBar  -->
+                <bottomSheet:SfBottomSheet.BottomSheetContent>
+
+                    <!--  2 rows: Header + Content. Actions are overlaid as the LAST child (RowSpan=2).  -->
+                    <Grid Padding="16,10,16,16" RowDefinitions="Auto,*">
+
+                        <!--  Header  -->
+                        <Border StyleClass="ai-sheet-header">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <Label
+                                    Grid.Row="0"
+                                    StyleClass="h2"
+                                    Text="AI Analysis"
+                                    TextColor="{StaticResource TextDark}" />
+                                <Button
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Command="{Binding CloseAiSheetCommand}"
+                                    StyleClass="ai-cta-secondary"
+                                    Text="Close" />
+                                <Label
+                                    Grid.Row="1"
+                                    StyleClass="ai-caption"
+                                    Text="Automated insights using your selected market &amp; timeframe." />
+                            </Grid>
+                        </Border>
+
+                        <!--  Scrollable body (leave space at bottom so content never hides behind the dock)  -->
+                        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+                            <Grid
+                                Margin="0,6,0,120"
+                                ColumnDefinitions="*,*"
+                                ColumnSpacing="12"
+                                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                                RowSpacing="12">
+                                <!--  Summary  -->
+                                <Border Grid.ColumnSpan="2" StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border StyleClass="ai-iconchip">
+                                                <Path Data="M4,4 H20 V16 H9 L6,19 V16 H4 Z" StyleClass="ai-icon" />
+                                            </Border>
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="h4 ai-section-title"
+                                                Text="Summary" />
+                                        </Grid>
+                                        <Label
+                                            Grid.Row="1"
+                                            StyleClass="ai-body"
+                                            Text="{Binding Analysis.Summary}" />
+                                    </Grid>
+                                </Border>
+
+                                <!--  Trend  -->
+                                <Border
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border StyleClass="ai-iconchip">
+                                                <Path Data="M3,17 L11,9 L14,12 L21,5" StyleClass="ai-icon" />
+                                            </Border>
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="h4 ai-section-title"
+                                                Text="Trend Analysis" />
+                                        </Grid>
+                                        <Label
+                                            Grid.Row="1"
+                                            StyleClass="ai-body"
+                                            Text="{Binding Analysis.TrendAnalysis}" />
+                                    </Grid>
+                                </Border>
+
+                                <!--  Pattern  -->
+                                <Border
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border StyleClass="ai-iconchip">
+                                                <Path Data="M12,4 L20,18 H4 Z" StyleClass="ai-icon" />
+                                            </Border>
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="h4 ai-section-title"
+                                                Text="Pattern Detected" />
+                                        </Grid>
+                                        <Label
+                                            Grid.Row="1"
+                                            StyleClass="ai-body"
+                                            Text="{Binding Analysis.Pattern}" />
+                                    </Grid>
+                                </Border>
+
+                                <!--  Support & Resistance  -->
+                                <Border
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="2"
+                                    StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border StyleClass="ai-iconchip">
+                                                <Path Data="M4,8 H20 M4,14 H20" StyleClass="ai-icon" />
+                                            </Border>
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="h4 ai-section-title"
+                                                Text="Support &amp; Resistance" />
+                                        </Grid>
+
+                                        <CollectionView
+                                            Grid.Row="1"
+                                            ItemsSource="{Binding Analysis.SupportResistance}"
+                                            SelectionMode="None">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="models:SupportResistanceLevel">
+                                                    <Grid
+                                                        Padding="0,6"
+                                                        ColumnDefinitions="Auto,*,Auto"
+                                                        ColumnSpacing="12">
+                                                        <Label StyleClass="bold" Text="{Binding Type}" />
+                                                        <Label Grid.Column="1" Text="{Binding Price, StringFormat='${0:F2}'}" />
+                                                        <Border
+                                                            Grid.Column="2"
+                                                            Background="{Binding Confidence, Converter={StaticResource ConfidenceToBrush}}"
+                                                            StyleClass="ai-badge">
+                                                            <Label StyleClass="ai-caption" Text="{Binding Confidence, StringFormat='{0:F0}%'}" />
+                                                        </Border>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+                                    </Grid>
+                                </Border>
+
+                                <!--  Indicators  -->
+                                <Border
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border StyleClass="ai-iconchip">
+                                                <Path Data="M6,7 H20 M4,7 A2,2 0 1 0 8,7 M10,13 H20 M8,13 A2,2 0 1 0 12,13" StyleClass="ai-icon" />
+                                            </Border>
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="h4 ai-section-title"
+                                                Text="Indicators" />
+                                        </Grid>
+
+                                        <FlexLayout
+                                            Grid.Row="1"
+                                            Margin="0,0,0,7"
+                                            BindableLayout.ItemsSource="{Binding Analysis.Indicators}"
+                                            Direction="Row"
+                                            Wrap="Wrap">
+                                            <BindableLayout.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border StyleClass="ai-tag">
+                                                        <Label StyleClass="ai-caption" Text="{Binding .}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </BindableLayout.ItemTemplate>
+                                        </FlexLayout>
+                                    </Grid>
+                                </Border>
+
+                                <!--  Risk  -->
+                                <Border
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border StyleClass="ai-iconchip">
+                                                <Path Data="M12,3 L20,6 V12 C20,16 16,19 12,21 C8,19 4,16 4,12 V6 Z" StyleClass="ai-icon" />
+                                            </Border>
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="h4 ai-section-title"
+                                                Text="Risk &amp; Volatility" />
+                                        </Grid>
+                                        <Label
+                                            Grid.Row="1"
+                                            StyleClass="ai-body"
+                                            Text="{Binding Analysis.Risk}" />
+                                    </Grid>
+                                </Border>
+
+                                <!--  Trade Idea  -->
+                                <Border
+                                    Grid.Row="4"
+                                    Grid.ColumnSpan="2"
+                                    StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border StyleClass="ai-iconchip">
+                                                <Path Data="M12,4 A8,8 0 1 0 12,20 A8,8 0 1 0 12,4 M12,8 A4,4 0 1 0 12,16 A4,4 0 1 0 12,8" StyleClass="ai-icon" />
+                                            </Border>
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="h4 ai-section-title"
+                                                Text="AI Suggestion / Trade Idea" />
+                                        </Grid>
+
+                                        <Grid
+                                            Grid.Row="1"
+                                            ColumnDefinitions="*,*"
+                                            ColumnSpacing="12"
+                                            RowDefinitions="Auto,Auto,Auto"
+                                            RowSpacing="6">
+                                            <Label Text="Entry" />
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="bold"
+                                                Text="{Binding Analysis.TradeIdea.Entry, StringFormat='${0:F2}'}" />
+
+                                            <Label Grid.Row="1" Text="Stop Loss" />
+                                            <Label
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                StyleClass="bold"
+                                                Text="{Binding Analysis.TradeIdea.StopLoss, StringFormat='${0:F2}'}" />
+
+                                            <Label Grid.Row="2" Text="Targets" />
+                                            <FlexLayout
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                BindableLayout.ItemsSource="{Binding Analysis.TradeIdea.Targets}"
+                                                Direction="Row"
+                                                Wrap="Wrap">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate x:DataType="x:Double">
+                                                        <Border StyleClass="ai-tag">
+                                                            <Label Text="{Binding ., StringFormat='${0:F2}'}" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </FlexLayout>
+                                        </Grid>
+
+                                        <Label
+                                            Grid.Row="2"
+                                            StyleClass="ai-caption"
+                                            Text="{Binding Analysis.TradeIdea.Rationale}" />
+                                    </Grid>
+                                </Border>
+
+                                <!--  Explainability  -->
+                                <Border
+                                    Grid.Row="5"
+                                    Grid.ColumnSpan="2"
+                                    StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border StyleClass="ai-iconchip">
+                                                <Path Data="M12,4 A8,8 0 1 0 12,20 A8,8 0 1 0 12,4 M12,10 V16 M12,8 A1,1 0 1 0 12,8.01" StyleClass="ai-icon" />
+                                            </Border>
+                                            <Label
+                                                Grid.Column="1"
+                                                StyleClass="h4 ai-section-title"
+                                                Text="Explainability" />
+                                        </Grid>
+
+                                        <!--  Now a single paragraph  -->
+                                        <Label
+                                            Grid.Row="1"
+                                            LineBreakMode="WordWrap"
+                                            StyleClass="ai-body"
+                                            Text="{Binding Analysis.Explainability}" />
+                                    </Grid>
+                                </Border>
+
+
+                            </Grid>
+                        </ScrollView>
+
+                        <!--  OVERLAY DOCK: placed last so it's always on top  -->
+                        <Grid
+                            Grid.Row="0"
+                            Grid.RowSpan="2"
+                            Margin="0,0,4,80"
+                            ColumnDefinitions="Auto,12,Auto"
+                            HorizontalOptions="End"
+                            VerticalOptions="End"
+                            ZIndex="9999">
+
+                            <!--  background pill  -->
+                            <Border
+                                Grid.ColumnSpan="3"
+                                StyleClass="ai-actionbar"
+                                WidthRequest="148" />
+
+                            <!--  Share  -->
+                            <Border Grid.Column="0" StyleClass="ai-fab-ghost">
+                                <Grid>
+                                    <Path
+                                        Data="M6,18 L18,6 M10,6 H18 V14"
+                                        Stroke="{StaticResource Primary}"
+                                        StyleClass="ai-fab-icon" />
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShareAnalysisCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                            <!--  Save  -->
+                            <Border Grid.Column="2" StyleClass="ai-fab">
+                                <Grid>
+                                    <Path Data="M6,4 H18 V20 L12,16 L6,20 Z" StyleClass="ai-fab-icon" />
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SaveAnalysisCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+
+                    </Grid>
+                </bottomSheet:SfBottomSheet.BottomSheetContent>
+            </bottomSheet:SfBottomSheet>
+
+
+        </Grid>
         <Controls:TABBAR
             Margin="0,0,0,20"
             AbsoluteLayout.LayoutBounds="0.5,1,1,76"
             AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional"
-            ZIndex="1000" />
+            ZIndex="1000">
+            <Controls:TABBAR.Triggers>
+                <DataTrigger
+                    Binding="{Binding IsAiSheetOpen}"
+                    TargetType="Controls:TABBAR"
+                    Value="True">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </Controls:TABBAR.Triggers>
+        </Controls:TABBAR>
     </AbsoluteLayout>
 </ContentPage>

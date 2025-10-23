@@ -12,6 +12,9 @@
     <Color x:Key="TextLight">#718096</Color>
     <Color x:Key="Border">#B2F0E6</Color>
     <Color x:Key="CardBg">#FFFFFF</Color>
+    <Color x:Key="Ok">#16A34A</Color>
+    <Color x:Key="Warn">#F59E0B</Color>
+    <Color x:Key="Muted">#E5E7EB</Color>
 
     <!--  ===== Brushes / Gradients =====  -->
     <LinearGradientBrush x:Key="Brush.ButtonGradient" StartPoint="0,0" EndPoint="1,1">
@@ -273,7 +276,126 @@
 
     <!--#endregion-->
 
-    <!--#region PresetPage-->
+    <!--#region AI RESPONSE sheet-->
+    <!--  ===== Card =====  -->
+    <Style Class="ai-card" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Brush.CardBgGradient}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
+        <Setter Property="Padding" Value="18,14" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <!--  ===== Sheet header =====  -->
+    <Style Class="ai-sheet-header" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Brush.HeaderGradient}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+        <Setter Property="Padding" Value="16,14" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+
+    <!--  ===== Titles / text (combine with your h* classes) =====  -->
+    <Style Class="ai-section-title" TargetType="Label">
+        <Setter Property="Margin" Value="0,0,0,6" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+    </Style>
+    <Style Class="ai-body" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+    </Style>
+    <Style Class="ai-caption" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource TextLight}" />
+    </Style>
+
+    <!--  ===== CTAs =====  -->
+    <Style Class="ai-cta" TargetType="Button">
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontFamily" Value="NexaHeavy" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style Class="ai-cta-secondary" TargetType="Button">
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="Background" Value="{StaticResource Secondary}" />
+        <Setter Property="TextColor" Value="{StaticResource TextDark}" />
+        <Setter Property="FontFamily" Value="NexaHeavy" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+
+    <!--  ===== Chips/Badges =====  -->
+    <Style Class="ai-tag" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Secondary}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 25" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Margin" Value="0,6,6,0" />
+    </Style>
+    <Style Class="ai-badge" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="Padding" Value="10,6" />
+    </Style>
+
+    <!--  ===== Icon chip (circle) & line icon style =====  -->
+    <Style Class="ai-iconchip" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Secondary}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="Margin" Value="0,0,8,0" />
+    </Style>
+    <Style Class="ai-icon" TargetType="Path">
+        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+        <Setter Property="StrokeThickness" Value="1.8" />
+        <Setter Property="Aspect" Value="Uniform" />
+        <Setter Property="HeightRequest" Value="20" />
+        <Setter Property="WidthRequest" Value="20" />
+    </Style>
+    <!--  FABs  -->
+    <Style Class="ai-fab" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Brush.ButtonGradient}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="WidthRequest" Value="56" />
+        <Setter Property="HeightRequest" Value="56" />
+        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style Class="ai-fab-ghost" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Secondary}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="WidthRequest" Value="56" />
+        <Setter Property="HeightRequest" Value="56" />
+        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style Class="ai-fab-icon" TargetType="Path">
+        <Setter Property="Stroke" Value="White" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="Aspect" Value="Uniform" />
+        <Setter Property="HeightRequest" Value="22" />
+        <Setter Property="WidthRequest" Value="22" />
+    </Style>
+    <!--  Sticky action bar (bottom of the sheet)  -->
+    <Style Class="ai-actionbar" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Secondary}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="HeightRequest" Value="64" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
+    </Style>
 
 
     <!--#endregion-->

@@ -19,7 +19,7 @@ namespace ChartSightAI.MVVM.Models
         public string? Risk { get; set; }
         public TradeIdea? TradeIdea { get; set; }
 
-        public List<string> Explainability { get; set; } = new();
+        public string? Explainability { get; set; }
     }
 
 }
