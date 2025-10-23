@@ -26,6 +26,8 @@ namespace ChartSightAI.MVVM.ViewModels
 {
     public partial class NewPredictionVM : ObservableObject
     {
+
+
         #region Properties
         [ObservableProperty] private AnalysisSession analysisSession = new();
 
@@ -80,62 +82,43 @@ namespace ChartSightAI.MVVM.ViewModels
         #endregion
 
         #region Commands
-        public IRelayCommand<string> SetMarketTypeFromStringCommand { get; }
-        public IRelayCommand<string> SetTimeFrameFromStringCommand { get; }
-        public IRelayCommand<string> SetTradeDirectionFromStringCommand { get; }
-        public IRelayCommand<string> ToggleStrategyFocusCommand { get; }
-        public IAsyncRelayCommand UploadImageCommand { get; }
-        public IAsyncRelayCommand AnalyzeChartCommand { get; }
-        public IAsyncRelayCommand CancelCommand { get; }
-        public IRelayCommand CloseAiSheetCommand { get; }
-        public IAsyncRelayCommand SaveAnalysisCommand { get; }
-        public IAsyncRelayCommand ShareAnalysisCommand { get; }
-
-        #endregion
-
-        #region Ctor
-        public NewPredictionVM()
+        public IRelayCommand<string> SetMarketTypeFromStringCommand => new RelayCommand<string>(s =>
         {
-            SetMarketTypeFromStringCommand = new RelayCommand<string>(s =>
+            if (Enum.TryParse<MT>(s, out var mt)) SelectedMarketType = mt;
+        });
+        public IRelayCommand<string> SetTimeFrameFromStringCommand => new RelayCommand<string>(s =>
+        {
+            if (Enum.TryParse<TF>(s, out var tf))
             {
-                if (Enum.TryParse<MT>(s, out var mt)) SelectedMarketType = mt;
-            });
-
-            SetTimeFrameFromStringCommand = new RelayCommand<string>(s =>
+                SelectedTimeFrame = tf;
+                SelectedTimeFrameOption = TimeFrameChoices.FirstOrDefault(o => o.Value.Equals(tf));
+            }
+        });
+        public IRelayCommand<string> SetTradeDirectionFromStringCommand => new RelayCommand<string>(s =>
+        {
+            if (Enum.TryParse<TD>(s, out var td)) SelectedTradeDirection = td;
+        });
+        public IRelayCommand<string> ToggleStrategyFocusCommand => new RelayCommand<string>(key =>
+        {
+            switch (key)
             {
-                if (Enum.TryParse<TF>(s, out var tf))
-                {
-                    SelectedTimeFrame = tf;
-                    SelectedTimeFrameOption = TimeFrameChoices.FirstOrDefault(o => o.Value.Equals(tf));
-                }
-            });
+                case "Technical": IsTechnicalSelected = !IsTechnicalSelected; break;
+                case "Pattern": IsPatternSelected = !IsPatternSelected; break;
+                case "AI": IsAiSelected = !IsAiSelected; break;
+            }
+        });
 
-            SetTradeDirectionFromStringCommand = new RelayCommand<string>(s =>
-            {
-                if (Enum.TryParse<TD>(s, out var td)) SelectedTradeDirection = td;
-            });
+        public IAsyncRelayCommand UploadImageCommand => new AsyncRelayCommand(OnUploadTappedAsync);
+        public IAsyncRelayCommand AnalyzeChartCommand => new AsyncRelayCommand(OnAnalyzeChartAsync);
+        public IAsyncRelayCommand CancelCommand => new AsyncRelayCommand(ResetFiltersAsync);
+        public IRelayCommand CloseAiSheetCommand => new RelayCommand(() => IsAiSheetOpen = false);
+        public IAsyncRelayCommand SaveAnalysisCommand => new AsyncRelayCommand(SaveAnalysisAsync);
+        public IAsyncRelayCommand ShareAnalysisCommand => new AsyncRelayCommand(ShareAnalysisAsync);
 
-            ToggleStrategyFocusCommand = new RelayCommand<string>(key =>
-            {
-                switch (key)
-                {
-                    case "Technical": IsTechnicalSelected = !IsTechnicalSelected; break;
-                    case "Pattern": IsPatternSelected = !IsPatternSelected; break;
-                    case "AI": IsAiSelected = !IsAiSelected; break;
-                }
-            });
-
-            UploadImageCommand = new AsyncRelayCommand(OnUploadTappedAsync);
-            AnalyzeChartCommand = new AsyncRelayCommand(OnAnalyzeChartAsync);
-            CancelCommand = new AsyncRelayCommand(ResetFiltersAsync);
-
-            CloseAiSheetCommand = new RelayCommand(() => IsAiSheetOpen = false);
-            SaveAnalysisCommand = new AsyncRelayCommand(SaveAnalysisAsync);
-            ShareAnalysisCommand = new AsyncRelayCommand(ShareAnalysisAsync);
-        }
         #endregion
 
-        #region Partial Change Handlers
+        #region Methods
+
         partial void OnSelectedMarketTypeChanged(MT value)
         {
             AnalysisSession.MarketType = value;
@@ -181,9 +164,6 @@ namespace ChartSightAI.MVVM.ViewModels
             AnalysisSession.PreviewImage = value;
             OnPropertyChanged(nameof(AnalysisSession));
         }
-        #endregion
-
-        #region Methods
         private void SeedAiMockFromPreset()
         {
             SelectedPreset?.SetIndicatorsByMarket();
@@ -226,8 +206,8 @@ namespace ChartSightAI.MVVM.ViewModels
                         sb.AppendLine($"Targets: {string.Join(", ", Analysis.TradeIdea.Targets.Select(t => t.ToString("F2")))}");
                 }
             }
-            await Microsoft.Maui.ApplicationModel.DataTransfer.Share.Default.RequestAsync(
-                new Microsoft.Maui.ApplicationModel.DataTransfer.ShareTextRequest
+            await Share.Default.RequestAsync(
+                new ShareTextRequest
                 {
                     Title = "ChartSightAI Analysis",
                     Text = sb.ToString()

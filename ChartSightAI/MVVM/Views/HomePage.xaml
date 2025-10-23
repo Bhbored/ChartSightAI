@@ -54,7 +54,11 @@
                         Aspect="AspectFit"
                         HeightRequest="20"
                         Source="history.png"
-                        WidthRequest="20" />
+                        WidthRequest="20">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToHistoryCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
                     <Image
                         Margin="30,0"
                         Aspect="AspectFit"

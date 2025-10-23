@@ -283,9 +283,7 @@
         <Setter Property="Stroke" Value="{StaticResource Border}" />
         <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="StrokeShape" Value="RoundRectangle 22" />
-        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
         <Setter Property="Padding" Value="18,14" />
-        <Setter Property="Margin" Value="0,0,0,12" />
     </Style>
 
     <!--  ===== Sheet header =====  -->
@@ -400,6 +398,37 @@
 
     <!--#endregion-->
 
+    <!--#region History-->
+    <!--  Flat ghost circle (no shadow) for the top-right + button  -->
+    <Style Class="ai-fab-ghost-flat" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Secondary}" />
+        <Setter Property="Stroke" Value="{StaticResource Border}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="WidthRequest" Value="40" />
+        <Setter Property="HeightRequest" Value="40" />
+        <!--  no Shadow here on purpose  -->
+    </Style>
+
+    <!--  Swipe pills (compact)  -->
+    <Style Class="ai-swipe-pill" TargetType="Border">
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="Padding" Value="14,8" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 999" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!--  Icon inside swipe pills  -->
+    <Style Class="ai-swipe-icon" TargetType="Path">
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="HeightRequest" Value="18" />
+        <Setter Property="WidthRequest" Value="18" />
+        <Setter Property="Aspect" Value="Uniform" />
+    </Style>
+
+    <!--#endregion-->
 </ResourceDictionary>
 
 

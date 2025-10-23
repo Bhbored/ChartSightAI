@@ -19,13 +19,17 @@ namespace ChartSightAI.MVVM.Models
         public TradeDirection TradeDirection { get; set; }
 
         public string ImagePath => TradeDirection == TradeDirection.Long
-            ? "images/long_trade.png"
-            : "images/short_trade.png";
+            ? "images/long_trade.gif"
+            : "images/short_trade.gif";
         public string? PreviewImage { get; set; }//from the device local storage
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public AiAnalysisResult? Result { get; set; }
         public bool IsRated { get; set; } = false;
+
+        public bool Hit { get; set; }
+
+        public bool Miss => !Hit;
 
     }
 

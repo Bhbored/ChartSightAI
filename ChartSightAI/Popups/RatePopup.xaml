@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="ChartSightAI.Popups.RatePopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Padding="16"
+    Background="{StaticResource Brush.BackgroundGradient}"
+    CanBeDismissedByTappingOutsideOfPopup="True"
+    HeightRequest="200"
+    Shadow="{StaticResource Sh.CardShadow}"
+    WidthRequest="200">
+
+    <VerticalStackLayout Spacing="14">
+        <Label
+            StyleClass="h4"
+            Text="Submit result"
+            VerticalOptions="Start" />
+        <Grid
+            ColumnDefinitions="*,*"
+            ColumnSpacing="12"
+            VerticalOptions="Center">
+            <!--  Hit  -->
+            <Border
+                x:Name="HitBtn"
+                Padding="14,10"
+                Background="#E7FFF4"
+                Stroke="#A7F3D0"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
+                <Grid ColumnDefinitions="Auto,8,Auto" HorizontalOptions="Center">
+                    <Path
+                        Data="M4,12 L9,17 L20,6"
+                        HeightRequest="18"
+                        Stroke="#16A34A"
+                        StrokeThickness="2"
+                        WidthRequest="18" />
+                    <Label
+                        Grid.Column="2"
+                        FontFamily="NexaHeavy"
+                        Text="Hit"
+                        TextColor="#166534" />
+                </Grid>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                </Border.GestureRecognizers>
+            </Border>
+
+            <!--  Miss  -->
+            <Border
+                x:Name="MissBtn"
+                Grid.Column="1"
+                Padding="14,10"
+                Background="#FFEAEA"
+                Stroke="#FECACA"
+                StrokeShape="RoundRectangle 16"
+                StrokeThickness="1">
+                <Grid ColumnDefinitions="Auto,8,Auto" HorizontalOptions="Center">
+                    <Path
+                        Data="M6,6 L18,18 M18,6 L6,18"
+                        HeightRequest="18"
+                        Stroke="#DC2626"
+                        StrokeThickness="2"
+                        WidthRequest="18" />
+                    <Label
+                        Grid.Column="2"
+                        FontFamily="NexaHeavy"
+                        Text="Miss"
+                        TextColor="#991B1B" />
+                </Grid>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1" />
+                </Border.GestureRecognizers>
+            </Border>
+        </Grid>
+    </VerticalStackLayout>
+</toolkit:Popup>

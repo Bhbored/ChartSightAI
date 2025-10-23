@@ -18,7 +18,12 @@ namespace ChartSightAI.MVVM.ViewModels
         [RelayCommand]
         public async Task GoToSettings()
         {
-            await Shell.Current.GoToAsync(nameof(Settings));
+            await Shell.Current.GoToAsync(nameof(Settings),true);
+        }
+        [RelayCommand]
+        public async Task GoToHistory()
+        {
+            await Shell.Current.GoToAsync(nameof(History),true);
         }
 
     }
