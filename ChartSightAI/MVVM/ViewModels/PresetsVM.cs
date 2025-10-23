@@ -28,6 +28,7 @@ namespace ChartSightAI.MVVM.ViewModels
             if (preset is null) return;
             items.Remove(preset);
             SelectedPreset = PresetStore.Items.FirstOrDefault();
+            BaseVM.ShowErrorSnackAsync(Presets.Current, "Preset Deleted Succesfully");
         }
 
         [RelayCommand]

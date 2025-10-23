@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
-    xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
     xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
     x:DataType="vm:NewPredictionVM"
     Background="{StaticResource Brush.BackgroundGradient}"
@@ -14,55 +13,57 @@
         <Grid
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
-            RowDefinitions="220,*"
+            RowDefinitions="Auto,*"
             RowSpacing="0">
 
-            <!--  TOP WAVES (real curved shape)  -->
+            <!--  Top waves  -->
             <Grid
                 Grid.Row="0"
-                HeightRequest="220"
-                InputTransparent="True"
+                Margin="0,0,0,20"
+                HeightRequest="200"
+                WidthRequest="450"
                 ZIndex="0">
-                <!--  main gradient wave  -->
-                <shapes:Path
-                    Aspect="Fill"
-                    Data="M0,0 L720,0 L720,160 C540,200 180,200 0,160 Z"
+                <Rectangle
                     Fill="{StaticResource Brush.HeaderGradient}"
                     HorizontalOptions="Fill"
                     VerticalOptions="Fill" />
-                <!--  subtle white highlight wave  -->
-                <shapes:Path
+                <Path
                     Aspect="Fill"
-                    Data="M0,145 C220,190 500,150 720,175 L720,220 L0,220 Z"
+                    Data="M0,170 C160,210 320,130 480,170 C580,195 660,200 720,185 L720,220 L0,220 Z"
                     Fill="White"
                     HorizontalOptions="Fill"
-                    Opacity="0.22"
-                    VerticalOptions="Fill" />
+                    Opacity="0.38"
+                    VerticalOptions="End" />
             </Grid>
 
-            <!--  HEADER CONTENT (sits above waves)  -->
-            <Grid
+            <!--  Header content  -->
+            <Border
                 Grid.Row="0"
-                Padding="24,28,24,8"
+                Margin="24,0,24,8"
+                Padding="0"
+                Background="Transparent"
+                StrokeThickness="0"
                 ZIndex="10">
+
                 <Grid
+                    Padding="16,12"
                     ColumnDefinitions="Auto,*,Auto"
                     ColumnSpacing="12"
                     RowDefinitions="Auto,Auto">
 
-                    <!--  Back button  -->
+                    <!--  Back button pill  -->
                     <Border
                         Grid.RowSpan="2"
                         Margin="0,0,10,0"
                         Padding="10"
                         Background="White"
-                        Opacity="0.95"
+                        HeightRequest="100"
                         StrokeShape="RoundRectangle 999"
                         StrokeThickness="0">
                         <Image
-                            HeightRequest="20"
-                            Source="back_arrow.png"
-                            WidthRequest="20">
+                            HeightRequest="40"
+                            Source="logo.png"
+                            WidthRequest="40">
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding CancelCommand}" />
                             </Image.GestureRecognizers>
@@ -76,7 +77,7 @@
                         Text="New Analysis Setup"
                         TextColor="{StaticResource TextDark}" />
 
-                    <!--  Status chip  -->
+                    <!--  Small chip  -->
                     <Border
                         Grid.Column="2"
                         Padding="10,4"
@@ -100,14 +101,15 @@
                         Text="Enter details and upload your chart to begin."
                         TextColor="{StaticResource TextLight}" />
                 </Grid>
-            </Grid>
+            </Border>
 
-            <!--  CONTENT  -->
+            <!--  Content  -->
             <ScrollView
                 Grid.Row="1"
                 Margin="0,0,0,70"
                 Padding="15,0,15,24"
                 VerticalScrollBarVisibility="Never">
+
                 <StackLayout
                     HorizontalOptions="Center"
                     MaximumWidthRequest="720"
@@ -141,6 +143,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                 </Button>
+
                                 <Button
                                     Grid.Column="1"
                                     Command="{Binding SetMarketTypeFromStringCommand}"
@@ -159,6 +162,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                 </Button>
+
                                 <Button
                                     Grid.Column="2"
                                     Command="{Binding SetMarketTypeFromStringCommand}"
@@ -184,7 +188,7 @@
                     <!--  Timeframe + Presets  -->
                     <Grid
                         Margin="0,0,0,8"
-                        ColumnDefinitions="*,Auto"
+                        ColumnDefinitions=".53*,.47*"
                         ColumnSpacing="8">
 
                         <!--  Timeframe  -->
@@ -198,7 +202,10 @@
                             <StackLayout Spacing="6">
                                 <Label StyleClass="h4" Text="Chart Timeframe" />
 
-                                <Grid ColumnDefinitions="*,*,*" RowSpacing="10">
+                                <Grid
+                                    ColumnDefinitions="*,*,*"
+                                    RowDefinitions="Auto"
+                                    RowSpacing="10">
                                     <Button
                                         Grid.Column="0"
                                         Command="{Binding SetTimeFrameFromStringCommand}"
@@ -217,6 +224,7 @@
                                             </DataTrigger>
                                         </Button.Triggers>
                                     </Button>
+
                                     <Button
                                         Grid.Column="1"
                                         Command="{Binding SetTimeFrameFromStringCommand}"
@@ -235,6 +243,7 @@
                                             </DataTrigger>
                                         </Button.Triggers>
                                     </Button>
+
                                     <Button
                                         Grid.Column="2"
                                         Command="{Binding SetTimeFrameFromStringCommand}"
@@ -280,7 +289,7 @@
                             Shadow="{StaticResource Sh.CardShadow}"
                             StrokeShape="RoundRectangle 20"
                             StrokeThickness="0">
-                            <StackLayout Spacing="6" WidthRequest="260">
+                            <StackLayout Spacing="6">
                                 <Label StyleClass="h4" Text="Presets" />
                                 <Border Margin="0,8,0,0" StyleClass="na-field">
                                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
@@ -331,6 +340,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                 </Button>
+
                                 <Button
                                     Grid.Column="1"
                                     Command="{Binding ToggleStrategyFocusCommand}"
@@ -349,6 +359,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                 </Button>
+
                                 <Button
                                     Grid.Column="2"
                                     Command="{Binding ToggleStrategyFocusCommand}"
@@ -399,6 +410,7 @@
                                         </DataTrigger>
                                     </Button.Triggers>
                                 </Button>
+
                                 <Button
                                     Grid.Column="1"
                                     Command="{Binding SetTradeDirectionFromStringCommand}"
@@ -439,6 +451,7 @@
                                     Source="search.gif"
                                     WidthRequest="50" />
                             </Border>
+
                             <VerticalStackLayout
                                 Grid.Row="0"
                                 Grid.Column="1"
@@ -464,6 +477,7 @@
                                 StrokeShape="RoundRectangle 16"
                                 StrokeThickness="0">
                                 <Grid>
+                                    <!--  Placeholder  -->
                                     <Grid x:Name="Placeholder" Padding="16">
                                         <VerticalStackLayout
                                             HorizontalOptions="Center"
@@ -489,6 +503,7 @@
                                         </Grid.Triggers>
                                     </Grid>
 
+                                    <!--  Preview  -->
                                     <Image
                                         x:Name="Preview"
                                         Aspect="AspectFill"
@@ -512,7 +527,7 @@
                         </Border.GestureRecognizers>
                     </Border>
 
-                    <!--  CTAs  -->
+                    <!--  CTA  -->
                     <Grid
                         Margin="0,24,0,0"
                         ColumnDefinitions="*,*"

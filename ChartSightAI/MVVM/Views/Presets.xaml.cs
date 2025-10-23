@@ -9,6 +9,7 @@ public partial class Presets : ContentPage
 		InitializeComponent();
 		BindingContext = vm;
 	}
+    public static Presets? Current {  get; set; }
     protected override async void OnAppearing()
     {
         base.OnAppearing();

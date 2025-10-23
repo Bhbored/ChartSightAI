@@ -9,6 +9,9 @@ using CommunityToolkit.Mvvm.Input;
 using MT = ChartSightAI.MVVM.Models.Enums.MarketType;
 using TF = ChartSightAI.MVVM.Models.Enums.TimeFrame;
 using TD = ChartSightAI.MVVM.Models.Enums.TradeDirection;
+using CommunityToolkit.Maui.Extensions;
+using ChartSightAI.Popups;
+using Google.Cloud.AIPlatform.V1;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
@@ -74,7 +77,8 @@ namespace ChartSightAI.MVVM.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PresetName))
             {
-                await Shell.Current.DisplayAlert("Missing name", "Please enter a preset name.", "OK");
+                var msg = "Missing name\nPlease enter a preset name.";
+                await Shell.Current.ShowPopupAsync(new InfoPopup(msg)) ;
                 return;
             }
 
@@ -92,6 +96,7 @@ namespace ChartSightAI.MVVM.ViewModels
                     Indicators = AllIndicators.ToList()
                 };
                 PresetStore.Items.Insert(0, newPreset);
+                BaseVM.ShowSnackAsync(ChartSightAI.MVVM.Views.Presets.Current, "Preset added successfully");
             }
             else
             {
