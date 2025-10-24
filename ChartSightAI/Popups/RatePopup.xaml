@@ -7,12 +7,13 @@
     Padding="16"
     Background="{StaticResource Brush.BackgroundGradient}"
     CanBeDismissedByTappingOutsideOfPopup="True"
-    HeightRequest="200"
+    HeightRequest="150"
     Shadow="{StaticResource Sh.CardShadow}"
     WidthRequest="200">
 
-    <VerticalStackLayout Spacing="14">
+    <VerticalStackLayout Spacing="30">
         <Label
+            HorizontalOptions="Center"
             StyleClass="h4"
             Text="Submit result"
             VerticalOptions="Start" />

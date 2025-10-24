@@ -41,7 +41,7 @@
                 </Grid>
             </CollectionView.EmptyView>
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout ItemSpacing="16" Orientation="Vertical" />
+                <LinearItemsLayout ItemSpacing="12" Orientation="Vertical" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:AnalysisSession">
@@ -90,7 +90,8 @@
                                                     Grid.Column="2"
                                                     FontFamily="NexaHeavy"
                                                     Text="Delete"
-                                                    TextColor="White" />
+                                                    TextColor="White"
+                                                    VerticalOptions="Center" />
                                             </Grid>
                                         </Border>
                                     </SwipeItemView.Content>
@@ -105,70 +106,85 @@
                                 <Grid
                                     Padding="12"
                                     ColumnDefinitions="76,*,76"
-                                    RowDefinitions="Auto,Auto,Auto">
+                                    RowDefinitions="Auto,Auto">
 
                                     <!--  left thumbnail  -->
                                     <Border
-                                        Grid.RowSpan="3"
+                                        Grid.RowSpan="2"
                                         Margin="0,0,12,0"
                                         Background="{StaticResource Secondary}"
                                         HeightRequest="64"
                                         StrokeShape="RoundRectangle 16"
                                         StrokeThickness="0"
+                                        VerticalOptions="Center"
                                         WidthRequest="64">
                                         <Image
-                                            Margin="10"
-                                            Aspect="AspectFit"
+                                            Aspect="AspectFill"
+                                            IsAnimationPlaying="True"
                                             Source="{Binding ImagePath}" />
                                     </Border>
 
                                     <!--  center text  -->
-                                    <Label
+                                    <VerticalStackLayout
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
                                         Grid.Column="1"
-                                        LineBreakMode="TailTruncation"
-                                        StyleClass="h4"
-                                        Text="{Binding MarketType, StringFormat='Market: {0}'}" />
-                                    <Label
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        LineBreakMode="TailTruncation"
-                                        StyleClass="ai-body"
-                                        Text="{Binding TimeFrame, StringFormat='Timeframe: {0}'}" />
-                                    <Label
-                                        Grid.Row="2"
-                                        Grid.Column="1"
-                                        LineBreakMode="TailTruncation"
-                                        StyleClass="ai-caption"
-                                        Text="{Binding CreatedAt, StringFormat='Date: {0:yyyy-MM-dd}'}" />
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Fill">
+                                        <Label
+                                            LineBreakMode="TailTruncation"
+                                            StyleClass="h4"
+                                            Text="{Binding MarketType, StringFormat='Market: {0}'}" />
+                                        <Label
+                                            LineBreakMode="TailTruncation"
+                                            StyleClass="ai-body"
+                                            Text="{Binding TimeFrame, StringFormat='Timeframe: {0}'}" />
+                                        <Label
+                                            LineBreakMode="TailTruncation"
+                                            StyleClass="ai-caption"
+                                            Text="{Binding CreatedAt, StringFormat='Date: {0:yyyy-MM-dd}'}" />
+
+                                    </VerticalStackLayout>
 
                                     <!--  status chip bottom-right of CENTER col (keep 76dp gap for right rail)  -->
-                                    <Grid
-                                        Grid.Row="2"
-                                        Grid.Column="1"
-                                        Grid.ColumnSpan="2"
-                                        Margin="0,30,0,0"
-                                        HorizontalOptions="Center">
-
+                                    <VerticalStackLayout
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="2"
+                                        HorizontalOptions="End"
+                                        Spacing="20"
+                                        VerticalOptions="Fill">
+                                        <Border
+                                            Background="{StaticResource Brush.CardBgGradient}"
+                                            HeightRequest="40"
+                                            StrokeShape="RoundRectangle 20"
+                                            StrokeThickness="0"
+                                            WidthRequest="40">
+                                            <Image
+                                                HeightRequest="20"
+                                                Source="plus.png"
+                                                WidthRequest="20" />
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type Pages:History}}, Path=BindingContext.RateSessionAsyncCommand}" CommandParameter="{Binding .}" />
+                                            </Border.GestureRecognizers>
+                                        </Border>
                                         <!--  pending  -->
                                         <Border
                                             Padding="10,6"
                                             Background="{StaticResource Secondary}"
                                             IsVisible="{Binding IsRated, Converter={StaticResource Not}}"
                                             Stroke="{StaticResource Border}"
-                                            StrokeShape="RoundRectangle 999"
-                                            StrokeThickness="1">
-                                            <Grid ColumnDefinitions="Auto,6,Auto" VerticalOptions="Center">
-                                                <Path
-                                                    Data="M12,4 A8,8 0 1 0 12,20 A8,8 0 1 0 12,4 M12,8 V12 L15,14"
-                                                    HeightRequest="14"
-                                                    Stroke="{StaticResource Primary}"
-                                                    StrokeThickness="2"
-                                                    WidthRequest="14" />
+                                            StrokeShape="RoundRectangle 10"
+                                            StrokeThickness="1"
+                                            WidthRequest="100">
+                                            <HorizontalStackLayout Spacing="5">
+                                                <Label Text="❗" WidthRequest="14" />
                                                 <Label
                                                     Grid.Column="2"
                                                     StyleClass="ai-caption"
-                                                    Text="AI result not submitted" />
-                                            </Grid>
+                                                    Text="Result" />
+                                            </HorizontalStackLayout>
+
                                         </Border>
 
                                         <!--  rated group  -->
@@ -176,76 +192,46 @@
                                             <!--  hit  -->
                                             <Border
                                                 Padding="10,6"
-                                                Background="#E7FFF4"
+                                                Background="LightGreen"
                                                 IsVisible="{Binding Hit}"
-                                                Stroke="{StaticResource Border}"
-                                                StrokeShape="RoundRectangle 999"
-                                                StrokeThickness="1">
-                                                <Grid ColumnDefinitions="Auto,6,Auto" VerticalOptions="Center">
-                                                    <Path
-                                                        Data="M4,12 L9,17 L20,6"
-                                                        HeightRequest="14"
-                                                        Stroke="#16A34A"
-                                                        StrokeThickness="2"
-                                                        WidthRequest="14" />
+                                                StrokeShape="RoundRectangle 10"
+                                                StrokeThickness="0"
+                                                WidthRequest="70">
+                                                <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                                                    <Label Text="👊" />
                                                     <Label
                                                         Grid.Column="2"
                                                         StyleClass="ai-caption"
                                                         Text="Hit"
                                                         TextColor="#166534" />
-                                                </Grid>
+                                                </HorizontalStackLayout>
                                             </Border>
 
                                             <!--  miss  -->
                                             <Border
                                                 Padding="10,6"
-                                                Background="#FFEAEA"
+                                                Background="Red"
                                                 IsVisible="{Binding Hit, Converter={StaticResource Not}}"
-                                                Stroke="{StaticResource Border}"
-                                                StrokeShape="RoundRectangle 999"
-                                                StrokeThickness="1">
-                                                <Grid ColumnDefinitions="Auto,6,Auto" VerticalOptions="Center">
-                                                    <Path
-                                                        Data="M6,6 L18,18 M18,6 L6,18"
-                                                        HeightRequest="14"
-                                                        Stroke="#DC2626"
-                                                        StrokeThickness="2"
-                                                        WidthRequest="14" />
+                                                StrokeShape="RoundRectangle 10"
+                                                StrokeThickness="0"
+                                                WidthRequest="90">
+                                                <HorizontalStackLayout
+                                                    HorizontalOptions="Center"
+                                                    Spacing="5"
+                                                    VerticalOptions="Center">
+                                                    <Label Text="😔" />
                                                     <Label
-                                                        Grid.Column="2"
                                                         StyleClass="ai-caption"
                                                         Text="Miss"
                                                         TextColor="#991B1B" />
-                                                </Grid>
+                                                </HorizontalStackLayout>
                                             </Border>
                                         </Grid>
-                                    </Grid>
+                                    </VerticalStackLayout>
 
-                                    <!--  right rail (fixed 76)  -->
-                                    <Grid
-                                        Grid.RowSpan="3"
-                                        Grid.Column="2"
-                                        HeightRequest="64"
-                                        RowDefinitions="Auto,*">
-                                        <!--  top-right rating (+)  -->
-                                        <Border
-                                            Grid.Row="0"
-                                            HorizontalOptions="End"
-                                            StyleClass="ai-fab-ghost-flat"
-                                            VerticalOptions="Start">
-                                            <Grid>
-                                                <Path
-                                                    Data="M12,5 V19 M5,12 H19"
-                                                    HeightRequest="18"
-                                                    Stroke="{StaticResource Primary}"
-                                                    StrokeThickness="2"
-                                                    WidthRequest="18" />
-                                            </Grid>
-                                            <Border.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type Pages:History}}, Path=BindingContext.RateSessionAsyncCommand}" CommandParameter="{Binding .}" />
-                                            </Border.GestureRecognizers>
-                                        </Border>
-                                    </Grid>
+
+                                    <!--  top-right rating (+)  -->
+
 
                                 </Grid>
                             </Border>

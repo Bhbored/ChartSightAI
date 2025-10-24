@@ -283,7 +283,7 @@
         <Setter Property="Stroke" Value="{StaticResource Border}" />
         <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="StrokeShape" Value="RoundRectangle 22" />
-        <Setter Property="Padding" Value="18,14" />
+        <Setter Property="Padding" Value="10" />
     </Style>
 
     <!--  ===== Sheet header =====  -->
