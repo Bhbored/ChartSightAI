@@ -11,7 +11,6 @@ using TF = ChartSightAI.MVVM.Models.Enums.TimeFrame;
 using TD = ChartSightAI.MVVM.Models.Enums.TradeDirection;
 using CommunityToolkit.Maui.Extensions;
 using ChartSightAI.Popups;
-using Google.Cloud.AIPlatform.V1;
 
 namespace ChartSightAI.MVVM.ViewModels
 {

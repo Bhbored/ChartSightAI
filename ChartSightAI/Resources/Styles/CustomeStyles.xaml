@@ -427,8 +427,76 @@
         <Setter Property="WidthRequest" Value="18" />
         <Setter Property="Aspect" Value="Uniform" />
     </Style>
+    <!--  tighter, pill-like chip  -->
+    <Style Class="ai-chip" TargetType="Border">
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="10" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource Brush.CardBgGradient}" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="10,6" />
+    </Style>
+    <!--  Ghost / flat secondary button  -->
+    <Style Class="btn-ghost-flat" TargetType="Button">
+        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="Padding" Value="18,12" />
+        <Setter Property="BackgroundColor" Value="#EAF5F5" />
+        <Setter Property="TextColor" Value="#139E9A" />
+        <Setter Property="BorderColor" Value="#CFEDED" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="FontAttributes" Value="Bold" />
+
+        <!--  Pressed / Disabled states  -->
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#D9F0F0" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.5" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!--  (Optional) Primary CTA used by “Share / Export”  -->
+    <Style Class="btn-primary" TargetType="Button">
+        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="Padding" Value="18,12" />
+        <Setter Property="BackgroundColor" Value="#22C7C1" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#18B5B0" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.5" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
 
     <!--#endregion-->
+
+
 </ResourceDictionary>
 
 

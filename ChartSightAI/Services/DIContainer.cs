@@ -1,6 +1,7 @@
 ﻿using ChartSightAI.MVVM.ViewModels;
 using ChartSightAI.MVVM.Views;
 using ChartSightAI.Services.Interfaces;
+using CommunityToolkit.Maui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace ChartSightAI.Services
             services.AddTransient<PresetsVM>();
             services.AddTransient<NewPresetVM>();
             services.AddTransient<HistoryVM>();
+            services.AddTransient<AnalyticsVM>();
             return services;
         }
 
@@ -30,6 +32,8 @@ namespace ChartSightAI.Services
             services.AddTransient<Presets>();
             services.AddTransient<NewPreset>();
             services.AddTransient<History>();
+            services.AddTransient<AnalysisDetails>();
+            services.AddTransient<Analytics>();
             return services;
         }
         public static IServiceCollection RegisterAuthServices(this IServiceCollection services)

@@ -4,9 +4,205 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
+    xmlns:charts="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+    xmlns:gauge="clr-namespace:Syncfusion.Maui.Gauges;assembly=Syncfusion.Maui.Gauges"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
+
     <AbsoluteLayout>
+
+        <ScrollView
+            Padding="16,20,16,112"
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Spacing="14">
+
+                <Label
+                    HorizontalTextAlignment="Center"
+                    StyleClass="h1"
+                    Text="Analytics" />
+
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                    <Border Padding="12" StyleClass="ai-card">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                            <Label
+                                HorizontalTextAlignment="Center"
+                                StyleClass="ai-caption"
+                                Text="Rated" />
+                            <Label
+                                HorizontalTextAlignment="Center"
+                                StyleClass="h2"
+                                Text="{Binding TotalRated}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border
+                        Grid.Column="1"
+                        Padding="12"
+                        StyleClass="ai-card">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                            <Label
+                                HorizontalTextAlignment="Center"
+                                StyleClass="ai-caption"
+                                Text="Hits" />
+                            <Label
+                                HorizontalTextAlignment="Center"
+                                StyleClass="h2"
+                                Text="{Binding HitCount}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border
+                        Grid.Column="2"
+                        Padding="12"
+                        StyleClass="ai-card">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="2">
+                            <Label
+                                HorizontalTextAlignment="Center"
+                                StyleClass="ai-caption"
+                                Text="Misses" />
+                            <Label
+                                HorizontalTextAlignment="Center"
+                                StyleClass="h2"
+                                Text="{Binding MissCount}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border Padding="12" StyleClass="ai-card">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <gauge:SfRadialGauge HeightRequest="140" WidthRequest="140">
+                            <gauge:RadialAxis
+                                EndAngle="-40"
+                                Maximum="100"
+                                Minimum="0"
+                                ShowLabels="False"
+                                ShowTicks="False"
+                                StartAngle="220">
+                                <gauge:RadialAxis.Pointers>
+                                    <gauge:NeedlePointer KnobRadius="8" Value="{Binding HitRate}" />
+                                </gauge:RadialAxis.Pointers>
+                            </gauge:RadialAxis>
+                        </gauge:SfRadialGauge>
+
+                        <VerticalStackLayout
+                            Grid.Column="1"
+                            Spacing="6"
+                            VerticalOptions="Center">
+                            <Label StyleClass="h2" Text="Overall Hit Rate" />
+                            <Label StyleClass="h1" Text="{Binding HitRate, StringFormat='{}{0:0}%'}" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                <Border Background="{StaticResource Brush.ButtonGradient}" StyleClass="ai-chip">
+                                    <Label StyleClass="ai-caption" Text="{Binding LastFrom}" />
+                                </Border>
+                                <Border
+                                    Grid.Column="1"
+                                    Background="{StaticResource Brush.ButtonGradient}"
+                                    StyleClass="ai-chip">
+                                    <Label StyleClass="ai-caption" Text="{Binding LastTo}" />
+                                </Border>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Border Padding="12" StyleClass="ai-card">
+                    <VerticalStackLayout Spacing="6">
+                        <Label StyleClass="h3" Text="Performance Over Time" />
+                        <charts:SfCartesianChart>
+                            <charts:SfCartesianChart.XAxes>
+                                <charts:DateTimeAxis />
+                            </charts:SfCartesianChart.XAxes>
+                            <charts:SfCartesianChart.YAxes>
+                                <charts:NumericalAxis />
+                            </charts:SfCartesianChart.YAxes>
+
+                            <charts:ColumnSeries
+                                ItemsSource="{Binding TimeSeries}"
+                                XBindingPath="Date"
+                                YBindingPath="Hits" />
+                            <charts:ColumnSeries
+                                ItemsSource="{Binding TimeSeries}"
+                                XBindingPath="Date"
+                                YBindingPath="Misses" />
+                            <charts:LineSeries
+                                ItemsSource="{Binding TimeSeries}"
+                                XBindingPath="Date"
+                                YBindingPath="HitRate" />
+                        </charts:SfCartesianChart>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Border Padding="12" StyleClass="ai-card">
+                        <VerticalStackLayout Spacing="6">
+                            <Label StyleClass="h3" Text="By Market" />
+                            <charts:SfCircularChart>
+                                <charts:DoughnutSeries
+                                    ItemsSource="{Binding MarketBreakdown}"
+                                    XBindingPath="Name"
+                                    YBindingPath="Value" />
+                            </charts:SfCircularChart>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border
+                        Grid.Column="1"
+                        Padding="12"
+                        StyleClass="ai-card">
+                        <VerticalStackLayout Spacing="6">
+                            <Label StyleClass="h3" Text="Trade Direction" />
+                            <charts:SfCircularChart>
+                                <charts:DoughnutSeries
+                                    ItemsSource="{Binding DirectionBreakdown}"
+                                    XBindingPath="Name"
+                                    YBindingPath="Value" />
+                            </charts:SfCircularChart>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border Padding="12" StyleClass="ai-card">
+                    <VerticalStackLayout Spacing="6">
+                        <Label StyleClass="h3" Text="Hit/Miss by TimeFrame" />
+                        <charts:SfCartesianChart>
+                            <charts:SfCartesianChart.XAxes>
+                                <charts:CategoryAxis />
+                            </charts:SfCartesianChart.XAxes>
+                            <charts:SfCartesianChart.YAxes>
+                                <charts:NumericalAxis />
+                            </charts:SfCartesianChart.YAxes>
+                            <charts:ColumnSeries
+                                ItemsSource="{Binding TimeframePerf}"
+                                XBindingPath="TimeFrame"
+                                YBindingPath="Hits" />
+                            <charts:ColumnSeries
+                                ItemsSource="{Binding TimeframePerf}"
+                                XBindingPath="TimeFrame"
+                                YBindingPath="Misses" />
+                        </charts:SfCartesianChart>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Padding="12" StyleClass="ai-card">
+                    <VerticalStackLayout Spacing="6">
+                        <Label StyleClass="h3" Text="Top Indicators" />
+                        <charts:SfCartesianChart>
+                            <charts:SfCartesianChart.XAxes>
+                                <charts:CategoryAxis />
+                            </charts:SfCartesianChart.XAxes>
+                            <charts:SfCartesianChart.YAxes>
+                                <charts:NumericalAxis />
+                            </charts:SfCartesianChart.YAxes>
+                            <charts:ColumnSeries
+                                ItemsSource="{Binding TopIndicators}"
+                                XBindingPath="Name"
+                                YBindingPath="Value" />
+                        </charts:SfCartesianChart>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
 
         <Controls:TABBAR
             Margin="0,0,0,20"
@@ -15,5 +211,3 @@
             ZIndex="1000" />
     </AbsoluteLayout>
 </ContentPage>
-
-

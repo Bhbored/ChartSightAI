@@ -10,6 +10,7 @@ namespace ChartSightAI
             Routing.RegisterRoute(nameof(Settings), typeof(Settings));
             Routing.RegisterRoute(nameof(NewPreset), typeof(NewPreset));
             Routing.RegisterRoute(nameof(History), typeof(History));
+            Routing.RegisterRoute(nameof(AnalysisDetails), typeof(AnalysisDetails));
 
         }
     }

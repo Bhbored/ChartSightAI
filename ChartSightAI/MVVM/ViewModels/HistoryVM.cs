@@ -1,4 +1,5 @@
 ﻿using ChartSightAI.MVVM.Models;
+using ChartSightAI.MVVM.Views;
 using ChartSightAI.Popups;
 using ChartSightAI.Utility;
 using CommunityToolkit.Maui.Extensions;
@@ -30,6 +31,12 @@ namespace ChartSightAI.MVVM.ViewModels
         public ICommand RateSessionAsyncCommand => new Command<AnalysisSession>(async (session) => await RateSessionAsync(session));
         public ICommand DeleteSessionAsyncCommand => new Command<AnalysisSession>(async (session) => await DeleteSessionAsync(session));
         public ICommand ShareAnalysisAsyncCommand => new Command<AnalysisSession>(async (session) => await ShareAnalysisAsync(session));
+        public ICommand OpenDetailsCommand => new Command<AnalysisSession>(async (selectedSession) =>
+        {
+            await Shell.Current.GoToAsync(nameof(AnalysisDetails),
+        new Dictionary<string, object> { { "Session", selectedSession } });
+
+        });
 
         #endregion
 
@@ -114,7 +121,7 @@ namespace ChartSightAI.MVVM.ViewModels
                     Text = sb.ToString()
                 });
         }
-        public  Task InitializeAsync()
+        public Task InitializeAsync()
         {
             Sessions.Clear();
             var sessions = AnalysisSessionStore.Items; //change here

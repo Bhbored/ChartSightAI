@@ -63,16 +63,18 @@
 		<PackageReference Include="Bogus" Version="35.6.4" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Google.Cloud.AIPlatform.V1" Version="3.50.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.10" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="Supabase" Version="1.1.1" />
 		<PackageReference Include="Supabase.Postgrest" Version="4.1.0" />
-		<PackageReference Include="Syncfusion.Licensing" Version="31.2.2" />
-		<PackageReference Include="Syncfusion.Maui.Core" Version="31.2.2" />
-		<PackageReference Include="Syncfusion.Maui.Inputs" Version="31.2.2" />
-		<PackageReference Include="Syncfusion.Maui.Picker" Version="31.2.2" />
+		<PackageReference Include="Syncfusion.Licensing" Version="31.2.3" />
+		<PackageReference Include="Syncfusion.Maui.Charts" Version="31.2.3" />
+		<PackageReference Include="Syncfusion.Maui.Core" Version="31.2.3" />
+		<PackageReference Include="Syncfusion.Maui.Expander" Version="31.2.3" />
+		<PackageReference Include="Syncfusion.Maui.Gauges" Version="31.2.3" />
+		<PackageReference Include="Syncfusion.Maui.Inputs" Version="31.2.3" />
+		<PackageReference Include="Syncfusion.Maui.Picker" Version="31.2.3" />
 		<PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.7" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
 	</ItemGroup>
@@ -83,6 +85,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Controls\TABBAR.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="MVVM\Views\AnalysisDetails.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="MVVM\Views\Analytics.xaml">

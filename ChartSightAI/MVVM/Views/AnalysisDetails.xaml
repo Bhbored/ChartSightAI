@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ChartSightAI.MVVM.Views.AnalysisDetails"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:conv="clr-namespace:ChartSightAI.Converters"
+    xmlns:sfe="clr-namespace:Syncfusion.Maui.Expander;assembly=Syncfusion.Maui.Expander"
+    Background="{StaticResource Brush.BackgroundGradient}"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <conv:TradeIdeaToTextConverter x:Key="TradeIdeaToText" />
+        <conv:SupportResistanceToTextConverter x:Key="SRToText" />
+    </ContentPage.Resources>
+
+    <!--  bind to the page (code-behind exposes props/commands)  -->
+    <ContentPage.BindingContext>
+        <x:Reference Name="Root" />
+    </ContentPage.BindingContext>
+
+    <Grid x:Name="Root" RowDefinitions="Auto,*,Auto">
+
+        <!--  ============== HEADER (clean + centered) ==============  -->
+        <Grid Padding="20,44,20,16" RowDefinitions="Auto,Auto,Auto">
+            <!--  Title only (no back button)  -->
+            <Label
+                HorizontalTextAlignment="Center"
+                StyleClass="h1"
+                Text="Prediction Details" />
+
+            <!--  Preview image card  -->
+            <Border
+                Grid.Row="1"
+                Margin="0,16,0,0"
+                Padding="0"
+                StyleClass="ai-card">
+                <Image
+                    Aspect="AspectFill"
+                    HeightRequest="180"
+                    IsAnimationPlaying="True"
+                    Source="{Binding HeroImage}" />
+
+            </Border>
+
+            <!--  Meta chips row  -->
+            <Grid
+                Grid.Row="2"
+                Margin="0,12,0,0"
+                ColumnDefinitions="*,*,*"
+                ColumnSpacing="8">
+                <Border StyleClass="ai-chip">
+                    <Label StyleClass="ai-caption" Text="{Binding Session.MarketType}" />
+                </Border>
+                <Border Grid.Column="1" StyleClass="ai-chip">
+                    <Label StyleClass="ai-caption" Text="{Binding Session.TimeFrame}" />
+                </Border>
+                <Border Grid.Column="2" StyleClass="ai-chip">
+                    <Label StyleClass="ai-caption" Text="{Binding Session.CreatedAt, StringFormat='{}{0:yyyy-MM-dd}'}" />
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!--  ================= BODY =================  -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,12" Spacing="12">
+
+                <!--  Summary  -->
+                <Border StyleClass="ai-card">
+                    <sfe:SfExpander IsExpanded="True">
+                        <sfe:SfExpander.Header>
+                            <Grid
+                                Padding="12"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12">
+                                <Label
+                                    FontSize="20"
+                                    Text="💡"
+                                    VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="1"
+                                    StyleClass="h3"
+                                    Text="Summary"
+                                    VerticalTextAlignment="Center" />
+                                <Border
+                                    Grid.Column="2"
+                                    IsVisible="{Binding HasConfidence}"
+                                    StyleClass="ai-chip">
+                                    <Label StyleClass="ai-caption" Text="{Binding ConfidenceText}" />
+                                </Border>
+                            </Grid>
+                        </sfe:SfExpander.Header>
+                        <sfe:SfExpander.Content>
+                            <Grid Padding="12,0,12,12">
+                                <Label
+                                    LineBreakMode="WordWrap"
+                                    StyleClass="ai-body"
+                                    Text="{Binding Session.Result.Summary}" />
+                            </Grid>
+                        </sfe:SfExpander.Content>
+                    </sfe:SfExpander>
+                </Border>
+
+                <!--  Trend Reanalysis  -->
+                <Border StyleClass="ai-card">
+                    <sfe:SfExpander>
+                        <sfe:SfExpander.Header>
+                            <Grid
+                                Padding="12"
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="12">
+                                <Label
+                                    FontSize="20"
+                                    Text="📈"
+                                    VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="1"
+                                    StyleClass="h3"
+                                    Text="Trend Reanalysis"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+                        </sfe:SfExpander.Header>
+                        <sfe:SfExpander.Content>
+                            <Grid Padding="12,0,12,12">
+                                <Label
+                                    LineBreakMode="WordWrap"
+                                    StyleClass="ai-body"
+                                    Text="{Binding Session.Result.TrendAnalysis}" />
+                            </Grid>
+                        </sfe:SfExpander.Content>
+                    </sfe:SfExpander>
+                </Border>
+
+                <!--  Support / Resistance  -->
+                <Border StyleClass="ai-card">
+                    <sfe:SfExpander>
+                        <sfe:SfExpander.Header>
+                            <Grid
+                                Padding="12"
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="12">
+                                <Label
+                                    FontSize="20"
+                                    Text="🧱"
+                                    VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="1"
+                                    StyleClass="h3"
+                                    Text="Support / Resistance"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+                        </sfe:SfExpander.Header>
+                        <sfe:SfExpander.Content>
+                            <VerticalStackLayout Padding="12,0,12,12" Spacing="8">
+                                <BindableLayout.ItemsSource>
+                                    <Binding Path="Session.Result.SupportResistance" />
+                                </BindableLayout.ItemsSource>
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Margin="0,6,0,0"
+                                            Padding="12"
+                                            BackgroundColor="#F7FAFB"
+                                            StrokeShape="RoundRectangle 16"
+                                            StrokeThickness="0">
+                                            <Label StyleClass="ai-body" Text="{Binding ., Converter={StaticResource SRToText}}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </sfe:SfExpander.Content>
+                    </sfe:SfExpander>
+                </Border>
+
+                <!--  Trade Idea (fixed binding)  -->
+                <Border StyleClass="ai-card">
+                    <sfe:SfExpander>
+                        <sfe:SfExpander.Header>
+                            <Grid
+                                Padding="12"
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="12">
+                                <Label
+                                    FontSize="20"
+                                    Text="💼"
+                                    VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="1"
+                                    StyleClass="h3"
+                                    Text="Trade Idea"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+                        </sfe:SfExpander.Header>
+                        <sfe:SfExpander.Content>
+                            <Grid Padding="12,0,12,12">
+                                <Label
+                                    LineBreakMode="WordWrap"
+                                    StyleClass="ai-body"
+                                    Text="{Binding Session.Result.TradeIdea, Converter={StaticResource TradeIdeaToText}}" />
+                            </Grid>
+                        </sfe:SfExpander.Content>
+                    </sfe:SfExpander>
+                </Border>
+
+                <!--  Explainability  -->
+                <Border StyleClass="ai-card">
+                    <sfe:SfExpander>
+                        <sfe:SfExpander.Header>
+                            <Grid
+                                Padding="12"
+                                ColumnDefinitions="Auto,*"
+                                ColumnSpacing="12">
+                                <Label
+                                    FontSize="20"
+                                    Text="🧠"
+                                    VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="1"
+                                    StyleClass="h3"
+                                    Text="Explainability"
+                                    VerticalTextAlignment="Center" />
+                            </Grid>
+                        </sfe:SfExpander.Header>
+                        <sfe:SfExpander.Content>
+                            <Grid Padding="12,0,12,12">
+                                <Label
+                                    LineBreakMode="WordWrap"
+                                    StyleClass="ai-body"
+                                    Text="{Binding Session.Result.Explainability}" />
+                            </Grid>
+                        </sfe:SfExpander.Content>
+                    </sfe:SfExpander>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+        <!--  ================= BOTTOM BAR =================  -->
+        <Grid Grid.Row="2" Padding="16,8">
+            <Border
+                Padding="12"
+                StrokeThickness="0"
+                StyleClass="ai-card">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <!--  Close instead of View Full Chart  -->
+                    <Button
+                        Clicked="Button_Clicked"
+                        StyleClass="btn-ghost-flat"
+                        Text="Close" />
+                    <Button
+                        Grid.Column="1"
+                        Clicked="Button_Clicked_1"
+                        StyleClass="btn-primary"
+                        Text="Share / Export" />
+                </Grid>
+            </Border>
+        </Grid>
+
+    </Grid>
+</ContentPage>
