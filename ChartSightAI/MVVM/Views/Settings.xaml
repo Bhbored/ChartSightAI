@@ -3,7 +3,9 @@
     x:Class="ChartSightAI.MVVM.Views.Settings"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:VM="clr-namespace:ChartSightAI.MVVM.ViewModels"
     xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
+    x:DataType="VM:SettingsVM"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
 
@@ -142,7 +144,7 @@
                                 VerticalOptions="Center">
                                 <Label
                                     StyleClass="h4"
-                                    Text="Jane Doe"
+                                    Text="{Binding Name}"
                                     TextColor="{StaticResource TextDark}" />
                                 <Label
                                     StyleClass="caption"
@@ -159,15 +161,20 @@
                                 StrokeThickness="0"
                                 VerticalOptions="Center">
                                 <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                                    <Image
+                                    <Label
+                                        Margin="0,0,0,5"
                                         HeightRequest="14"
-                                        Source="edit.png"
+                                        Text="✏️"
+                                        VerticalOptions="Center"
                                         WidthRequest="14" />
                                     <Label
                                         StyleClass="caption"
                                         Text="Edit"
                                         TextColor="{StaticResource TextDark}" />
                                 </HorizontalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding EditUserNameCommand}" />
+                                </Border.GestureRecognizers>
                             </Border>
                         </Grid>
                     </Border>
@@ -196,6 +203,7 @@
                                     <Label
                                         HorizontalTextAlignment="Center"
                                         Text="🌙"
+                                        TextColor="Cyan"
                                         VerticalTextAlignment="Center" />
                                 </Border>
                                 <Label
@@ -233,7 +241,7 @@
                                 </Border>
                                 <Label
                                     Grid.Column="1"
-                                    Text="Haptics"
+                                    Text="Animations"
                                     TextColor="{StaticResource TextDark}"
                                     VerticalOptions="Center" />
                                 <Switch
@@ -266,9 +274,11 @@
                                     StyleClass="na-pill"
                                     VerticalOptions="Center"
                                     WidthRequest="36">
-                                    <Image
+                                    <Label
                                         HeightRequest="18"
-                                        Source="delete.png"
+                                        HorizontalOptions="Center"
+                                        Text="🗑️"
+                                        TextColor="Cyan"
                                         WidthRequest="18" />
                                 </Border>
                                 <Label
@@ -279,7 +289,7 @@
                                 <Image
                                     Grid.Column="2"
                                     HeightRequest="14"
-                                    Source="arrow_right.png"
+                                    Source="right_arrow.png"
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
                             </Grid>
@@ -313,7 +323,7 @@
                                 <Image
                                     Grid.Column="2"
                                     HeightRequest="14"
-                                    Source="arrow_right.png"
+                                    Source="right_arrow.png"
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
                             </Grid>
@@ -347,7 +357,7 @@
                                 <Image
                                     Grid.Column="2"
                                     HeightRequest="14"
-                                    Source="arrow_right.png"
+                                    Source="right_arrow.png"
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
                             </Grid>
@@ -422,7 +432,7 @@
                                 <Image
                                     Grid.Column="2"
                                     HeightRequest="14"
-                                    Source="arrow_right.png"
+                                    Source="right_arrow.png"
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
                             </Grid>
@@ -445,7 +455,7 @@
                                     WidthRequest="36">
                                     <Image
                                         HeightRequest="18"
-                                        Source="star.png"
+                                        Source="rate.png"
                                         WidthRequest="18" />
                                 </Border>
                                 <Label
@@ -456,7 +466,7 @@
                                 <Image
                                     Grid.Column="2"
                                     HeightRequest="14"
-                                    Source="arrow_right.png"
+                                    Source="right_arrow.png"
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
                             </Grid>
