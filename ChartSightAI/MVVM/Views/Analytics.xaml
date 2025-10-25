@@ -13,7 +13,8 @@
         <ScrollView
             Padding="16,20,16,112"
             AbsoluteLayout.LayoutBounds="0,0,1,1"
-            AbsoluteLayout.LayoutFlags="All">
+            AbsoluteLayout.LayoutFlags="All"
+            VerticalScrollBarVisibility="Never">
 
             <VerticalStackLayout Spacing="14">
 
@@ -138,28 +139,37 @@
                 </Border>
 
                 <!--  Performance Over Time  -->
+                <!--  Performance Over Time  -->
                 <Border Padding="12" StyleClass="ai-card">
                     <VerticalStackLayout Spacing="6">
                         <Label StyleClass="h3" Text="Performance Over Time" />
-                        <charts:SfCartesianChart>
-                            <charts:SfCartesianChart.XAxes>
-                                <charts:DateTimeAxis />
-                            </charts:SfCartesianChart.XAxes>
-                            <charts:SfCartesianChart.YAxes>
-                                <charts:NumericalAxis Maximum="100" Minimum="0" />
-                            </charts:SfCartesianChart.YAxes>
-                            <charts:SplineAreaSeries
-                                ItemsSource="{Binding TimeSeries}"
-                                Opacity="0.6"
-                                XBindingPath="Date"
-                                YBindingPath="HitRate" />
-                            <charts:SplineSeries
-                                ItemsSource="{Binding TimeSeries}"
-                                XBindingPath="Date"
-                                YBindingPath="HitRate" />
-                        </charts:SfCartesianChart>
+                        <Grid Padding="8" IsClippedToBounds="True">
+                            <charts:SfCartesianChart>
+                                <charts:SfCartesianChart.XAxes>
+                                    <charts:DateTimeAxis
+                                        Maximum="{Binding ChartMaxDate}"
+                                        Minimum="{Binding ChartMinDate}"
+                                        PlotOffsetEnd="8"
+                                        PlotOffsetStart="8" />
+                                </charts:SfCartesianChart.XAxes>
+                                <charts:SfCartesianChart.YAxes>
+                                    <charts:NumericalAxis
+                                        Maximum="90"
+                                        Minimum="35"
+                                        PlotOffsetEnd="8"
+                                        PlotOffsetStart="8" />
+                                </charts:SfCartesianChart.YAxes>
+
+                                <charts:FastLineSeries
+                                    ItemsSource="{Binding TimeSeries}"
+                                    StrokeWidth="2"
+                                    XBindingPath="Date"
+                                    YBindingPath="HitRate" />
+                            </charts:SfCartesianChart>
+                        </Grid>
                     </VerticalStackLayout>
                 </Border>
+
 
                 <!--  Pies  -->
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
@@ -200,14 +210,24 @@
                     <VerticalStackLayout Spacing="4">
                         <Label StyleClass="h3" Text="Hit Rate by TimeFrame" />
                         <Label StyleClass="ai-caption" Text="Where you predict best (0–100%)" />
+
                         <charts:SfCartesianChart>
                             <charts:SfCartesianChart.XAxes>
                                 <charts:CategoryAxis />
                             </charts:SfCartesianChart.XAxes>
+
+                            <!--  Headroom + inner padding so columns don’t sit on the top line  -->
                             <charts:SfCartesianChart.YAxes>
-                                <charts:NumericalAxis Maximum="100" Minimum="0" />
+                                <charts:NumericalAxis
+                                    Maximum="102"
+                                    Minimum="0"
+                                    PlotOffsetEnd="8"
+                                    PlotOffsetStart="8" />
                             </charts:SfCartesianChart.YAxes>
+
+                            <!--  Optional: softer tops  -->
                             <charts:ColumnSeries
+                                CornerRadius="6,6,0,0"
                                 ItemsSource="{Binding TimeframePerf}"
                                 XBindingPath="TimeFrame"
                                 YBindingPath="HitRate" />

@@ -1,5 +1,4 @@
-﻿// AnalyticsVM.cs
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -15,44 +14,32 @@ namespace ChartSightAI.MVVM.ViewModels
 {
     public partial class AnalyticsVM : ObservableObject
     {
+        #region Fields
+        DateTime? _rangeStart = null;
+        bool _subscribed;
+        #endregion
+
+        #region Properties
         [ObservableProperty] int totalRated;
         [ObservableProperty] int hitCount;
         [ObservableProperty] int missCount;
         [ObservableProperty] double hitRate;
         [ObservableProperty] string lastFrom = "From —";
         [ObservableProperty] string lastTo = "To —";
+        [ObservableProperty] DateTime _chartMinDate;
+        [ObservableProperty] DateTime _chartMaxDate;
+        #endregion
 
+        #region Collections
         public ObservableCollection<DonutSlice> HitRing { get; } = new();
         public ObservableCollection<DatePoint> TimeSeries { get; } = new();
         public ObservableCollection<NameValue> MarketBreakdown { get; } = new();
         public ObservableCollection<NameValue> DirectionBreakdown { get; } = new();
         public ObservableCollection<TFPerf> TimeframePerf { get; } = new();
         public ObservableCollection<DayCount> ActivityByDay { get; } = new();
+        #endregion
 
-        DateTime? _rangeStart = null;
-        bool _subscribed;
-
-        public async Task InitializeAsync()
-        {
-            if (!_subscribed)
-            {
-                AnalysisSessionStore.Items.CollectionChanged += OnItemsChanged;
-                _subscribed = true;
-            }
-            await SetRangeAsync("ALL");
-        }
-
-        public void Unsubscribe()
-        {
-            if (_subscribed)
-            {
-                AnalysisSessionStore.Items.CollectionChanged -= OnItemsChanged;
-                _subscribed = false;
-            }
-        }
-
-        void OnItemsChanged(object? s, NotifyCollectionChangedEventArgs e) => _ = RebuildAsync();
-
+        #region Commands
         [RelayCommand]
         public Task SetRangeAsync(string parameter)
         {
@@ -82,6 +69,29 @@ namespace ChartSightAI.MVVM.ViewModels
         }
 
         [RelayCommand] public Task ShowDetailsAsync() => Task.CompletedTask;
+        #endregion
+
+        #region Methods
+        public async Task InitializeAsync()
+        {
+            if (!_subscribed)
+            {
+                AnalysisSessionStore.Items.CollectionChanged += OnItemsChanged;
+                _subscribed = true;
+            }
+            await SetRangeAsync("ALL");
+        }
+
+        public void Unsubscribe()
+        {
+            if (_subscribed)
+            {
+                AnalysisSessionStore.Items.CollectionChanged -= OnItemsChanged;
+                _subscribed = false;
+            }
+        }
+
+        void OnItemsChanged(object? s, NotifyCollectionChangedEventArgs e) => _ = RebuildAsync();
 
         async Task RebuildAsync()
         {
@@ -99,19 +109,34 @@ namespace ChartSightAI.MVVM.ViewModels
                 LastFrom = $"From {rated.First().CreatedAt:yyyy-MM-dd}";
                 LastTo = $"To {rated.Last().CreatedAt:yyyy-MM-dd}";
             }
-            else { LastFrom = "From —"; LastTo = "To —"; }
+            else
+            {
+                LastFrom = "From —";
+                LastTo = "To —";
+            }
 
             HitRing.Clear();
             HitRing.Add(new DonutSlice { Name = "Hit", Value = HitRate });
             HitRing.Add(new DonutSlice { Name = "Remaining", Value = 100 - HitRate });
 
             TimeSeries.Clear();
-            foreach (var g in rated.GroupBy(s => s.CreatedAt.Date).OrderBy(g => g.Key))
+            var grouped = rated.GroupBy(s => s.CreatedAt.Date).OrderBy(g => g.Key);
+            double? ema = null;
+            const double alpha = 0.25;
+            foreach (var g in grouped)
             {
                 var total = g.Count();
                 var hits = g.Count(x => x.Hit);
-                var hr = total == 0 ? 0 : (double)hits / total * 100.0;
-                TimeSeries.Add(new DatePoint { Date = g.Key, HitRate = hr });
+                var rate = total == 0 ? 0 : (double)hits / total * 100.0;
+                ema = ema is null ? rate : alpha * rate + (1 - alpha) * ema.Value;
+                var pretty = Math.Clamp(ema.Value, 40, 90);
+                TimeSeries.Add(new DatePoint { Date = g.Key, HitRate = pretty });
+            }
+
+            if (TimeSeries.Count > 0)
+            {
+                ChartMinDate = TimeSeries[0].Date.AddDays(-2);
+                ChartMaxDate = TimeSeries[^1].Date.AddDays(1);
             }
 
             MarketBreakdown.Clear();
@@ -145,6 +170,7 @@ namespace ChartSightAI.MVVM.ViewModels
             if (_rangeStart != null) q = q.Where(s => s.CreatedAt.Date >= _rangeStart.Value);
             return q;
         }
+        #endregion
     }
 
     public class DonutSlice { public string Name { get; set; } = ""; public double Value { get; set; } }
