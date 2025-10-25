@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:VM="clr-namespace:ChartSightAI.MVVM.ViewModels"
+    xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
     xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
     x:DataType="VM:SettingsVM"
     Background="{StaticResource Brush.BackgroundGradient}"
@@ -292,6 +293,9 @@
                                     Source="right_arrow.png"
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenBottomsheetCommand}" />
+                                </Grid.GestureRecognizers>
                             </Grid>
 
                             <BoxView
@@ -481,6 +485,207 @@
                         Text="Logout" />
                 </VerticalStackLayout>
             </ScrollView>
+            <bottomSheet:SfBottomSheet
+                x:Name="DeleteDataSheet"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                AllowedState="All"
+                Background="#F8FFFF"
+                CollapsedHeight="160"
+                ContentPadding="0"
+                CornerRadius="28"
+                FullExpandedRatio="0.64"
+                GrabberAreaHeight="18"
+                GrabberBackground="{StaticResource Primary}"
+                GrabberWidth="56"
+                HalfExpandedRatio="0.64"
+                IsModal="True"
+                IsOpen="{Binding IsDeleteSheetOpen}"
+                ShowGrabber="True"
+                State="HalfExpanded"
+                ZIndex="4000">
+
+                <bottomSheet:SfBottomSheet.BottomSheetContent>
+
+                    <!--  header + body; action bar is overlaid last (no background pill)  -->
+                    <Grid Padding="16,10,16,16" RowDefinitions="Auto,*">
+
+                        <!--  header  -->
+                        <Border StyleClass="ai-sheet-header">
+                            <Grid
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                RowDefinitions="Auto,Auto">
+                                <!--  danger icon  -->
+                                <Border
+                                    Padding="10"
+                                    BackgroundColor="#1AFF3B30"
+                                    HeightRequest="50"
+                                    Stroke="#FF3B30"
+                                    StrokeShape="RoundRectangle 12"
+                                    WidthRequest="50">
+                                    <Grid>
+                                        <Label
+                                            HorizontalOptions="Center"
+                                            Text="⚠️"
+                                            TextColor="Red"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+
+                                <Label
+                                    Grid.Column="1"
+                                    StyleClass="h2"
+                                    Text="Delete local data"
+                                    TextColor="{StaticResource TextDark}" />
+                                <Button
+                                    Grid.Column="2"
+                                    Command="{Binding CloseDeleteSheetCommand}"
+                                    HeightRequest="50"
+                                    StyleClass="ai-cta-secondary"
+                                    Text="Close"
+                                    WidthRequest="80" />
+
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="3"
+                                    Margin="0,6,0,0"
+                                    StyleClass="ai-caption"
+                                    Text="Remove analytics, presets, and cached AI results from this device. Your account stays active."
+                                    TextColor="{StaticResource TextLight}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  body  -->
+                        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+
+                                <!--  callout  -->
+                                <Border Padding="12" StyleClass="ai-card">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Border
+                                            Padding="6"
+                                            BackgroundColor="#1AFF3B30"
+                                            Stroke="#FF3B30"
+                                            StrokeShape="RoundRectangle 10">
+                                            <Path Data="M12,2 L22,20 H2 Z" Fill="#FF3B30" />
+                                        </Border>
+                                        <Label
+                                            Grid.Column="1"
+                                            LineBreakMode="WordWrap"
+                                            StyleClass="ai-body"
+                                            Text="This action is permanent. You can’t undo it." />
+                                    </Grid>
+                                </Border>
+
+                                <!--  will be deleted  -->
+                                <Border Padding="12" StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <Label StyleClass="h4 ai-section-title" Text="Will be deleted" />
+                                        <VerticalStackLayout Grid.Row="1" Spacing="10">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="All rated sessions - history" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Saved presets (local)" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Cached AI analysis results" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Offline files generated by the app" />
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+
+                                <!--  will not be deleted  -->
+                                <Border Padding="12" StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <Label StyleClass="h4 ai-section-title" Text="Will not be deleted" />
+                                        <VerticalStackLayout Grid.Row="1" Spacing="10">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Your account - sign-in" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Cloud data, if any" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Subscriptions - receipts" />
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+
+                            </Grid>
+                        </ScrollView>
+
+                        <!--  floating action bar (separate buttons, no shared background)  -->
+                        <Grid
+                            Grid.RowSpan="2"
+                            Margin="16,0,16,28"
+                            ColumnDefinitions="*,12,*"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="End"
+                            ZIndex="9999">
+
+                            <Button
+                                Grid.Column="0"
+                                Command="{Binding CloseDeleteSheetCommand}"
+                                HeightRequest="48"
+                                StyleClass="ai-cta-secondary"
+                                Text="Cancel" />
+
+                            <Button
+                                Grid.Column="2"
+                                BackgroundColor="#FF3B30"
+                                Command="{Binding DeleteAllDataCommand}"
+                                CornerRadius="16"
+                                HeightRequest="48"
+                                Text="Delete data"
+                                TextColor="White" />
+                        </Grid>
+
+                    </Grid>
+                </bottomSheet:SfBottomSheet.BottomSheetContent>
+
+
+            </bottomSheet:SfBottomSheet>
         </Grid>
     </AbsoluteLayout>
 </ContentPage>

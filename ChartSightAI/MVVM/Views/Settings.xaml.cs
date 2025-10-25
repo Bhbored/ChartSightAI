@@ -15,4 +15,6 @@ public partial class Settings : ContentPage
 		if(BindingContext is SettingsVM vM)
             vM.InitializeAsync();
     }
+
+    
 }
