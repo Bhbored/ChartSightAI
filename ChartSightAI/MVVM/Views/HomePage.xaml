@@ -49,26 +49,41 @@
                 <HorizontalStackLayout
                     x:Name="Settings"
                     Margin="60,0,0,0"
-                    HorizontalOptions="End">
-                    <Image
-                        Aspect="AspectFit"
-                        HeightRequest="20"
-                        Source="history.png"
-                        WidthRequest="20">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding GoToHistoryCommand}" />
-                        </Image.GestureRecognizers>
-                    </Image>
-                    <Image
-                        Margin="30,0"
-                        Aspect="AspectFit"
-                        HeightRequest="20"
-                        Source="settings.png"
-                        WidthRequest="20">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding GoToSettingsCommand}" />
-                        </Image.GestureRecognizers>
-                    </Image>
+                    HorizontalOptions="End"
+                    Spacing="10">
+                    <Border
+                        Background="{StaticResource Brush.ButtonGradient}"
+                        HeightRequest="40"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 999"
+                        StrokeThickness="0"
+                        WidthRequest="40">
+                        <Image
+                            HeightRequest="20"
+                            Source="history.png"
+                            WidthRequest="20">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToHistoryCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </Border>
+                    <Border
+                        Background="{StaticResource Brush.ButtonGradient}"
+                        HeightRequest="40"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 999"
+                        StrokeThickness="0"
+                        WidthRequest="40">
+                        <Image
+                            HeightRequest="20"
+                            Source="settings.png"
+                            WidthRequest="20">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToSettingsCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </Border>
+
                 </HorizontalStackLayout>
             </HorizontalStackLayout>
 

@@ -36,6 +36,7 @@ namespace ChartSightAI.Services
             services.AddTransient<AnalysisDetails>();
             services.AddTransient<Analytics>();
             services.AddTransient<Settings>();
+            services.AddTransient<Profile>();
             return services;
         }
         public static IServiceCollection RegisterAuthServices(this IServiceCollection services)

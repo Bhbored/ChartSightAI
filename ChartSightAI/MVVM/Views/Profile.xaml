@@ -4,13 +4,684 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
+    xmlns:VM="clr-namespace:ChartSightAI.MVVM.ViewModels"
+    xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
+    x:DataType="VM:SettingsVM"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
     <AbsoluteLayout>
         <Grid
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
-            RowDefinitions="Auto,*" />
+            RowDefinitions="Auto,*">
+            <!--  Top wave background (behind header + content)  -->
+            <Grid Grid.Row="0" HeightRequest="240">
+                <!--  Wave 1  -->
+                <shapes:Path
+                    Aspect="Fill"
+                    Data="M0,0 L0,160 Q180,210 360,160 T720,160 L720,0 Z"
+                    Fill="{StaticResource Brush.HeaderGradient}"
+                    HorizontalOptions="Fill"
+                    InputTransparent="True"
+                    Opacity="1"
+                    VerticalOptions="Fill" />
+
+                <!--  Subtle overlay wave for depth  -->
+                <shapes:Path
+                    Aspect="Fill"
+                    Data="M0,0 L0,175 Q180,225 360,175 T720,175 L720,0 Z"
+                    Fill="White"
+                    HorizontalOptions="Fill"
+                    InputTransparent="True"
+                    Opacity="0.12"
+                    VerticalOptions="Fill" />
+            </Grid>
+
+            <!--  Header card on top of waves  -->
+            <Border
+                Grid.Row="0"
+                Margin="24,28,24,12"
+                Padding="0"
+                Background="Transparent"
+                StrokeThickness="0"
+                ZIndex="10">
+                <Grid
+                    Padding="16,12"
+                    ColumnDefinitions="Auto,*,Auto"
+                    RowDefinitions="Auto,Auto">
+
+                    <!--  Brand pill  -->
+                    <Border
+                        Grid.RowSpan="2"
+                        Margin="0,0,12,0"
+                        Padding="10"
+                        Background="White"
+                        Opacity="0.95"
+                        StrokeShape="RoundRectangle 999"
+                        StrokeThickness="0">
+                        <!--  swap with your logo if available  -->
+                        <Label
+                            FontSize="20"
+                            HorizontalTextAlignment="Center"
+                            Text="⚙️"
+                            VerticalTextAlignment="Center" />
+                    </Border>
+
+                    <!--  Title  -->
+                    <Label
+                        Grid.Column="1"
+                        StyleClass="h2"
+                        Text="Profile"
+                        TextColor="{StaticResource TextDark}" />
+
+                    <!--  Version chip  -->
+                    <Border
+                        Grid.Column="2"
+                        Padding="12,6"
+                        Background="White"
+                        Opacity="0.92"
+                        StrokeShape="RoundRectangle 999"
+                        StrokeThickness="0">
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Label
+                                StyleClass="caption"
+                                Text="Version"
+                                TextColor="{StaticResource TextLight}" />
+                            <Label
+                                FontAttributes="Bold"
+                                Text="v1.0.0"
+                                TextColor="{StaticResource TextDark}" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!--  Subtitle  -->
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,4,0,0"
+                        StyleClass="caption"
+                        Text="Personalize your experience"
+                        TextColor="{StaticResource TextLight}" />
+                </Grid>
+            </Border>
+
+            <!--  Content  -->
+            <ScrollView
+                Grid.Row="1"
+                Margin="20,0,20,90"
+                VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout MaximumWidthRequest="720" Spacing="18">
+
+                    <!--  Profile  -->
+                    <Border
+                        Padding="14"
+                        Background="{StaticResource Brush.CardBgGradient}"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Border
+                                Background="{StaticResource Secondary}"
+                                HeightRequest="56"
+                                StrokeShape="Ellipse"
+                                StrokeThickness="0"
+                                WidthRequest="56">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="20"
+                                    HorizontalTextAlignment="Center"
+                                    Text="JD"
+                                    TextColor="{StaticResource Primary}"
+                                    VerticalTextAlignment="Center" />
+                            </Border>
+
+                            <VerticalStackLayout
+                                Grid.Column="1"
+                                Spacing="2"
+                                VerticalOptions="Center">
+                                <Label
+                                    StyleClass="h4"
+                                    Text="{Binding Name}"
+                                    TextColor="{StaticResource TextDark}" />
+                                <Label
+                                    StyleClass="caption"
+                                    Text="janedoe@email.com"
+                                    TextColor="{StaticResource TextLight}" />
+                            </VerticalStackLayout>
+
+                            <Border
+                                Grid.Column="2"
+                                Padding="12,6"
+                                Background="White"
+                                Opacity="0.95"
+                                StrokeShape="RoundRectangle 999"
+                                StrokeThickness="0"
+                                VerticalOptions="Center">
+                                <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                                    <Label
+                                        Margin="0,0,0,5"
+                                        HeightRequest="14"
+                                        Text="✏️"
+                                        VerticalOptions="Center"
+                                        WidthRequest="14" />
+                                    <Label
+                                        StyleClass="caption"
+                                        Text="Edit"
+                                        TextColor="{StaticResource TextDark}" />
+                                </HorizontalStackLayout>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding EditUserNameCommand}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!--  Appearance  -->
+                    <Label StyleClass="h4" Text="Appearance" />
+                    <Border
+                        Padding="10"
+                        Background="{StaticResource CardBg}"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0">
+                        <VerticalStackLayout Spacing="0">
+
+                            <!--  Dark Mode  -->
+                            <Grid
+                                Padding="6,0"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                HeightRequest="52">
+                                <Border
+                                    HeightRequest="36"
+                                    StyleClass="na-pill"
+                                    VerticalOptions="Center"
+                                    WidthRequest="36">
+                                    <Label
+                                        HorizontalTextAlignment="Center"
+                                        Text="🌙"
+                                        TextColor="Cyan"
+                                        VerticalTextAlignment="Center" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="Dark Mode"
+                                    TextColor="{StaticResource TextDark}"
+                                    VerticalOptions="Center" />
+                                <Switch
+                                    Grid.Column="2"
+                                    IsToggled="True"
+                                    StyleClass="na-switch"
+                                    VerticalOptions="Center" />
+                            </Grid>
+
+                            <BoxView
+                                Margin="54,0,0,0"
+                                HeightRequest="1"
+                                Color="{StaticResource Border}" />
+
+                            <!--  Haptics  -->
+                            <Grid
+                                Padding="6,0"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                HeightRequest="52">
+                                <Border
+                                    HeightRequest="36"
+                                    StyleClass="na-pill"
+                                    VerticalOptions="Center"
+                                    WidthRequest="36">
+                                    <Label
+                                        HorizontalTextAlignment="Center"
+                                        Text="✨"
+                                        VerticalTextAlignment="Center" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="Animations"
+                                    TextColor="{StaticResource TextDark}"
+                                    VerticalOptions="Center" />
+                                <Switch
+                                    Grid.Column="2"
+                                    IsToggled="True"
+                                    StyleClass="na-switch"
+                                    VerticalOptions="Center" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!--  Privacy & Data  -->
+                    <Label StyleClass="h4" Text="Privacy &amp; Data" />
+                    <Border
+                        Padding="10"
+                        Background="{StaticResource CardBg}"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0">
+                        <VerticalStackLayout Spacing="0">
+
+                            <!--  Delete Local Data  -->
+                            <Grid
+                                Padding="6,0"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                HeightRequest="52">
+                                <Border
+                                    HeightRequest="36"
+                                    StyleClass="na-pill"
+                                    VerticalOptions="Center"
+                                    WidthRequest="36">
+                                    <Label
+                                        HeightRequest="18"
+                                        HorizontalOptions="Center"
+                                        Text="🗑️"
+                                        TextColor="Cyan"
+                                        WidthRequest="18" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="Delete Local Data"
+                                    TextColor="{StaticResource TextDark}"
+                                    VerticalOptions="Center" />
+                                <Image
+                                    Grid.Column="2"
+                                    HeightRequest="14"
+                                    Source="right_arrow.png"
+                                    VerticalOptions="Center"
+                                    WidthRequest="14" />
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenBottomsheetCommand}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+
+                            <BoxView
+                                Margin="54,0,0,0"
+                                HeightRequest="1"
+                                Color="{StaticResource Border}" />
+
+                            <!--  Clear Cache  -->
+                            <Grid
+                                Padding="6,0"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                HeightRequest="52">
+                                <Border
+                                    HeightRequest="36"
+                                    StyleClass="na-pill"
+                                    VerticalOptions="Center"
+                                    WidthRequest="36">
+                                    <Label
+                                        HorizontalTextAlignment="Center"
+                                        Text="🧹"
+                                        VerticalTextAlignment="Center" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="Clear Cache"
+                                    TextColor="{StaticResource TextDark}"
+                                    VerticalOptions="Center" />
+                                <Image
+                                    Grid.Column="2"
+                                    HeightRequest="14"
+                                    Source="right_arrow.png"
+                                    VerticalOptions="Center"
+                                    WidthRequest="14" />
+                            </Grid>
+
+                            <BoxView
+                                Margin="54,0,0,0"
+                                HeightRequest="1"
+                                Color="{StaticResource Border}" />
+
+                            <!--  Export Data  -->
+                            <Grid
+                                Padding="6,0"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                HeightRequest="52">
+                                <Border
+                                    HeightRequest="36"
+                                    StyleClass="na-pill"
+                                    VerticalOptions="Center"
+                                    WidthRequest="36">
+                                    <Label
+                                        HorizontalTextAlignment="Center"
+                                        Text="⬇️"
+                                        VerticalTextAlignment="Center" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="Export Data"
+                                    TextColor="{StaticResource TextDark}"
+                                    VerticalOptions="Center" />
+                                <Image
+                                    Grid.Column="2"
+                                    HeightRequest="14"
+                                    Source="right_arrow.png"
+                                    VerticalOptions="Center"
+                                    WidthRequest="14" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!--  Support / Info  -->
+                    <Label StyleClass="h4" Text="Support / Info" />
+                    <Border
+                        Padding="10"
+                        Background="{StaticResource CardBg}"
+                        Shadow="{StaticResource Sh.CardShadow}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0">
+                        <VerticalStackLayout Spacing="0">
+
+                            <!--  About App  -->
+                            <Grid
+                                Padding="6,0"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                HeightRequest="52">
+                                <Border
+                                    HeightRequest="36"
+                                    StyleClass="na-pill"
+                                    VerticalOptions="Center"
+                                    WidthRequest="36">
+                                    <Image
+                                        HeightRequest="18"
+                                        Source="info.png"
+                                        WidthRequest="18" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="About App"
+                                    TextColor="{StaticResource TextDark}"
+                                    VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="2"
+                                    StyleClass="caption"
+                                    Text="v1.0.0"
+                                    TextColor="{StaticResource TextLight}"
+                                    VerticalOptions="Center" />
+                            </Grid>
+
+                            <BoxView
+                                Margin="54,0,0,0"
+                                HeightRequest="1"
+                                Color="{StaticResource Border}" />
+
+                            <!--  Contact / Feedback  -->
+                            <Grid
+                                Padding="6,0"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                HeightRequest="52">
+                                <Border
+                                    HeightRequest="36"
+                                    StyleClass="na-pill"
+                                    VerticalOptions="Center"
+                                    WidthRequest="36">
+                                    <Image
+                                        HeightRequest="18"
+                                        Source="chat.png"
+                                        WidthRequest="18" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="Contact / Feedback"
+                                    TextColor="{StaticResource TextDark}"
+                                    VerticalOptions="Center" />
+                                <Image
+                                    Grid.Column="2"
+                                    HeightRequest="14"
+                                    Source="right_arrow.png"
+                                    VerticalOptions="Center"
+                                    WidthRequest="14" />
+                            </Grid>
+
+                            <BoxView
+                                Margin="54,0,0,0"
+                                HeightRequest="1"
+                                Color="{StaticResource Border}" />
+
+                            <!--  Rate App  -->
+                            <Grid
+                                Padding="6,0"
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                HeightRequest="52">
+                                <Border
+                                    HeightRequest="36"
+                                    StyleClass="na-pill"
+                                    VerticalOptions="Center"
+                                    WidthRequest="36">
+                                    <Image
+                                        HeightRequest="18"
+                                        Source="rate.png"
+                                        WidthRequest="18" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="Rate App"
+                                    TextColor="{StaticResource TextDark}"
+                                    VerticalOptions="Center" />
+                                <Image
+                                    Grid.Column="2"
+                                    HeightRequest="14"
+                                    Source="right_arrow.png"
+                                    VerticalOptions="Center"
+                                    WidthRequest="14" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!--  Logout  -->
+                    <Button
+                        CornerRadius="26"
+                        HeightRequest="52"
+                        StyleClass="na-cta"
+                        Text="Logout" />
+                </VerticalStackLayout>
+            </ScrollView>
+            <bottomSheet:SfBottomSheet
+                x:Name="DeleteDataSheet"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                AllowedState="All"
+                Background="#F8FFFF"
+                CollapsedHeight="160"
+                ContentPadding="0"
+                CornerRadius="28"
+                FullExpandedRatio="0.64"
+                GrabberAreaHeight="18"
+                GrabberBackground="{StaticResource Primary}"
+                GrabberWidth="56"
+                HalfExpandedRatio="0.70"
+                IsModal="True"
+                IsOpen="{Binding IsDeleteSheetOpen}"
+                ShowGrabber="True"
+                State="HalfExpanded"
+                ZIndex="4000">
+
+                <bottomSheet:SfBottomSheet.BottomSheetContent>
+
+                    <!--  header + body; action bar is overlaid last (no background pill)  -->
+                    <Grid Padding="16,10,16,70" RowDefinitions="Auto,*">
+
+                        <!--  header  -->
+                        <Border StyleClass="ai-sheet-header">
+                            <Grid
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="12"
+                                RowDefinitions="Auto,Auto">
+                                <!--  danger icon  -->
+                                <Border
+                                    Padding="10"
+                                    BackgroundColor="#1AFF3B30"
+                                    HeightRequest="50"
+                                    Stroke="#FF3B30"
+                                    StrokeShape="RoundRectangle 12"
+                                    WidthRequest="50">
+                                    <Grid>
+                                        <Label
+                                            HorizontalOptions="Center"
+                                            Text="⚠️"
+                                            TextColor="Red"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+
+                                <Label
+                                    Grid.Column="1"
+                                    StyleClass="h2"
+                                    Text="Delete local data"
+                                    TextColor="{StaticResource TextDark}" />
+                                <Button
+                                    Grid.Column="2"
+                                    Command="{Binding CloseDeleteSheetCommand}"
+                                    HeightRequest="50"
+                                    StyleClass="ai-cta-secondary"
+                                    Text="Close"
+                                    WidthRequest="80" />
+
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="3"
+                                    Margin="0,6,0,0"
+                                    StyleClass="ai-caption"
+                                    Text="Remove analytics, presets, and cached AI results from this device. Your account stays active."
+                                    TextColor="{StaticResource TextLight}" />
+                            </Grid>
+                        </Border>
+
+                        <!--  body  -->
+                        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+
+                                <!--  callout  -->
+                                <Border Padding="12" StyleClass="ai-card">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                        <Border
+                                            Padding="6"
+                                            BackgroundColor="#1AFF3B30"
+                                            Stroke="#FF3B30"
+                                            StrokeShape="RoundRectangle 10">
+                                            <Path Data="M12,2 L22,20 H2 Z" Fill="#FF3B30" />
+                                        </Border>
+                                        <Label
+                                            Grid.Column="1"
+                                            LineBreakMode="WordWrap"
+                                            StyleClass="ai-body"
+                                            Text="This action is permanent. You can’t undo it." />
+                                    </Grid>
+                                </Border>
+
+                                <!--  will be deleted  -->
+                                <Border Padding="12" StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <Label StyleClass="h4 ai-section-title" Text="Will be deleted" />
+                                        <VerticalStackLayout Grid.Row="1" Spacing="10">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="All rated sessions - history" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Saved presets (local)" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Cached AI analysis results" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Offline files generated by the app" />
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+
+                                <!--  will not be deleted  -->
+                                <Border Padding="12" StyleClass="ai-card">
+                                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <Label StyleClass="h4 ai-section-title" Text="Will not be deleted" />
+                                        <VerticalStackLayout Grid.Row="1" Spacing="10">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Your account - sign-in" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Cloud data, if any" />
+                                            </Grid>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                <Ellipse
+                                                    Fill="{StaticResource TextDark}"
+                                                    HeightRequest="6"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="6" />
+                                                <Label Grid.Column="1" Text="Subscriptions - receipts" />
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+
+                            </Grid>
+                        </ScrollView>
+
+                        <!--  floating action bar (separate buttons, no shared background)  -->
+                        <Grid
+                            Grid.RowSpan="2"
+                            Margin="16,0,16,28"
+                            ColumnDefinitions="*,12,*"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="End"
+                            ZIndex="9999">
+
+                            <Button
+                                Grid.Column="0"
+                                Command="{Binding CloseDeleteSheetCommand}"
+                                HeightRequest="48"
+                                StyleClass="ai-cta-secondary"
+                                Text="Cancel" />
+
+                            <Button
+                                Grid.Column="2"
+                                BackgroundColor="#FF3B30"
+                                Command="{Binding DeleteAllDataCommand}"
+                                CornerRadius="16"
+                                HeightRequest="48"
+                                Text="Delete data"
+                                TextColor="White" />
+                        </Grid>
+
+                    </Grid>
+                </bottomSheet:SfBottomSheet.BottomSheetContent>
+            </bottomSheet:SfBottomSheet>
+        </Grid>
         <Controls:TABBAR
             Margin="0,0,0,20"
             AbsoluteLayout.LayoutBounds="0.5,1,1,76"

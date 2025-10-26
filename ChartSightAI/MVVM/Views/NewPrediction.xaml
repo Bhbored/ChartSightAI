@@ -7,6 +7,7 @@
     xmlns:bottomSheet="clr-namespace:Syncfusion.Maui.Toolkit.BottomSheet;assembly=Syncfusion.Maui.Toolkit"
     xmlns:conv="clr-namespace:ChartSightAI.Converters"
     xmlns:models="clr-namespace:ChartSightAI.MVVM.Models"
+    xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
     xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
     x:DataType="vm:NewPredictionVM"
     Background="{StaticResource Brush.BackgroundGradient}"
@@ -26,92 +27,112 @@
             AbsoluteLayout.LayoutFlags="All"
             RowDefinitions="Auto,*"
             RowSpacing="0">
-
-            <!--  Top waves  -->
-            <Grid
-                Grid.Row="0"
-                Margin="0,0,0,20"
-                HeightRequest="200"
-                WidthRequest="450"
-                ZIndex="0">
-                <Rectangle
+            <!--  Top wave background (behind header + content)  -->
+            <Grid Grid.Row="0" HeightRequest="240">
+                <!--  Wave 1  -->
+                <shapes:Path
+                    Aspect="Fill"
+                    Data="M0,0 L0,160 Q180,210 360,160 T720,160 L720,0 Z"
                     Fill="{StaticResource Brush.HeaderGradient}"
                     HorizontalOptions="Fill"
+                    InputTransparent="True"
+                    Opacity="1"
                     VerticalOptions="Fill" />
-                <Path
+
+                <!--  Subtle overlay wave for depth  -->
+                <shapes:Path
                     Aspect="Fill"
-                    Data="M0,170 C160,210 320,130 480,170 C580,195 660,200 720,185 L720,220 L0,220 Z"
+                    Data="M0,0 L0,175 Q180,225 360,175 T720,175 L720,0 Z"
                     Fill="White"
                     HorizontalOptions="Fill"
-                    Opacity="0.38"
-                    VerticalOptions="End" />
+                    InputTransparent="True"
+                    Opacity="0.12"
+                    VerticalOptions="Fill" />
             </Grid>
 
-            <!--  Header content  -->
+
             <Border
                 Grid.Row="0"
-                Margin="24,0,24,8"
+                Margin="24,20,24,12"
                 Padding="0"
-                Background="Transparent"
+                Background="{StaticResource Brush.HeaderGradient}"
+                HeightRequest="120"
+                Shadow="{StaticResource Sh.CardShadow}"
+                StrokeShape="RoundRectangle 28"
                 StrokeThickness="0"
-                ZIndex="10">
+                VerticalOptions="Start">
+
                 <Grid
-                    Padding="16,12"
+                    Padding="16,14"
                     ColumnDefinitions="Auto,*,Auto"
                     ColumnSpacing="12"
                     RowDefinitions="Auto,Auto">
 
-                    <!--  Back/Logo pill  -->
+                    <!--  Brand pill (standard: 56x88)  -->
                     <Border
                         Grid.RowSpan="2"
-                        Margin="0,0,10,0"
-                        Padding="10"
+                        Margin="0,0,12,0"
+                        Padding="12"
                         Background="White"
-                        HeightRequest="100"
+                        HeightRequest="88"
+                        Opacity="0.95"
                         StrokeShape="RoundRectangle 999"
-                        StrokeThickness="0">
+                        StrokeThickness="0"
+                        VerticalOptions="Center"
+                        WidthRequest="56">
                         <Image
-                            HeightRequest="40"
+                            HeightRequest="28"
                             Source="logo.png"
-                            WidthRequest="40">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding CancelCommand}" />
-                            </Image.GestureRecognizers>
-                        </Image>
+                            WidthRequest="28" />
                     </Border>
 
                     <!--  Title  -->
                     <Label
                         Grid.Column="1"
+                        Margin="0,2,0,0"
+                        LineBreakMode="WordWrap"
+                        MaxLines="2"
                         StyleClass="h2"
                         Text="New Analysis Setup"
                         TextColor="{StaticResource TextDark}" />
 
-                    <!--  Small chip  -->
+                    <!--  Step pill (compact, consistent height)  -->
                     <Border
                         Grid.Column="2"
                         Padding="10,4"
                         Background="White"
-                        Opacity="0.92"
+                        HeightRequest="32"
+                        Opacity="0.95"
                         StrokeShape="RoundRectangle 999"
                         StrokeThickness="0"
-                        VerticalOptions="Center">
-                        <Label
-                            StyleClass="caption"
-                            Text="Step 1 of 1"
-                            TextColor="{StaticResource TextLight}" />
+                        VerticalOptions="Start">
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Label
+                                StyleClass="caption"
+                                Text="Step"
+                                TextColor="{StaticResource TextLight}" />
+                            <Label
+                                FontAttributes="Bold"
+                                Text="1 of 1"
+                                TextColor="{StaticResource TextDark}" />
+                        </HorizontalStackLayout>
                     </Border>
 
                     <!--  Subtitle  -->
                     <Label
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="0,2,0,0"
+                        Margin="0,4,0,0"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="1"
                         StyleClass="caption"
-                        Text="Enter details and upload your chart to begin."
+                        Text="Enter your details"
                         TextColor="{StaticResource TextLight}" />
                 </Grid>
             </Border>
+
+
+
 
             <!--  Content  -->
             <ScrollView

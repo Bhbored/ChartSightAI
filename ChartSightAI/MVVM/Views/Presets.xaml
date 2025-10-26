@@ -6,6 +6,7 @@
     xmlns:Controls="clr-namespace:ChartSightAI.Controls"
     xmlns:Models="clr-namespace:ChartSightAI.MVVM.Models"
     xmlns:conv="clr-namespace:ChartSightAI.Converters"
+    xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
     xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
     x:DataType="vm:PresetsVM"
     Background="{StaticResource Brush.BackgroundGradient}"
@@ -27,75 +28,113 @@
             AbsoluteLayout.LayoutFlags="All"
             RowDefinitions="Auto,*"
             RowSpacing="0">
+            <!--  Top wave background (behind header + content)  -->
+            <Grid Grid.Row="0" HeightRequest="240">
+                <!--  Wave 1  -->
+                <shapes:Path
+                    Aspect="Fill"
+                    Data="M0,0 L0,160 Q180,210 360,160 T720,160 L720,0 Z"
+                    Fill="{StaticResource Brush.HeaderGradient}"
+                    HorizontalOptions="Fill"
+                    InputTransparent="True"
+                    Opacity="1"
+                    VerticalOptions="Fill" />
 
-            <!--  Modern Header  -->
+                <!--  Subtle overlay wave for depth  -->
+                <shapes:Path
+                    Aspect="Fill"
+                    Data="M0,0 L0,175 Q180,225 360,175 T720,175 L720,0 Z"
+                    Fill="White"
+                    HorizontalOptions="Fill"
+                    InputTransparent="True"
+                    Opacity="0.12"
+                    VerticalOptions="Fill" />
+            </Grid>
+
+            <!--  Presets — compact header (120h, pill 56x88)  -->
             <Border
                 Grid.Row="0"
                 Margin="24,20,24,12"
                 Padding="0"
                 Background="{StaticResource Brush.HeaderGradient}"
+                HeightRequest="120"
                 Shadow="{StaticResource Sh.CardShadow}"
                 StrokeShape="RoundRectangle 28"
-                StrokeThickness="0">
+                StrokeThickness="0"
+                VerticalOptions="Start">
 
                 <Grid
                     Padding="16,14"
                     ColumnDefinitions="Auto,*,Auto"
+                    ColumnSpacing="10"
                     RowDefinitions="Auto,Auto">
 
-                    <!--  Logo pill  -->
+                    <!--  Brand pill (standard size)  -->
                     <Border
                         Grid.RowSpan="2"
                         Margin="0,0,12,0"
-                        Padding="10"
+                        Padding="12"
                         Background="White"
-                        Opacity="0.92"
+                        HeightRequest="88"
+                        Opacity="0.95"
                         StrokeShape="RoundRectangle 999"
-                        StrokeThickness="0">
-                        <!--  Swap to your real logo image if desired  -->
+                        StrokeThickness="0"
+                        VerticalOptions="Center"
+                        WidthRequest="56">
                         <Image
                             HeightRequest="28"
                             Source="logo.png"
                             WidthRequest="28" />
                     </Border>
 
-                    <!--  Title  -->
+                    <!--  Title: single line, no wrap  -->
                     <Label
                         Grid.Column="1"
+                        Margin="0,2,0,0"
+                        FontSize="22"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="1"
                         StyleClass="h2"
                         Text="Presets"
                         TextColor="{StaticResource TextDark}" />
+                    <!--  smaller to guarantee fit  -->
 
-                    <!--  Count pill (modern)  -->
+                    <!--  Compact count chip  -->
                     <Border
                         Grid.Column="2"
-                        Padding="12,6"
+                        Padding="10,4"
                         Background="White"
+                        HeightRequest="32"
                         Opacity="0.95"
                         StrokeShape="RoundRectangle 999"
-                        StrokeThickness="0">
-                        <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        StrokeThickness="0"
+                        VerticalOptions="Start">
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                             <Label
                                 StyleClass="caption"
                                 Text="Total"
                                 TextColor="{StaticResource TextLight}" />
                             <Label
                                 FontAttributes="Bold"
-                                Text="{Binding Items.Count, StringFormat='{}{0} presets'}"
+                                Text="{Binding Items.Count}"
                                 TextColor="{StaticResource TextDark}" />
                         </HorizontalStackLayout>
                     </Border>
 
-                    <!--  Subtitle  -->
+                    <!--  Subtitle: single line  -->
                     <Label
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="0,4,0,0"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="1"
                         StyleClass="caption"
-                        Text="Manage your saved setups"
+                        Text="Manage your saved presets"
                         TextColor="{StaticResource TextLight}" />
                 </Grid>
             </Border>
+
+
 
             <!--  Content  -->
             <Grid Grid.Row="1">

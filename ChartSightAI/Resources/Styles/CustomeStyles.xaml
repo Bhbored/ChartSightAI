@@ -470,7 +470,7 @@
 
     <!--  (Optional) Primary CTA used by “Share / Export”  -->
     <Style Class="btn-primary" TargetType="Button">
-        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="CornerRadius" Value="15" />
         <Setter Property="Padding" Value="18,12" />
         <Setter Property="BackgroundColor" Value="#22C7C1" />
         <Setter Property="TextColor" Value="White" />
