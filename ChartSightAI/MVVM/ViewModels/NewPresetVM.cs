@@ -92,7 +92,6 @@ namespace ChartSightAI.MVVM.ViewModels
                     MarketType = SelectedMarketType,
                     TimeFrame = SelectedTimeFrame,
                     TradeDirection = SelectedTradeDirection,
-                    Indicators = AllIndicators.ToList()
                 };
                 PresetStore.Items.Insert(0, newPreset);
                 BaseVM.ShowSnackAsync(ChartSightAI.MVVM.Views.Presets.Current, "Preset added successfully");
@@ -110,7 +109,6 @@ namespace ChartSightAI.MVVM.ViewModels
                         MarketType = SelectedMarketType,
                         TimeFrame = SelectedTimeFrame,
                         TradeDirection = SelectedTradeDirection,
-                        Indicators = AllIndicators.ToList()
                     };
                     PresetStore.Items[idx] = updated;
                 }

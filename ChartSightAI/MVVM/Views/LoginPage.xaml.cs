@@ -1,9 +1,12 @@
+using ChartSightAI.MVVM.ViewModels;
+
 namespace ChartSightAI.MVVM.Views;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
-	{
-		InitializeComponent();
-	}
+    public LoginPage(LoginVM vm)
+    {
+        InitializeComponent();
+        BindingContext = vm;
+    }
 }

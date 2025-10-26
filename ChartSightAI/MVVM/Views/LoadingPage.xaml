@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ChartSightAI.MVVM.Views.LoadingPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
+    x:DataType="vm:LoadingVM"
+    Background="{StaticResource Brush.BackgroundGradient}"
+    Shell.NavBarIsVisible="False">
+    <Grid>
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center" />
+    </Grid>
+</ContentPage>

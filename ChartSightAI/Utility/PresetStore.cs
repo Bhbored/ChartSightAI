@@ -15,7 +15,6 @@ namespace ChartSightAI.Utility
                 MarketType = MarketType.Forex,
                 TimeFrame = TimeFrame.Hour1,
                 TradeDirection = TradeDirection.Long,
-                Indicators = MarketIndicatorHelper.GetDefaultIndicators(MarketType.Forex)
             },
         new ()
             {
@@ -25,8 +24,7 @@ namespace ChartSightAI.Utility
                 MarketType = MarketType.Stocks,
                 TimeFrame = TimeFrame.Day1,
                 TradeDirection = TradeDirection.Long,
-                Indicators = MarketIndicatorHelper.GetDefaultIndicators(MarketType.Stocks)
-            }
+        }
         };
 
         public static Preset? TempPreset { get; set; }

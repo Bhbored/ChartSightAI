@@ -29,7 +29,6 @@ namespace ChartSightAI
     		builder.Logging.AddDebug();
 #endif
             builder.Services.RegisterDependencies();
-            builder.Services.AddSingleton<IAuthService, AuthService>();
 
             return builder.Build();
         }
