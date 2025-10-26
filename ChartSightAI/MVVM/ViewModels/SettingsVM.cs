@@ -1,70 +1,125 @@
-﻿using ChartSightAI.Popups;
-using CommunityToolkit.Maui.Extensions;
+﻿using ChartSightAI.MVVM.Models;
+using ChartSightAI.Services;
+using ChartSightAI.Services.Repos;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Preferences = ChartSightAI.MVVM.Models.Preferences;
+
 namespace ChartSightAI.MVVM.ViewModels
 {
     public partial class SettingsVM : ObservableObject
     {
-        #region Properties
-        [ObservableProperty] private Preferences _prefs;//wire later for backend
-        [ObservableProperty] private string _name="";
-        [ObservableProperty] private string _email="";
-        [ObservableProperty] private bool _isDeleteSheetOpen = false;
-        #endregion
+        private readonly AuthService _auth;
+        private readonly AnalysisSessionRepo _sessionsRepo;
+        private readonly PresetRepo _presetRepo;
+        private readonly UserPreferenceRepo _preferencesRepo;
 
-        #region Commands
-        [RelayCommand]
-        private async Task EditUserNameAsync()
+        public SettingsVM(AuthService auth, AnalysisSessionRepo sessionsRepo, PresetRepo presetRepo, UserPreferenceRepo preferencesRepo)
         {
-            var name = Name;
-            await Shell.Current.ShowPopupAsync(new EditUserNamePopup(this, name));   
-            
+            _auth = auth;
+            _sessionsRepo = sessionsRepo;
+            _presetRepo = presetRepo;
+            _preferencesRepo = preferencesRepo;
         }
-        [RelayCommand]
-        private void OpenBottomsheet()
-        {
-            IsDeleteSheetOpen = true;
 
-        }
-        [RelayCommand]
-        private void CloseDeleteSheet()
-        {
-            IsDeleteSheetOpen = false;
+        [ObservableProperty] private string _userName = "";
+        [ObservableProperty] private string _email = "";
+        [ObservableProperty] private bool isDeleteSheetOpen;
+        [ObservableProperty] private bool isBusy;
 
+        public async Task InitializeAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                await _auth.InitializeAsync();
+                Email = await _auth.GetUserEmailAsync() ?? "Unknown";
+                var uid = await _auth.GetUserIdAsync();
+                if (uid is null) return;
+                var pref = await _preferencesRepo.GetAsync(uid.Value);
+                UserName = pref?.UserName ?? "";
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
+
+        [RelayCommand]
+        private void OpenDeleteSheet() => IsDeleteSheetOpen = true;
+
+        [RelayCommand]
+        private void CloseDeleteSheet() => IsDeleteSheetOpen = false;
+
+        
+        public async Task SaveUserNameAsync(string name)
+        {
+            await _auth.InitializeAsync();
+            var uid = await _auth.GetUserIdAsync();
+            if (uid is null)
+            {
+                await Shell.Current.DisplayAlert("Not signed in", "Please log in to update your preferences.", "OK");
+                await Shell.Current.GoToAsync("//LoginPage");
+                return;
+            }
+            await _preferencesRepo.UpdateUserNameAsync(uid.Value, name?.Trim() ?? "");
+            await Shell.Current.DisplayAlert("Saved", "Preferences updated.", "OK");
+        }
+
         [RelayCommand]
         private async Task DeleteAllData()
         {
-            
+            var confirm = await Shell.Current.DisplayAlert("Delete data", "Delete all your sessions, presets and local files on this device? Your account stays active.", "Delete", "Cancel");
+            if (!confirm) return;
 
-            var confirm = await Shell.Current.DisplayAlert(
-                "                   ⚠️ Delete local data",
-                "❗Are you sure you want to remove all local analytics, presets, and cached AI results from this device? This cannot be undone.",
-                "Delete",
-                "Cancel");
-
-            if (confirm)
+            try
             {
-                // TODO: perform the actual deletion of local data here
+                await _auth.InitializeAsync();
+                var uid = await _auth.GetUserIdAsync();
+                if (uid is null)
+                {
+                    await Shell.Current.DisplayAlert("Not signed in", "Please log in to delete your data.", "OK");
+                    return;
+                }
+
+                var sessions = await _sessionsRepo.GetByDateRange(uid.Value, from: null, to: null, limit: 10000);
+                var presets = await _presetRepo.GetAllAsync(uid.Value);
+
+                await Task.WhenAll(
+                    Task.WhenAll(sessions.Select(s => _sessionsRepo.DeleteAsync(uid.Value, s.Id))),
+                    Task.WhenAll(presets.Select(p => _presetRepo.DeleteAsync(uid.Value, p.Id))),
+                    _preferencesRepo.UpdateUserNameAsync(uid.Value, "")
+                );
+
+                try
+                {
+                    var dir = FileSystem.AppDataDirectory;
+                    foreach (var file in Directory.EnumerateFiles(dir))
+                    {
+                        var name = Path.GetFileName(file).ToLowerInvariant();
+                        if (name.StartsWith("chart_") || name.EndsWith(".png") || name.EndsWith(".jpg") || name.EndsWith(".jpeg"))
+                        {
+                            try { File.Delete(file); } catch { }
+                        }
+                    }
+                }
+                catch { }
+
+                await Shell.Current.DisplayAlert("Done", "Your data was deleted.", "OK");
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Delete failed", ex.Message, "OK");
+            }
+            finally
+            {
                 CloseDeleteSheet();
             }
         }
-        #endregion
-
-        #region Methods
-        public Task InitializeAsync()
-        {
-           IsDeleteSheetOpen = false;
-            return Task.CompletedTask;
-        }
-        #endregion
     }
 }

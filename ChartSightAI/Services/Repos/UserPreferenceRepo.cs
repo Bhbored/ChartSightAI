@@ -1,22 +1,30 @@
-﻿using ChartSightAI.DTO_S.DB;
-using Supabase;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using ChartSightAI.DTO_S.DB;
+using Supabase;
+using Supabase.Postgrest;
+using Client = Supabase.Client;
 
-namespace ChartSightAI.Services.Repos
+public class UserPreferenceRepo
 {
-    public class UserPreferenceRepo
-    {
-        private readonly Client _client;
-        public UserPreferenceRepo(Client client) => _client = client;
+    private readonly Client _client;
+    public UserPreferenceRepo(Client client) => _client = client;
 
-        public Task UpdateUserNameAsync(Guid userId, string? userName) =>
-            _client.From<UserPreferenceRow>()
-                   .Where(x => x.UserId == userId)
-                   .Set(x => x.UserName, userName ?? "")
-                   .Update();
+    public async Task<UserPreferenceRow?> GetAsync(Guid userId)
+    {
+        var resp = await _client.From<UserPreferenceRow>()
+            .Filter(nameof(UserPreferenceRow.UserId), Constants.Operator.Equals, userId)
+            .Get();
+        return resp.Models.FirstOrDefault();
     }
+
+    public Task UpdateUserNameAsync(Guid userId, string? userName) =>
+        _client.From<UserPreferenceRow>()
+               .Filter(nameof(UserPreferenceRow.UserId), Constants.Operator.Equals, userId)
+               .Update(new UserPreferenceRow { UserName = userName ?? "" });
+
+    public Task UpsertUserNameAsync(Guid userId, string? userName) =>
+        _client.From<UserPreferenceRow>()
+               .Upsert(new UserPreferenceRow { UserId = userId, UserName = userName ?? "" });
 }

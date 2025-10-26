@@ -20,7 +20,8 @@ public partial class EditUserNamePopup : Popup
 
     void Save_Clicked(object sender, EventArgs e)
     {
-        _settingsVM.Name = NameEntry.Text;
+        var name = NameEntry.Text;
+        _ = _settingsVM.SaveUserNameAsync(name);
         CloseAsync();
     }
 }

@@ -1,12 +1,12 @@
 ﻿using ChartSightAI.MVVM.Models;
 using ChartSightAI.Popups;
-using ChartSightAI.TestData;
 using ChartSightAI.Utility;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Media;
 using Microsoft.Maui.Storage;
@@ -18,15 +18,24 @@ using System.Threading.Tasks;
 using MT = ChartSightAI.MVVM.Models.Enums.MarketType;
 using TD = ChartSightAI.MVVM.Models.Enums.TradeDirection;
 using TF = ChartSightAI.MVVM.Models.Enums.TimeFrame;
-using ST = ChartSightAI.MVVM.Models.Enums.SupportType;
 using System.Diagnostics;
-
+using ChartSightAI.Services;
+using ChartSightAI.Services.Repos;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
     public partial class NewPredictionVM : ObservableObject
     {
+        private readonly AuthService _auth;
+        private readonly PresetRepo _presetRepo;
+        private readonly AnalysisSessionRepo _analysisSession;
 
+        public NewPredictionVM(AuthService authService, PresetRepo presetRepo, AnalysisSessionRepo analysisSessionRepo)
+        {
+            _auth = authService;
+            _presetRepo = presetRepo;
+            _analysisSession = analysisSessionRepo;
+        }
 
         #region Properties
         [ObservableProperty] private AnalysisSession analysisSession = new();
@@ -65,7 +74,7 @@ namespace ChartSightAI.MVVM.ViewModels
 
         [ObservableProperty] private Option<TF>? selectedTimeFrameOption;
 
-        public ObservableCollection<Preset> Presets { get; private set; } = new();
+        [ObservableProperty] private ObservableCollection<Preset> _presets = new();
         [ObservableProperty] private Preset? selectedPreset;
 
         [ObservableProperty] private bool isTechnicalSelected;
@@ -77,6 +86,7 @@ namespace ChartSightAI.MVVM.ViewModels
         private string? previewImagePath;
 
         public bool HasPreview => !string.IsNullOrWhiteSpace(PreviewImagePath);
+
         [ObservableProperty] private bool isAiSheetOpen;
         [ObservableProperty] private AiAnalysisResult? analysis;
         #endregion
@@ -86,6 +96,7 @@ namespace ChartSightAI.MVVM.ViewModels
         {
             if (Enum.TryParse<MT>(s, out var mt)) SelectedMarketType = mt;
         });
+
         public IRelayCommand<string> SetTimeFrameFromStringCommand => new RelayCommand<string>(s =>
         {
             if (Enum.TryParse<TF>(s, out var tf))
@@ -94,10 +105,12 @@ namespace ChartSightAI.MVVM.ViewModels
                 SelectedTimeFrameOption = TimeFrameChoices.FirstOrDefault(o => o.Value.Equals(tf));
             }
         });
+
         public IRelayCommand<string> SetTradeDirectionFromStringCommand => new RelayCommand<string>(s =>
         {
             if (Enum.TryParse<TD>(s, out var td)) SelectedTradeDirection = td;
         });
+
         public IRelayCommand<string> ToggleStrategyFocusCommand => new RelayCommand<string>(key =>
         {
             switch (key)
@@ -114,11 +127,9 @@ namespace ChartSightAI.MVVM.ViewModels
         public IRelayCommand CloseAiSheetCommand => new RelayCommand(() => IsAiSheetOpen = false);
         public IAsyncRelayCommand SaveAnalysisCommand => new AsyncRelayCommand(SaveAnalysisAsync);
         public IAsyncRelayCommand ShareAnalysisCommand => new AsyncRelayCommand(ShareAnalysisAsync);
-
         #endregion
 
-        #region Methods
-
+        #region Methods (property change hooks)
         partial void OnSelectedMarketTypeChanged(MT value)
         {
             AnalysisSession.MarketType = value;
@@ -164,25 +175,41 @@ namespace ChartSightAI.MVVM.ViewModels
             AnalysisSession.PreviewImage = value;
             OnPropertyChanged(nameof(AnalysisSession));
         }
-        private void SeedAiMockFromPreset()
-        {
-            SelectedPreset?.SetIndicatorsByMarket();
-            Analysis = AiAnalysisMockData.BuildForPreset(SelectedPreset);
-        }
+        #endregion
+
+        #region Save / Share
         private async Task SaveAnalysisAsync()
         {
-            var s = new AnalysisSession
+            try
             {
-                MarketType = SelectedMarketType,
-                TimeFrame = SelectedTimeFrame,
-                Preset = SelectedPreset,
-                TradeDirection = SelectedTradeDirection,
-                CreatedAt = DateTime.Now,
-                Result = Analysis
-            };
-            AnalysisSessionStore.Items.Insert(0, s);
-            Debug.Write("done ");
-            await Task.CompletedTask;
+                await _auth.InitializeAsync();
+                var uid = await _auth.GetUserIdAsync();
+                if (uid is null)
+                {
+                    await ShowPopupAsync("Please log in to save analysis.");
+                    await Shell.Current.GoToAsync("//LoginPage");
+                    return;
+                }
+
+                var s = new AnalysisSession
+                {
+                    MarketType = SelectedMarketType,
+                    TimeFrame = SelectedTimeFrame,
+                    Preset = SelectedPreset,
+                    TradeDirection = SelectedTradeDirection,
+                    CreatedAt = DateTime.Now,
+                    Result = Analysis,
+                    PreviewImage = PreviewImagePath
+                };
+
+                await _analysisSession.InsertAsync(uid.Value, s);
+                Debug.WriteLine("Analysis saved.");
+                await ShowPopupAsync("Analysis saved.");
+            }
+            catch (Exception ex)
+            {
+                await ShowPopupAsync($"Save failed: {ex.Message}");
+            }
         }
 
         private async Task ShareAnalysisAsync()
@@ -215,45 +242,56 @@ namespace ChartSightAI.MVVM.ViewModels
         }
         #endregion
 
-        #region Tasks
+        #region Init / Reset
+        public async Task InitializeAsync()
+        {
+            try
+            {
+                await _auth.InitializeAsync();
 
+                SelectedMarketType = MT.Crypto;
+                SelectedTimeFrame = TF.Hour1;
+                SelectedTradeDirection = TD.Long;
+                SelectedTimeFrameOption = TimeFrameChoices.FirstOrDefault(o => o.Value.Equals(SelectedTimeFrame));
+
+                IsTechnicalSelected = true;
+                IsPatternSelected = false;
+                IsAiSelected = false;
+
+                Presets.Clear();
+
+                var uid = await _auth.GetUserIdAsync();
+                if (uid is null)
+                {
+                    await ShowPopupAsync("Please log in to load presets.");
+                    await Shell.Current.GoToAsync("//LoginPage");
+                    return;
+                }
+
+                var list = await _presetRepo.GetAllAsync(uid.Value);
+                foreach (var item in list)
+                    Presets.Add(item);
+
+                SelectedPreset = Presets.FirstOrDefault(p => p.MarketType == SelectedMarketType)
+                                 ?? Presets.FirstOrDefault();
+
+                AnalysisSession.CreatedAt = DateTime.Now;
+                AnalysisSession.Preset = SelectedPreset;
+                PreviewImagePath = null;
+            }
+            catch (Exception ex)
+            {
+                await ShowPopupAsync($"Init failed: {ex.Message}");
+            }
+        }
+
+        private Task ResetFiltersAsync() => InitializeAsync();
+        #endregion
+
+        #region Image / Permissions / AI
         public async Task ShowPopupAsync(string msg)
         {
             await Shell.Current.ShowPopupAsync(new InfoPopup(msg));
-        }
-        public Task InitializeAsync()
-        {
-            SelectedMarketType = MT.Crypto;
-            SelectedTimeFrame = TF.Hour1;
-            SelectedTradeDirection = TD.Long;
-            SelectedTimeFrameOption = TimeFrameChoices.FirstOrDefault(o => o.Value.Equals(SelectedTimeFrame));
-
-            IsTechnicalSelected = true;
-            IsPatternSelected = false;
-            IsAiSelected = false;
-
-            Presets.Clear();
-            var list = PresetStore.Items; // change when backend is added
-            foreach (var item in list)
-                Presets.Add(item);
-
-            SelectedPreset = Presets.FirstOrDefault(p => p.MarketType == SelectedMarketType)
-                             ?? Presets.FirstOrDefault();
-
-            AnalysisSession.CreatedAt = DateTime.Now;
-            AnalysisSession.Preset = SelectedPreset;
-            PreviewImagePath = null;
-
-            // IMPORTANT: use the PROPERTY, not the backing field
-            SeedAiMockFromPreset();
-
-            return Task.CompletedTask;
-        }
-
-
-        private async Task ResetFiltersAsync()
-        {
-            await InitializeAsync();
         }
 
         private async Task OnUploadTappedAsync()
@@ -359,15 +397,11 @@ namespace ChartSightAI.MVVM.ViewModels
 
         private async Task OnAnalyzeChartAsync()
         {
-            SeedAiMockFromPreset();
-
             if (string.IsNullOrWhiteSpace(PreviewImagePath))
                 await ShowPopupAsync("Mock analysis shown. Upload a chart to analyze a real image.");
 
             IsAiSheetOpen = true;
-
         }
         #endregion
     }
 }
-

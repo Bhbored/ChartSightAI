@@ -1,62 +1,53 @@
 ﻿using ChartSightAI.MVVM.Models;
 using ChartSightAI.MVVM.Views;
 using ChartSightAI.Popups;
-using ChartSightAI.Utility;
+using ChartSightAI.Services;
+using ChartSightAI.Services.Repos;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Controls;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
     public partial class HistoryVM : ObservableObject
     {
-        public ObservableCollection<AnalysisSession> Sessions
+        private readonly AuthService _auth;
+        private readonly AnalysisSessionRepo _sessionsRepo;
+
+        public HistoryVM(AuthService auth, AnalysisSessionRepo repo)
         {
-            get
-            {
-                return sessions;
-            }
-            set => sessions = value;
+            _auth = auth;
+            _sessionsRepo = repo;
         }
 
-
-        [ObservableProperty]
-        private string? choice;
-        private ObservableCollection<AnalysisSession> sessions = new ObservableCollection<AnalysisSession>();
+        #region Properties
+        [ObservableProperty] private string? choice;
+        [ObservableProperty] private ObservableCollection<AnalysisSession> _sessions = new();
+        #endregion
 
         #region Commands
-
-        public ICommand RateSessionAsyncCommand => new Command<AnalysisSession>(async (session) => await RateSessionAsync(session));
-        public ICommand DeleteSessionAsyncCommand => new Command<AnalysisSession>(async (session) => await DeleteSessionAsync(session));
-        public ICommand ShareAnalysisAsyncCommand => new Command<AnalysisSession>(async (session) => await ShareAnalysisAsync(session));
-        public ICommand OpenDetailsCommand => new Command<AnalysisSession>(async (selectedSession) =>
+        [RelayCommand]
+        private async Task OpenDetails(AnalysisSession selectedSession)
         {
+            if (selectedSession is null) return;
             await Shell.Current.GoToAsync(nameof(AnalysisDetails),
-        new Dictionary<string, object> { { "Session", selectedSession } });
-
-        });
-
-        #endregion
-
-        #region methods
-        public void Hit()
-        {
-            Choice = "Hit";
+                new Dictionary<string, object> { { "Session", selectedSession } });
         }
-        public void Miss()
-        {
-            Choice = "Miss";
 
-        }
-        #endregion
-        #region Tasks
-        public async Task RateSessionAsync(AnalysisSession? session)
+        [RelayCommand]
+        private async Task RateSessionAsync(AnalysisSession session)
         {
             if (session is null) return;
 
             await Shell.Current.ShowPopupAsync(new RatePopup(this));
+
             if (Choice == "Hit")
             {
                 session.IsRated = true;
@@ -73,25 +64,34 @@ namespace ChartSightAI.MVVM.ViewModels
             }
 
             var ix = Sessions.IndexOf(session);
-            if (ix >= 0)
-            {
-                Sessions[ix] = session;
-            }
+            if (ix >= 0) Sessions[ix] = session;
+
+            var uid = await _auth.GetUserIdAsync();
+            if (uid is null) return;
+            await _sessionsRepo.InsertAsync(uid.Value, session);
         }
-        private async Task DeleteSessionAsync(AnalysisSession? session)
+
+        [RelayCommand]
+        private async Task DeleteSessionAsync(AnalysisSession session)
         {
             if (session is null) return;
-            bool ok = await Application.Current.MainPage.DisplayAlert("Delete", "Remove this item?", "Delete", "Cancel");
+
+            bool ok = await Shell.Current.DisplayAlert("Delete", "Remove this item?", "Delete", "Cancel");
             if (!ok) return;
 
             Sessions.Remove(session);
-            AnalysisSessionStore.Items.Remove(session);
+
+            var uid = await _auth.GetUserIdAsync();
+            if (uid is null) return;
+            await _sessionsRepo.DeleteAsync(uid.Value, session.Id);
         }
-        private async Task ShareAnalysisAsync(AnalysisSession? session)
+
+        [RelayCommand]
+        private async Task ShareAnalysisAsync(AnalysisSession session)
         {
             if (session is null) return;
 
-            var sb = new System.Text.StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("ChartSightAI – Analysis Session");
             sb.AppendLine($"{session.MarketType} • {session.TimeFrame} • {session.TradeDirection}");
             sb.AppendLine($"Date: {session.CreatedAt:yyyy-MM-dd}");
@@ -121,18 +121,38 @@ namespace ChartSightAI.MVVM.ViewModels
                     Text = sb.ToString()
                 });
         }
-        public Task InitializeAsync()
-        {
-            Sessions.Clear();
-            var sessions = AnalysisSessionStore.Items; //change here
-            foreach (var item in sessions)
-            {
-                Sessions.Add(item);
-            }
+        #endregion
 
-            return Task.CompletedTask;
+        #region Methods
+        public void Hit() => Choice = "Hit";
+        public void Miss() => Choice = "Miss";
+        #endregion
+
+        #region Tasks
+        public async Task InitializeAsync()
+        {
+            try
+            {
+                Sessions.Clear();
+
+                await _auth.InitializeAsync();
+                var userId = await _auth.GetUserIdAsync();
+                if (userId is null)
+                {
+                    await Shell.Current.DisplayAlert("Not signed in", "Please log in to view your history.", "OK");
+                    await Shell.Current.GoToAsync("//LoginPage");
+                    return;
+                }
+
+                var items = await _sessionsRepo.GetByDateRange(userId.Value, from: null, to: null, limit: 200);
+                foreach (var s in items)
+                    Sessions.Add(s);
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
         }
         #endregion
     }
 }
-

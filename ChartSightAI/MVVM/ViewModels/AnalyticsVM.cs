@@ -1,14 +1,17 @@
-﻿using System;
+﻿using ChartSightAI.MVVM.Models;
+using ChartSightAI.Services;
+using ChartSightAI.Services.Repos;
+using ChartSightAI.Utility;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel.DataTransfer;
+using Microsoft.Maui.Controls;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using ChartSightAI.MVVM.Models;
-using ChartSightAI.Utility;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
@@ -30,7 +33,16 @@ namespace ChartSightAI.MVVM.ViewModels
         [ObservableProperty] DateTime _chartMaxDate;
         #endregion
 
+        private readonly AuthService _auth;
+        private readonly AnalysisSessionRepo _sessionsRepo;
+        public AnalyticsVM(AuthService auth, AnalysisSessionRepo sessionRepo)
+        {
+            _auth = auth;
+            _sessionsRepo = sessionRepo;
+        }
+
         #region Collections
+        [ObservableProperty] ObservableCollection<AnalysisSession> _sessions = new();
         public ObservableCollection<DonutSlice> HitRing { get; } = new();
         public ObservableCollection<DatePoint> TimeSeries { get; } = new();
         public ObservableCollection<NameValue> MarketBreakdown { get; } = new();
@@ -74,19 +86,42 @@ namespace ChartSightAI.MVVM.ViewModels
         #region Methods
         public async Task InitializeAsync()
         {
-            if (!_subscribed)
+            try
             {
-                AnalysisSessionStore.Items.CollectionChanged += OnItemsChanged;
-                _subscribed = true;
+                Sessions.Clear();
+
+                await _auth.InitializeAsync();
+                var userId = await _auth.GetUserIdAsync();
+                if (userId is null)
+                {
+                    await Shell.Current.DisplayAlert("Not signed in", "Please log in to load your analytics.", "OK");
+                    await Shell.Current.GoToAsync("//LoginPage");
+                    return;
+                }
+
+                var items = await _sessionsRepo.GetByDateRange(userId.Value, from: null, to: null, limit: 400);
+                foreach (var s in items)
+                    Sessions.Add(s);
+
+                if (!_subscribed)
+                {
+                    Sessions.CollectionChanged += OnItemsChanged;
+                    _subscribed = true;
+                }
+
+                await SetRangeAsync("ALL");
             }
-            await SetRangeAsync("ALL");
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
         }
 
         public void Unsubscribe()
         {
             if (_subscribed)
             {
-                AnalysisSessionStore.Items.CollectionChanged -= OnItemsChanged;
+                Sessions.CollectionChanged -= OnItemsChanged;
                 _subscribed = false;
             }
         }
@@ -138,6 +173,12 @@ namespace ChartSightAI.MVVM.ViewModels
                 ChartMinDate = TimeSeries[0].Date.AddDays(-2);
                 ChartMaxDate = TimeSeries[^1].Date.AddDays(1);
             }
+            else
+            {
+                var today = DateTime.Now.Date;
+                ChartMinDate = today.AddDays(-7);
+                ChartMaxDate = today;
+            }
 
             MarketBreakdown.Clear();
             foreach (var g in rated.GroupBy(s => s.MarketType.ToString()))
@@ -166,7 +207,7 @@ namespace ChartSightAI.MVVM.ViewModels
 
         IEnumerable<AnalysisSession> GetRated()
         {
-            var q = AnalysisSessionStore.Items.Where(s => s.IsRated && s.Result != null);
+            var q = Sessions.Where(s => s.IsRated && s.Result != null);
             if (_rangeStart != null) q = q.Where(s => s.CreatedAt.Date >= _rangeStart.Value);
             return q;
         }

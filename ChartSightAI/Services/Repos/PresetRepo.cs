@@ -1,12 +1,14 @@
 ﻿using ChartSightAI.DTO_S.DB;
 using ChartSightAI.MVVM.Models;
 using Supabase;
+using Supabase.Postgrest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Supabase.Postgrest.Constants;
+using Client = Supabase.Client;
 
 namespace ChartSightAI.Services.Repos
 {
@@ -38,9 +40,12 @@ namespace ChartSightAI.Services.Repos
             return res.Models.First().Id;
         }
 
-        public Task DeleteAsync(int id) =>
-            _client.From<PresetRow>()
-                   .Where(x => x.Id == id)
-                   .Delete();
+        public Task DeleteAsync(Guid userId, int id) =>
+     _client.From<PresetRow>()
+            .Where(x => x.UserId == userId)
+            .Where(x => x.Id == id)
+            .Delete();
+
+
     }
 }

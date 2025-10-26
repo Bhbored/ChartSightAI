@@ -1,102 +1,164 @@
-// Services/AuthService.cs
-using ChartSightAI.MVVM.Models;
-using ChartSightAI.Services.Interfaces;
-using Supabase;
-using System.Threading.Tasks;
-using Microsoft.Maui.Storage;
+using System;
 using System.Text.Json;
+using System.Threading.Tasks;
+using ChartSightAI.MVVM.Models;
+using Microsoft.Maui.Storage;
+using Supabase;
 
-namespace ChartSightAI.Services
+public class AuthService
 {
-    public class AuthService
+    private readonly Client _supabase;
+    private bool _initialized;
+
+    private const string SessionKey = "user_session";
+
+    public AuthService(Client supabase) => _supabase = supabase;
+
+    public async Task InitializeAsync()
     {
-        private readonly Client _supabase;
-        private bool _initialized;
+        if (_initialized) return;
+        await _supabase.InitializeAsync();
+        _initialized = true;
+    }
 
-        public AuthService(Client supabase) => _supabase = supabase;
+    public async Task<UserSession?> GetSession()
+    {
+        // Always ensure the client is ready and try to refresh if needed
+        await InitializeAsync();
+        var ensured = await EnsureSessionAsync();
+        if (ensured != null) return ensured;
 
-        public async Task InitializeAsync()
+        // Fallback to cached (not guaranteed valid)
+        return await GetCachedSession();
+    }
+
+    public async Task<UserSession?> EnsureSessionAsync()
+    {
+        await InitializeAsync();
+
+        var cached = await GetCachedSession();
+        if (cached == null) return null;
+
+        // Push cached tokens to Supabase Auth
+        if (!string.IsNullOrWhiteSpace(cached.AccessToken) && !string.IsNullOrWhiteSpace(cached.RefreshToken))
+            _supabase.Auth.SetSession(cached.AccessToken, cached.RefreshToken);
+        else
+            return null;
+
+        // If token is near expiry, try to refresh
+        if (IsExpiringSoon(cached.ExpiresAt))
         {
-            if (_initialized) return;
-            await _supabase.InitializeAsync();
-            _initialized = true;
-            await RestoreCachedSessionIntoClient();
-        }
-
-        public async Task<UserSession> GetSession()
-        {
-            var sessionJson = await SecureStorage.GetAsync("user_session");
-            if (string.IsNullOrEmpty(sessionJson)) return null;
-            return JsonSerializer.Deserialize<UserSession>(sessionJson);
-        }
-
-        public async Task<UserSession> Login(string email, string password)
-        {
-            await InitializeAsync();
-            var session = await _supabase.Auth.SignIn(email, password);
-            if (session == null) return null;
-
-            var userSession = new UserSession
+            try
             {
-                AccessToken = session.AccessToken,
-                RefreshToken = session.RefreshToken,
-                ExpiresAt = session.ExpiresAt(),
-                UserId = session.User.Id,
-                Email = session.User.Email
-            };
-
-            await SecureStorage.SetAsync("user_session", JsonSerializer.Serialize(userSession));
-            return userSession;
-        }
-
-        public async Task Logout()
-        {
-            await InitializeAsync();
-            await _supabase.Auth.SignOut();
-            SecureStorage.Remove("user_session");
-        }
-
-        public async Task<UserSession> SignUp(string email, string password)
-        {
-            await InitializeAsync();
-            var session = await _supabase.Auth.SignUp(email, password);
-            if (session == null) return null;
-
-            var userSession = new UserSession
-            {
-                AccessToken = session.AccessToken,
-                RefreshToken = session.RefreshToken,
-                ExpiresAt = session.ExpiresAt(),
-                UserId = session.User.Id,
-                Email = session.User.Email
-            };
-
-            await SecureStorage.SetAsync("user_session", JsonSerializer.Serialize(userSession));
-            return userSession;
-        }
-
-        private async Task RestoreCachedSessionIntoClient()
-        {
-            var cached = await GetSession();
-            if (cached == null) return;
-
-            if (!string.IsNullOrWhiteSpace(cached.AccessToken) && !string.IsNullOrWhiteSpace(cached.RefreshToken))
-            {
-                _supabase.Auth.SetSession(cached.AccessToken, cached.RefreshToken);
                 var refreshed = await _supabase.Auth.RefreshSession();
                 if (refreshed != null)
                 {
-                    var userSession = new UserSession
-                    {
-                        AccessToken = refreshed.AccessToken,
-                        RefreshToken = refreshed.RefreshToken,
-                        ExpiresAt = refreshed.ExpiresAt(),
-                        UserId = refreshed.User.Id,
-                        Email = refreshed.User.Email
-                    };
-                    await SecureStorage.SetAsync("user_session", JsonSerializer.Serialize(userSession));
+                    var us = ToUserSession(refreshed);
+                    await SetCachedSession(us);
+                    return us;
                 }
+                await ClearCachedSession();
+                return null;
+            }
+            catch
+            {
+                await ClearCachedSession();
+                return null;
             }
         }
+
+        // Tokens look fine; return cached snapshot
+        return cached;
+    }
+
+    public async Task<UserSession?> Login(string email, string password)
+    {
+        await InitializeAsync();
+        var session = await _supabase.Auth.SignIn(email, password);
+        if (session == null) return null;
+
+        var us = ToUserSession(session);
+        await SetCachedSession(us);
+        return us;
+    }
+
+    public async Task<UserSession?> SignUp(string email, string password)
+    {
+        await InitializeAsync();
+        var session = await _supabase.Auth.SignUp(email, password);
+        if (session == null) return null;
+
+        var us = ToUserSession(session);
+        await SetCachedSession(us);
+        return us;
+    }
+
+    public async Task Logout()
+    {
+        await InitializeAsync();
+        try { await _supabase.Auth.SignOut(); } catch { /* ignore */ }
+        await ClearCachedSession();
+    }
+
+    public async Task<string?> GetUserEmailAsync()
+    {
+        await InitializeAsync();
+        var live = _supabase?.Auth?.CurrentUser?.Email;
+        if (!string.IsNullOrWhiteSpace(live))
+            return live;
+
+        var cached = await GetCachedSession();
+        return cached?.Email;
+    }
+
+    public async Task<Guid?> GetUserIdAsync()
+    {
+        await InitializeAsync();
+
+        var idStr = _supabase?.Auth?.CurrentUser?.Id;
+        if (!string.IsNullOrWhiteSpace(idStr) && Guid.TryParse(idStr, out var uid))
+            return uid;
+
+        var cached = await GetCachedSession();
+        if (!string.IsNullOrWhiteSpace(cached?.UserId) && Guid.TryParse(cached.UserId, out var uid2))
+            return uid2;
+
+        return null;
+    }
+
+    // ----- helpers -----
+    private static bool IsExpiringSoon(DateTime? expiresAtUtc)
+    {
+        if (expiresAtUtc == null) return true;
+        // Refresh if expires within 2 minutes
+        return expiresAtUtc.Value <= DateTime.UtcNow.AddMinutes(2);
+    }
+
+    private static UserSession ToUserSession(dynamic supaSession)
+    {
+        // Works with Supabase .NET typical session shape
+        return new UserSession
+        {
+            AccessToken = supaSession.AccessToken,
+            RefreshToken = supaSession.RefreshToken,
+            ExpiresAt = supaSession.ExpiresAt(),
+            UserId = supaSession.User?.Id,
+            Email = supaSession.User?.Email
+        };
+    }
+
+    private static string Serialize(UserSession s) => JsonSerializer.Serialize(s);
+    private static UserSession? Deserialize(string json) => string.IsNullOrWhiteSpace(json) ? null : JsonSerializer.Deserialize<UserSession>(json);
+
+    private static async Task SetCachedSession(UserSession s) =>
+        await SecureStorage.SetAsync(SessionKey, Serialize(s));
+
+    private static async Task<UserSession?> GetCachedSession() =>
+        Deserialize(await SecureStorage.GetAsync(SessionKey));
+
+    private static Task ClearCachedSession()
+    {
+        SecureStorage.Remove(SessionKey);
+        return Task.CompletedTask;
     }
 }

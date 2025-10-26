@@ -16,7 +16,6 @@ public partial class Analytics : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        AnalysisSessionStore.SeedDummyData();//remove later
         await _vm.InitializeAsync();
     }
 

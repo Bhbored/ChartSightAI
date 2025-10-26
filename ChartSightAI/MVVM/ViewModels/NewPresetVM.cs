@@ -11,11 +11,24 @@ using TF = ChartSightAI.MVVM.Models.Enums.TimeFrame;
 using TD = ChartSightAI.MVVM.Models.Enums.TradeDirection;
 using CommunityToolkit.Maui.Extensions;
 using ChartSightAI.Popups;
+using ChartSightAI.Services;
+using ChartSightAI.Services.Repos;
+using Microsoft.Maui.Controls;
+using System;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
     public partial class NewPresetVM : ObservableObject
     {
+        private readonly AuthService _authService;
+        private readonly PresetRepo _presetRepo;
+
+        public NewPresetVM(AuthService authService, PresetRepo presetRepo)
+        {
+            _authService = authService;
+            _presetRepo = presetRepo;
+        }
+
         #region Properties
         [ObservableProperty] private string presetName = string.Empty;
         [ObservableProperty] private string? description;
@@ -46,6 +59,8 @@ namespace ChartSightAI.MVVM.ViewModels
         [ObservableProperty] private ObservableCollection<string> allIndicators = new();
 
         [ObservableProperty] private Preset? editingPreset;
+
+        [ObservableProperty] private ObservableCollection<Preset> _presets = new();
         #endregion
 
         #region Commands
@@ -74,54 +89,63 @@ namespace ChartSightAI.MVVM.ViewModels
         [RelayCommand(AllowConcurrentExecutions = false)]
         private async Task Save()
         {
+            await _authService.InitializeAsync();
+            var uid = await _authService.GetUserIdAsync();
+            if (uid is null)
+            {
+                await Shell.Current.ShowPopupAsync(new InfoPopup("Please log in to save a preset."));
+                await Shell.Current.GoToAsync("//LoginPage");
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(PresetName))
             {
-                var msg = "Missing name\nPlease enter a preset name.";
-                await Shell.Current.ShowPopupAsync(new InfoPopup(msg)) ;
+                await Shell.Current.ShowPopupAsync(new InfoPopup("Missing name\nPlease enter a preset name."));
                 return;
             }
 
             if (EditingPreset is null)
             {
-                var nextId = PresetStore.Items.Count == 0 ? 1 : PresetStore.Items.Max(p => p.Id) + 1;
                 var newPreset = new Preset
                 {
-                    Id = nextId,
                     Name = PresetName.Trim(),
                     Description = string.IsNullOrWhiteSpace(Description) ? null : Description.Trim(),
                     MarketType = SelectedMarketType,
                     TimeFrame = SelectedTimeFrame,
                     TradeDirection = SelectedTradeDirection,
                 };
-                PresetStore.Items.Insert(0, newPreset);
-                BaseVM.ShowSnackAsync(ChartSightAI.MVVM.Views.Presets.Current, "Preset added successfully");
+
+                await _presetRepo.InsertAsync(uid.Value, newPreset);
+                if (Presets.All(p => p.Id != newPreset.Id))
+                    Presets.Add(newPreset);
+
+                await BaseVM.ShowSnackAsync(ChartSightAI.MVVM.Views.Presets.Current, "Preset added successfully");
             }
             else
             {
-                var idx = PresetStore.Items.IndexOf(EditingPreset);
-                if (idx >= 0)
+                var updated = new Preset
                 {
-                    var updated = new Preset
-                    {
-                        Id = EditingPreset.Id,
-                        Name = PresetName.Trim(),
-                        Description = string.IsNullOrWhiteSpace(Description) ? null : Description.Trim(),
-                        MarketType = SelectedMarketType,
-                        TimeFrame = SelectedTimeFrame,
-                        TradeDirection = SelectedTradeDirection,
-                    };
-                    PresetStore.Items[idx] = updated;
-                }
+                    Id = EditingPreset.Id,
+                    Name = PresetName.Trim(),
+                    Description = string.IsNullOrWhiteSpace(Description) ? null : Description.Trim(),
+                    MarketType = SelectedMarketType,
+                    TimeFrame = SelectedTimeFrame,
+                    TradeDirection = SelectedTradeDirection,
+                };
+
+                var idx = Presets.IndexOf(EditingPreset);
+                if (idx >= 0) Presets[idx] = updated;
+
+                await _presetRepo.UpdateAsync(uid.Value, updated);
+                await BaseVM.ShowSnackAsync(ChartSightAI.MVVM.Views.Presets.Current, "Preset updated");
             }
 
-            PresetStore.TempPreset = null;
             await Shell.Current.GoToAsync("..", true);
         }
 
         [RelayCommand]
         private async Task Cancel()
         {
-            PresetStore.TempPreset = null;
             await Shell.Current.GoToAsync("..", true);
         }
         #endregion
@@ -140,12 +164,24 @@ namespace ChartSightAI.MVVM.ViewModels
         #endregion
 
         #region Init
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            var edit = PresetStore.TempPreset;
-            if (edit is null)
+            await _authService.InitializeAsync();
+            Presets.Clear();
+
+            var uid = await _authService.GetUserIdAsync();
+            if (uid is null)
             {
-                EditingPreset = null;
+                await Shell.Current.ShowPopupAsync(new InfoPopup("Please log in to manage presets."));
+                await Shell.Current.GoToAsync("//LoginPage");
+                return;
+            }
+
+            var list = await _presetRepo.GetAllAsync(uid.Value);
+            foreach (var item in list) Presets.Add(item);
+
+            if (EditingPreset is null)
+            {
                 PresetName = string.Empty;
                 Description = string.Empty;
 
@@ -154,28 +190,23 @@ namespace ChartSightAI.MVVM.ViewModels
                 SelectedTimeFrame = TF.Hour1;
                 SelectedTimeFrameOption = TimeFrameChoices.FirstOrDefault(o => o.Value.Equals(SelectedTimeFrame));
 
-                AllIndicators = new ObservableCollection<string>(
-                    MarketIndicatorHelper.GetDefaultIndicators(SelectedMarketType));
+                AllIndicators = new ObservableCollection<string>(MarketIndicatorHelper.GetDefaultIndicators(SelectedMarketType));
             }
             else
             {
-                EditingPreset = edit;
+                PresetName = EditingPreset.Name ?? string.Empty;
+                Description = EditingPreset.Description;
 
-                PresetName = edit.Name ?? string.Empty;
-                Description = edit.Description;
-
-                SelectedMarketType = edit.MarketType ?? MT.Forex;
-                SelectedTradeDirection = edit.TradeDirection ?? TD.Long;
-                SelectedTimeFrame = edit.TimeFrame ?? TF.Hour1;
+                SelectedMarketType = EditingPreset.MarketType ?? MT.Forex;
+                SelectedTradeDirection = EditingPreset.TradeDirection ?? TD.Long;
+                SelectedTimeFrame = EditingPreset.TimeFrame ?? TF.Hour1;
                 SelectedTimeFrameOption = TimeFrameChoices.FirstOrDefault(o => o.Value.Equals(SelectedTimeFrame));
 
-                var indicators = (edit.Indicators != null && edit.Indicators.Any())
-                    ? edit.Indicators
+                var indicators = (EditingPreset.Indicators != null && EditingPreset.Indicators.Any())
+                    ? EditingPreset.Indicators
                     : MarketIndicatorHelper.GetDefaultIndicators(SelectedMarketType);
                 AllIndicators = new ObservableCollection<string>(indicators);
             }
-
-            return Task.CompletedTask;
         }
         #endregion
     }
