@@ -49,6 +49,7 @@ namespace ChartSightAI.Services
             services.AddTransient<SettingsVM>();
             services.AddTransient<LoginVM>();
             services.AddTransient<LoadingVM>();
+            services.AddTransient<SignUpVM>();
             return services;
         }
 
@@ -65,6 +66,7 @@ namespace ChartSightAI.Services
             services.AddTransient<Profile>();
             services.AddTransient<LoginPage>();
             services.AddTransient<LoadingPage>();
+            services.AddTransient<SignUpPage>();
             return services;
         }
 

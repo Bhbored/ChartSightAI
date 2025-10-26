@@ -3,11 +3,225 @@
     x:Class="ChartSightAI.MVVM.Views.SignUpPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="SignUpPage">
-    <VerticalStackLayout>
-        <Label
-            HorizontalOptions="Center"
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" />
-    </VerticalStackLayout>
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
+    x:DataType="vm:SignUpVM"
+    Background="{StaticResource Brush.BackgroundGradient}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid HorizontalOptions="Center" VerticalOptions="Start">
+        <VerticalStackLayout
+            Margin="0,24,0,0"
+            Padding="20"
+            Spacing="18"
+            WidthRequest="360">
+
+            <Label
+                HorizontalOptions="Center"
+                StyleClass="h2"
+                Text="Create Account" />
+            <BoxView
+                BackgroundColor="{StaticResource Primary}"
+                HeightRequest="2"
+                HorizontalOptions="Center"
+                WidthRequest="180" />
+
+            <Border
+                Margin="0,16,0,0"
+                Padding="18"
+                Background="{StaticResource Brush.CardBgGradient}"
+                Shadow="{StaticResource Sh.CardShadow}"
+                Stroke="{StaticResource Border}"
+                StrokeShape="RoundRectangle 20"
+                StrokeThickness="1">
+
+                <VerticalStackLayout Spacing="14">
+
+                    <!--  Email  -->
+                    <Label
+                        Margin="4,0,0,0"
+                        StyleClass="caption"
+                        Text="Email"
+                        TextColor="{StaticResource TextDark}" />
+                    <sf:SfTextInputLayout
+                        Margin="0,0,0,2"
+                        ContainerType="Outlined"
+                        Hint="name@example.com"
+                        Stroke="{StaticResource Primary}">
+                        <sf:SfTextInputLayout.LeadingView>
+                            <Image
+                                HeightRequest="18"
+                                InputTransparent="True"
+                                Source="mail.png"
+                                VerticalOptions="Center"
+                                WidthRequest="18" />
+                        </sf:SfTextInputLayout.LeadingView>
+                        <Entry
+                            FontSize="16"
+                            HeightRequest="56"
+                            Keyboard="Email"
+                            PlaceholderColor="{StaticResource TextLight}"
+                            Text="{Binding Email}"
+                            TextColor="{StaticResource TextDark}"
+                            VerticalOptions="Center">
+                            <Entry.Behaviors>
+                                <toolkit:EventToCommandBehavior Command="{Binding SignUpCommand}" EventName="Completed" />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </sf:SfTextInputLayout>
+                    <Label
+                        IsVisible="{Binding EmailErrorVisible}"
+                        StyleClass="caption"
+                        Text="{Binding EmailError}"
+                        TextColor="#E11D48" />
+
+                    <!--  Password  -->
+                    <Label
+                        Margin="4,6,0,0"
+                        StyleClass="caption"
+                        Text="Password"
+                        TextColor="{StaticResource TextDark}" />
+                    <sf:SfTextInputLayout
+                        Margin="0,0,0,2"
+                        ContainerType="Outlined"
+                        Hint="At least 6 characters"
+                        Stroke="{StaticResource Primary}">
+                        <sf:SfTextInputLayout.LeadingView>
+                            <Image
+                                HeightRequest="18"
+                                InputTransparent="True"
+                                Source="lock.png"
+                                VerticalOptions="Center"
+                                WidthRequest="18" />
+                        </sf:SfTextInputLayout.LeadingView>
+                        <sf:SfTextInputLayout.TrailingView>
+                            <ImageButton
+                                Padding="6"
+                                BackgroundColor="Transparent"
+                                Command="{Binding TogglePasswordVisibilityCommand}"
+                                HeightRequest="24"
+                                Source="{Binding PasswordEyeIcon}"
+                                VerticalOptions="Center"
+                                WidthRequest="24" />
+                        </sf:SfTextInputLayout.TrailingView>
+                        <Entry
+                            FontSize="16"
+                            HeightRequest="56"
+                            IsPassword="{Binding IsPasswordHidden}"
+                            PlaceholderColor="{StaticResource TextLight}"
+                            Text="{Binding Password}"
+                            TextColor="{StaticResource TextDark}"
+                            VerticalOptions="Center">
+                            <Entry.Behaviors>
+                                <toolkit:EventToCommandBehavior Command="{Binding SignUpCommand}" EventName="Completed" />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </sf:SfTextInputLayout>
+                    <Label
+                        IsVisible="{Binding PasswordErrorVisible}"
+                        StyleClass="caption"
+                        Text="{Binding PasswordError}"
+                        TextColor="#E11D48" />
+
+                    <!--  Confirm Password  -->
+                    <Label
+                        Margin="4,6,0,0"
+                        StyleClass="caption"
+                        Text="Confirm Password"
+                        TextColor="{StaticResource TextDark}" />
+                    <sf:SfTextInputLayout
+                        Margin="0,0,0,2"
+                        ContainerType="Outlined"
+                        Hint="Re-enter password"
+                        Stroke="{StaticResource Primary}">
+                        <sf:SfTextInputLayout.LeadingView>
+                            <Image
+                                HeightRequest="18"
+                                InputTransparent="True"
+                                Source="lock.png"
+                                VerticalOptions="Center"
+                                WidthRequest="18" />
+                        </sf:SfTextInputLayout.LeadingView>
+                        <sf:SfTextInputLayout.TrailingView>
+                            <ImageButton
+                                Padding="6"
+                                BackgroundColor="Transparent"
+                                Command="{Binding ToggleConfirmVisibilityCommand}"
+                                HeightRequest="24"
+                                Source="{Binding ConfirmEyeIcon}"
+                                VerticalOptions="Center"
+                                WidthRequest="24" />
+                        </sf:SfTextInputLayout.TrailingView>
+                        <Entry
+                            FontSize="16"
+                            HeightRequest="56"
+                            IsPassword="{Binding IsConfirmHidden}"
+                            PlaceholderColor="{StaticResource TextLight}"
+                            Text="{Binding ConfirmPassword}"
+                            TextColor="{StaticResource TextDark}"
+                            VerticalOptions="Center">
+                            <Entry.Behaviors>
+                                <toolkit:EventToCommandBehavior Command="{Binding SignUpCommand}" EventName="Completed" />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </sf:SfTextInputLayout>
+                    <Label
+                        IsVisible="{Binding ConfirmErrorVisible}"
+                        StyleClass="caption"
+                        Text="{Binding ConfirmError}"
+                        TextColor="#E11D48" />
+
+                    <!--  Sign Up  -->
+                    <Button
+                        Margin="0,8,0,0"
+                        Background="{StaticResource Brush.ButtonGradient}"
+                        Command="{Binding SignUpCommand}"
+                        CornerRadius="24"
+                        FontFamily="NexaHeavy"
+                        FontSize="17"
+                        IsEnabled="{Binding IsSignUpEnabled}"
+                        Text="Create Account"
+                        TextColor="White">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Property="Opacity" Value="0.55" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
+
+                    <ActivityIndicator
+                        Margin="0,2,0,0"
+                        IsRunning="{Binding IsBusy}"
+                        IsVisible="{Binding IsBusy}" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!--  Already have an account  -->
+            <HorizontalStackLayout
+                Margin="0,8,0,0"
+                HorizontalOptions="Center"
+                Spacing="6">
+                <Label StyleClass="caption" Text="Already have an account?" />
+                <Label
+                    FontFamily="NexaHeavy"
+                    StyleClass="body"
+                    Text="Log in"
+                    TextColor="{StaticResource Primary}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToLoginCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>
