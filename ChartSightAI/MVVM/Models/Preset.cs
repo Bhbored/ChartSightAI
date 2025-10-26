@@ -16,14 +16,13 @@ namespace ChartSightAI.MVVM.Models
         public MarketType? MarketType { get; set; }
         public TimeFrame? TimeFrame { get; set; }
         public TradeDirection? TradeDirection { get; set; }
-        public List<string> Indicators { get;  set; } = new();
+        public List<string> Indicators  => SetIndicatorsByMarket();
 
-        public void SetIndicatorsByMarket()
+        public List<String> SetIndicatorsByMarket()
         {
             if (MarketType.HasValue)
-                Indicators = MarketIndicatorHelper.GetDefaultIndicators(MarketType.Value);
-            else
-                Indicators.Clear();
+                return MarketIndicatorHelper.GetDefaultIndicators(MarketType.Value);
+            return Indicators;
         }
     }
 }

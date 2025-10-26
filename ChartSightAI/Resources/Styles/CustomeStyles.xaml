@@ -147,15 +147,14 @@
 
     <!--  Card / modal container  -->
     <Style Class="na-card" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource CardBg}" />
+        <Setter Property="Background" Value="{StaticResource Brush.CardBgGradient}" />
         <Setter Property="StrokeThickness" Value="0" />
-        <Setter Property="Padding" Value="24" />
+        <Setter Property="Padding" Value="15" />
         <Setter Property="StrokeShape">
             <Setter.Value>
-                <RoundRectangle CornerRadius="50,50,0,0" />
+                <RoundRectangle CornerRadius="15" />
             </Setter.Value>
         </Setter>
-        <Setter Property="Shadow" Value="{StaticResource Sh.CardShadow}" />
     </Style>
 
     <!--  Gradient CTA  -->

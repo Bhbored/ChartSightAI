@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:conv="clr-namespace:ChartSightAI.Converters"
     xmlns:sfe="clr-namespace:Syncfusion.Maui.Expander;assembly=Syncfusion.Maui.Expander"
+    xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
     Background="{StaticResource Brush.BackgroundGradient}"
     Shell.NavBarIsVisible="False">
 
@@ -19,14 +20,83 @@
     </ContentPage.BindingContext>
 
     <Grid x:Name="Root" RowDefinitions="Auto,*,Auto">
+        <!--  Top wave background (behind header + content)  -->
+        <Grid
+            Grid.Row="0"
+            HeightRequest="240"
+            VerticalOptions="Start">
+            <!--  Wave 1  -->
+            <shapes:Path
+                Aspect="Fill"
+                Data="M0,0 L0,160 Q180,210 360,160 T720,160 L720,0 Z"
+                Fill="{StaticResource Brush.HeaderGradient}"
+                HorizontalOptions="Fill"
+                InputTransparent="True"
+                Opacity="1"
+                VerticalOptions="Fill" />
 
+            <!--  Subtle overlay wave for depth  -->
+            <shapes:Path
+                Aspect="Fill"
+                Data="M0,0 L0,175 Q180,225 360,175 T720,175 L720,0 Z"
+                Fill="White"
+                HorizontalOptions="Fill"
+                InputTransparent="True"
+                Opacity="0.12"
+                VerticalOptions="Fill" />
+        </Grid>
         <!--  ============== HEADER (clean + centered) ==============  -->
-        <Grid Padding="20,44,20,16" RowDefinitions="Auto,Auto,Auto">
+        <Grid
+            Grid.Row="0"
+            Padding="20,20,20,16"
+            RowDefinitions="Auto,Auto,Auto">
             <!--  Title only (no back button)  -->
-            <Label
-                HorizontalTextAlignment="Center"
-                StyleClass="h1"
-                Text="Prediction Details" />
+            <Border
+                Margin="-30,0,0,0"
+                Background="{StaticResource Brush.HeaderGradient}"
+                HeightRequest="80"
+                HorizontalOptions="Start"
+                Shadow="{StaticResource Sh.CardShadow}"
+                StrokeShape="RoundRectangle 0,50,0,50"
+                StrokeThickness="0"
+                WidthRequest="300">
+                <Grid
+                    Padding="14,5"
+                    ColumnDefinitions="Auto,*"
+                    RowDefinitions="Auto,Auto">
+
+                    <!--  Back arrow pill (placeholder image)  -->
+                    <Image
+                        Grid.RowSpan="2"
+                        Margin="0,0,10,10"
+                        HeightRequest="35"
+                        HorizontalOptions="End"
+                        Source="arrow.png"
+                        VerticalOptions="Center"
+                        WidthRequest="35">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <VerticalStackLayout
+                        Grid.Column="1"
+                        HorizontalOptions="End"
+                        Spacing="2"
+                        VerticalOptions="Start">
+                        <Label
+                            StyleClass="h2"
+                            Text="Analysis Details"
+                            TextColor="{StaticResource TextDark}" />
+                        <Label
+                            Margin="0,0,10,0"
+                            StyleClass="caption"
+                            Text="Review outcome for this past prediction"
+                            TextColor="{StaticResource TextLight}" />
+                    </VerticalStackLayout>
+
+                </Grid>
+            </Border>
 
             <!--  Preview image card  -->
             <Border
@@ -61,7 +131,7 @@
         </Grid>
 
         <!--  ================= BODY =================  -->
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <VerticalStackLayout Padding="16,12" Spacing="12">
 
                 <!--  Summary  -->

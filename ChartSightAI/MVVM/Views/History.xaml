@@ -6,6 +6,7 @@
     xmlns:Pages="clr-namespace:ChartSightAI.MVVM.Views"
     xmlns:conv="clr-namespace:ChartSightAI.Converters"
     xmlns:models="clr-namespace:ChartSightAI.MVVM.Models"
+    xmlns:shapes="clr-namespace:Microsoft.Maui.Controls.Shapes;assembly=Microsoft.Maui.Controls"
     xmlns:vm="clr-namespace:ChartSightAI.MVVM.ViewModels"
     x:DataType="vm:HistoryVM"
     Background="{StaticResource Brush.BackgroundGradient}"
@@ -17,18 +18,93 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="16,12,16,12" RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*">
+        <!--  Top wave background (behind header + content)  -->
+        <Grid Grid.Row="0" HeightRequest="240">
+            <!--  Wave 1  -->
+            <shapes:Path
+                Aspect="Fill"
+                Data="M0,0 L0,160 Q180,210 360,160 T720,160 L720,0 Z"
+                Fill="{StaticResource Brush.HeaderGradient}"
+                HorizontalOptions="Fill"
+                InputTransparent="True"
+                Opacity="1"
+                VerticalOptions="Fill" />
 
-        <!--  Header  -->
-        <Label
+            <!--  Subtle overlay wave for depth  -->
+            <shapes:Path
+                Aspect="Fill"
+                Data="M0,0 L0,175 Q180,225 360,175 T720,175 L720,0 Z"
+                Fill="White"
+                HorizontalOptions="Fill"
+                InputTransparent="True"
+                Opacity="0.12"
+                VerticalOptions="Fill" />
+        </Grid>
+
+        <!--  Header (unified style)  -->
+        <Border
             Grid.Row="0"
-            Margin="0,0,0,8"
-            StyleClass="h2"
-            Text="History" />
+            Margin="24,20,24,12"
+            Padding="0"
+            Background="{StaticResource Brush.HeaderGradient}"
+            HeightRequest="120"
+            Shadow="{StaticResource Sh.CardShadow}"
+            StrokeShape="RoundRectangle 28"
+            StrokeThickness="0"
+            VerticalOptions="Start">
+
+            <Grid
+                Padding="16,14"
+                ColumnDefinitions="Auto,*,Auto"
+                ColumnSpacing="12"
+                RowDefinitions="Auto,Auto">
+
+                <!--  Brand pill  -->
+                <Border
+                    Grid.RowSpan="2"
+                    Margin="0,0,12,0"
+                    Padding="12"
+                    Background="White"
+                    HeightRequest="88"
+                    Opacity="0.95"
+                    StrokeShape="RoundRectangle 999"
+                    StrokeThickness="0"
+                    VerticalOptions="Center"
+                    WidthRequest="56">
+                    <Image
+                        HeightRequest="28"
+                        Source="history.png"
+                        WidthRequest="28" />
+                </Border>
+
+                <!--  Title  -->
+                <Label
+                    Grid.Column="1"
+                    LineBreakMode="TailTruncation"
+                    MaxLines="1"
+                    StyleClass="h2"
+                    Text="History"
+                    TextColor="{StaticResource TextDark}" />
+
+                <!--  Subtitle  -->
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,4,0,0"
+                    LineBreakMode="TailTruncation"
+                    MaxLines="1"
+                    StyleClass="caption"
+                    Text="Browse your past sessions"
+                    TextColor="{StaticResource TextLight}" />
+            </Grid>
+        </Border>
+
 
         <!--  List  -->
         <CollectionView
             Grid.Row="1"
+            Margin="16,12,16,12"
             ItemsSource="{Binding Sessions}"
             SelectionMode="None"
             VerticalScrollBarVisibility="Never">

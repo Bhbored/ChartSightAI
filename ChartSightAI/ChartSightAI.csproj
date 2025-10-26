@@ -81,10 +81,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="DTO%27S\DB\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <MauiXaml Update="Controls\TABBAR.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -130,6 +126,10 @@
 	  <MauiXaml Update="Resources\Styles\CustomeStyles.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Services\Repos\" />
 	</ItemGroup>
 
 </Project>

@@ -82,5 +82,10 @@ namespace ChartSightAI.MVVM.Views
             if (!string.IsNullOrWhiteSpace(r.Explainability)) sb.AppendLine("\nExplainability:\n" + r.Explainability);
             await Share.Default.RequestAsync(new ShareTextRequest { Title = "Share / Export Analysis", Text = sb.ToString() });
         }
+
+        private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+        {
+            await Shell.Current.GoToAsync("..");
+        }
     }
 }
