@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /ChartSightAI/Utility/AppConfig.cs
+/ChartSightAI/Resources/Raw/ai.settings.json
+/ChartSightAI/Resources/Raw/ai.settings.json
+/ChartSightAI/Utility/AppConfig.cs
