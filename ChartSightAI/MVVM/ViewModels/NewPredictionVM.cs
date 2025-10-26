@@ -21,6 +21,8 @@ using TF = ChartSightAI.MVVM.Models.Enums.TimeFrame;
 using System.Diagnostics;
 using ChartSightAI.Services;
 using ChartSightAI.Services.Repos;
+// keep if you use those elsewhere
+using ChartSightAI.DTO_S.AI_S;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
@@ -29,12 +31,13 @@ namespace ChartSightAI.MVVM.ViewModels
         private readonly AuthService _auth;
         private readonly PresetRepo _presetRepo;
         private readonly AnalysisSessionRepo _analysisSession;
+        private AssistantClient _assistant;
 
         public NewPredictionVM(AuthService authService, PresetRepo presetRepo, AnalysisSessionRepo analysisSessionRepo)
         {
             _auth = authService;
             _presetRepo = presetRepo;
-            _analysisSession = analysisSessionRepo;
+            _analysisSession = analysisSessionRepo; // <- FIX: assign or InsertAsync will null-ref
         }
 
         #region Properties
@@ -89,6 +92,7 @@ namespace ChartSightAI.MVVM.ViewModels
 
         [ObservableProperty] private bool isAiSheetOpen;
         [ObservableProperty] private AiAnalysisResult? analysis;
+        [ObservableProperty] private bool _isAnalyzing;
         #endregion
 
         #region Commands
@@ -191,6 +195,12 @@ namespace ChartSightAI.MVVM.ViewModels
                     return;
                 }
 
+                if (Analysis == null)
+                {
+                    await ShowPopupAsync("Nothing to save yet. Run Analyze first.");
+                    return;
+                }
+
                 var s = new AnalysisSession
                 {
                     MarketType = SelectedMarketType,
@@ -278,6 +288,8 @@ namespace ChartSightAI.MVVM.ViewModels
                 AnalysisSession.CreatedAt = DateTime.Now;
                 AnalysisSession.Preset = SelectedPreset;
                 PreviewImagePath = null;
+                Analysis = null;
+                IsAiSheetOpen = false;
             }
             catch (Exception ex)
             {
@@ -397,11 +409,53 @@ namespace ChartSightAI.MVVM.ViewModels
 
         private async Task OnAnalyzeChartAsync()
         {
-            if (string.IsNullOrWhiteSpace(PreviewImagePath))
-                await ShowPopupAsync("Mock analysis shown. Upload a chart to analyze a real image.");
+            try
+            {
+                if (_assistant == null)
+                    _assistant = await AssistantClient.CreateFromAssetAsync();
 
-            IsAiSheetOpen = true;
+                IsAnalyzing = true;
+
+                var req = new AnalysisRequest
+                {
+                    MarketType = SelectedMarketType,
+                    TimeFrame = SelectedTimeFrame,
+                    TradeDirection = SelectedTradeDirection,
+                    Indicators = MarketIndicatorHelper.GetDefaultIndicators(SelectedMarketType),
+                    PreviewImage = PreviewImagePath,
+                    Notes = SelectedPreset?.Description
+                };
+
+                var result = await _assistant.AnalyzeAsync(req);
+
+                if (result == null)
+                {
+                    await ShowPopupAsync("No analysis returned. Please try again.");
+                    return;
+                }
+
+                var explicitNotChart =
+                    result.Summary?.Trim().Equals("Image is not a trading price chart.", StringComparison.OrdinalIgnoreCase) == true;
+
+                if (explicitNotChart)
+                {
+                    await ShowPopupAsync("This image doesn’t look like a price chart. Please upload a trading chart (candles/ohlc/line).");
+                    return;
+                }
+
+                Analysis = result;
+                IsAiSheetOpen = true;
+            }
+            catch (Exception ex)
+            {
+                await ShowPopupAsync($"Analysis failed: {ex.Message}");
+            }
+            finally
+            {
+                IsAnalyzing = false;
+            }
         }
+
         #endregion
     }
 }

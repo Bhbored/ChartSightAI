@@ -13,7 +13,7 @@ public partial class NewPrediction : ContentPage
     {
         if (BindingContext is NewPredictionVM vm)
         {
-            vm.InitializeAsync();
+            _=vm.InitializeAsync();
         }
         base.OnAppearing();
     }

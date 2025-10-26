@@ -47,7 +47,7 @@ namespace ChartSightAI.DTO_S.DB
 
         public static AnalysisSessionRow FromDomain(AnalysisSession s, Guid userId) => new()
         {
-            Id = s.Id, // 0 for new inserts; DB will assign if you omit it in Upsert
+            Id = s.Id, 
             UserId = userId,
             CreatedAt = s.CreatedAt,
             MarketType = s.MarketType.ToString(),

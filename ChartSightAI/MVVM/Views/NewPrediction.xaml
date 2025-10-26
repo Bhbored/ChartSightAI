@@ -922,6 +922,41 @@
 
 
         </Grid>
+        <!--  Busy overlay  -->
+        <Grid
+            x:Name="AnalyzingOverlay"
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="#66000000"
+            InputTransparent="False"
+            IsVisible="{Binding IsAnalyzing}"
+            ZIndex="9999">
+
+            <Grid
+                Padding="18"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                WidthRequest="220">
+                <Border
+                    Padding="18"
+                    Background="{StaticResource Brush.CardBgGradient}"
+                    Shadow="{StaticResource Sh.CardShadow}"
+                    StrokeShape="RoundRectangle 18">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="12">
+                        <ActivityIndicator IsRunning="True" />
+                        <Label
+                            HorizontalTextAlignment="Center"
+                            StyleClass="body"
+                            Text="Analyzing chart…" />
+                        <Label
+                            FontSize="12"
+                            HorizontalTextAlignment="Center"
+                            Opacity="0.7"
+                            Text="This may take a few seconds." />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </Grid>
         <Controls:TABBAR
             Margin="0,0,0,20"
             AbsoluteLayout.LayoutBounds="0.5,1,1,76"

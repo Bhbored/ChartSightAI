@@ -35,6 +35,7 @@ namespace ChartSightAI.Services
         public static IServiceCollection RegisterAuthServices(this IServiceCollection services)
         {
             services.AddSingleton<AuthService>();
+            services.AddSingleton<AssistantClient>();
             return services;
         }
 
