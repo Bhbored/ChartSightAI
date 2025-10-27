@@ -1,4 +1,5 @@
 ﻿using ChartSightAI.MVVM.Models;
+using ChartSightAI.MVVM.Views;
 using ChartSightAI.Popups;
 using ChartSightAI.Services;
 using ChartSightAI.Services.Repos;
@@ -11,6 +12,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
@@ -51,7 +53,7 @@ namespace ChartSightAI.MVVM.ViewModels
                 IsBusy = false;
             }
         }
-
+        public ICommand LogoutCommand => new Command(async () => await Shell.Current.ShowPopupAsync(new LogoutPopup(this)));
         [RelayCommand]
         private void OpenDeleteSheet() => IsDeleteSheetOpen = true;
 
@@ -119,6 +121,24 @@ namespace ChartSightAI.MVVM.ViewModels
             finally
             {
                 CloseDeleteSheet();
+            }
+        }
+
+        public async Task LogoutAsync()
+        {
+            try
+            {
+                IsBusy = true;
+                await _auth.Logout();
+                await Shell.Current.GoToAsync($"//{(nameof(LoginPage))}", true);
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Logout Failed", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

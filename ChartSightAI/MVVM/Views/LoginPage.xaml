@@ -18,10 +18,17 @@
             WidthRequest="360">
 
             <!--  Brand  -->
-            <Label
-                HorizontalOptions="Center"
-                StyleClass="h2"
-                Text="ChartSightAI" />
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="5">
+                <Image
+                    HeightRequest="40"
+                    Source="logo.png"
+                    WidthRequest="40" />
+                <Label
+                    HorizontalOptions="Center"
+                    StyleClass="h2"
+                    Text="ChartSightAI" />
+            </HorizontalStackLayout>
+
             <BoxView
                 BackgroundColor="{StaticResource Primary}"
                 HeightRequest="2"

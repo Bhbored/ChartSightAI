@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="ChartSightAI.Popups.LogoutPopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Background="{StaticResource Brush.BackgroundGradient}"
+    CanBeDismissedByTappingOutsideOfPopup="True"
+    HeightRequest="200"
+    Shadow="{StaticResource Sh.CardShadow}"
+    WidthRequest="300">
+    <VerticalStackLayout
+        HorizontalOptions="Center"
+        Spacing="5"
+        VerticalOptions="Center">
+        <Label
+            HorizontalTextAlignment="Center"
+            StyleClass="h3"
+            Text="Confirm Logout" />
+        <Label
+            x:Name="MessageLabel"
+            HorizontalTextAlignment="Center"
+            StyleClass="body"
+            Text="Are you sure you want to log out?" />
+        <ActivityIndicator
+            x:Name="LoadingIndicator"
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            Color="Cyan" />
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+            <Button
+                x:Name="CancelButton"
+                Clicked="Cancel_Clicked"
+                CornerRadius="15"
+                StyleClass="na-cta"
+                Text="Cancel" />
+            <Button
+                x:Name="LogoutButton"
+                Clicked="Logout_Clicked"
+                CornerRadius="15"
+                StyleClass="na-cta"
+                Text="Logout" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</toolkit:Popup>

@@ -476,6 +476,7 @@
 
                     <!--  Logout  -->
                     <Button
+                        Command="{Binding LogoutCommand}"
                         CornerRadius="26"
                         HeightRequest="52"
                         StyleClass="na-cta"

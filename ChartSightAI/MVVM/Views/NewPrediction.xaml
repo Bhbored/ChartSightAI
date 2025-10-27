@@ -52,6 +52,7 @@
 
 
             <Border
+                x:Name="Header"
                 Grid.Row="0"
                 Margin="24,20,24,12"
                 Padding="0"
@@ -136,6 +137,7 @@
 
             <!--  Content  -->
             <ScrollView
+                x:Name="Body"
                 Grid.Row="1"
                 Margin="0,0,0,70"
                 Padding="15,0,15,24"

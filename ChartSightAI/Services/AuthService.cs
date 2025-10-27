@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ChartSightAI.MVVM.Models;
@@ -96,7 +97,15 @@ public class AuthService
     public async Task Logout()
     {
         await InitializeAsync();
-        try { await _supabase.Auth.SignOut(); } catch { /* ignore */ }
+        try
+        {
+            await _supabase.Auth.SignOut();
+        }
+        catch (Exception ex)
+        {
+
+            Debug.WriteLine(ex.Message);
+        }
         await ClearCachedSession();
     }
 
