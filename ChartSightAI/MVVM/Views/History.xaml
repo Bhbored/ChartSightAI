@@ -128,7 +128,7 @@
                             <SwipeItems Mode="Reveal" SwipeBehaviorOnInvoked="Close">
                                 <SwipeItemView
                                     BackgroundColor="Transparent"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type Pages:History}}, Path=BindingContext.ShareAnalysisAsyncCommand}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type Pages:History}}, Path=BindingContext.ShareAnalysisCommand}"
                                     CommandParameter="{Binding .}">
                                     <SwipeItemView.Content>
                                         <Border Background="{StaticResource Secondary}" StyleClass="ai-swipe-pill">
@@ -153,7 +153,7 @@
                             <SwipeItems Mode="Reveal" SwipeBehaviorOnInvoked="Close">
                                 <SwipeItemView
                                     BackgroundColor="Transparent"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type Pages:History}}, Path=BindingContext.DeleteSessionAsyncCommand}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type Pages:History}}, Path=BindingContext.DeleteSessionCommand}"
                                     CommandParameter="{Binding .}">
                                     <SwipeItemView.Content>
                                         <Border Background="#EF4444" StyleClass="ai-swipe-pill">
@@ -241,7 +241,7 @@
                                                 Source="plus.png"
                                                 WidthRequest="20" />
                                             <Border.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type Pages:History}}, Path=BindingContext.RateSessionAsyncCommand}" CommandParameter="{Binding .}" />
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type Pages:History}}, Path=BindingContext.RateSessionCommand}" CommandParameter="{Binding .}" />
                                             </Border.GestureRecognizers>
                                         </Border>
                                         <!--  pending  -->

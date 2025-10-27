@@ -1,6 +1,8 @@
 ﻿using ChartSightAI.MVVM.Models;
+using ChartSightAI.Popups;
 using ChartSightAI.Services;
 using ChartSightAI.Services.Repos;
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Controls;
@@ -56,18 +58,16 @@ namespace ChartSightAI.MVVM.ViewModels
         [RelayCommand]
         private void CloseDeleteSheet() => IsDeleteSheetOpen = false;
 
-        
+        [RelayCommand]
+        private async Task EditUserName()
+        {
+            await Shell.Current.ShowPopupAsync(new EditUserNamePopup(this, UserName));
+        }
+
         public async Task SaveUserNameAsync(string name)
         {
-            await _auth.InitializeAsync();
             var uid = await _auth.GetUserIdAsync();
-            if (uid is null)
-            {
-                await Shell.Current.DisplayAlert("Not signed in", "Please log in to update your preferences.", "OK");
-                await Shell.Current.GoToAsync("//LoginPage");
-                return;
-            }
-            await _preferencesRepo.UpdateUserNameAsync(uid.Value, name?.Trim() ?? "");
+            await _preferencesRepo.UpsertUserNameAsync(uid.Value, name?.Trim() ?? "");
             await Shell.Current.DisplayAlert("Saved", "Preferences updated.", "OK");
         }
 

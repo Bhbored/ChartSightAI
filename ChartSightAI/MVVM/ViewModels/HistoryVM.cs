@@ -42,21 +42,24 @@ namespace ChartSightAI.MVVM.ViewModels
         }
 
         [RelayCommand]
-        private async Task RateSessionAsync(AnalysisSession session)
+        private async Task RateSession(AnalysisSession session)
         {
             if (session is null) return;
 
             await Shell.Current.ShowPopupAsync(new RatePopup(this));
+            var id = await _auth.GetUserIdAsync();
 
             if (Choice == "Hit")
             {
                 session.IsRated = true;
                 session.Hit = true;
+                await _sessionsRepo.UpdateAsync((Guid)id!, session);
             }
             else if (Choice == "Miss")
             {
                 session.IsRated = true;
                 session.Hit = false;
+                await _sessionsRepo.UpdateAsync((Guid)id!, session);
             }
             else
             {
@@ -72,7 +75,7 @@ namespace ChartSightAI.MVVM.ViewModels
         }
 
         [RelayCommand]
-        private async Task DeleteSessionAsync(AnalysisSession session)
+        private async Task DeleteSession(AnalysisSession session)
         {
             if (session is null) return;
 
@@ -87,7 +90,7 @@ namespace ChartSightAI.MVVM.ViewModels
         }
 
         [RelayCommand]
-        private async Task ShareAnalysisAsync(AnalysisSession session)
+        private async Task ShareAnalysis(AnalysisSession session)
         {
             if (session is null) return;
 
@@ -134,16 +137,7 @@ namespace ChartSightAI.MVVM.ViewModels
             try
             {
                 Sessions.Clear();
-
-                await _auth.InitializeAsync();
                 var userId = await _auth.GetUserIdAsync();
-                if (userId is null)
-                {
-                    await Shell.Current.DisplayAlert("Not signed in", "Please log in to view your history.", "OK");
-                    await Shell.Current.GoToAsync("//LoginPage");
-                    return;
-                }
-
                 var items = await _sessionsRepo.GetByDateRange(userId.Value, from: null, to: null, limit: 200);
                 foreach (var s in items)
                     Sessions.Add(s);

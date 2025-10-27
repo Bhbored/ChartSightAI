@@ -40,11 +40,13 @@ namespace ChartSightAI.Services.Repos
             return res.Models.First().Id;
         }
 
-        public async Task<int> UpdateAsync(Guid userId, AnalysisSession s)
+        public async Task UpdateAsync(Guid userId, AnalysisSession s)
         {
             var dto = AnalysisSessionRow.FromDomain(s, userId);
-            var res = await _client.From<AnalysisSessionRow>().Update(dto);
-            return res.Models.First().Id;
+            await _client.From<AnalysisSessionRow>()
+               .Where(x => x.UserId == userId)
+               .Where(x => x.Id == dto.Id)
+               .Update(dto);
         }
 
         public Task DeleteAsync(Guid userId, int id) =>

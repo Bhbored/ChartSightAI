@@ -103,6 +103,7 @@
 
                             <Button
                                 Background="{StaticResource Brush.ButtonGradient}"
+                                Clicked="Button_Clicked"
                                 Shadow="{StaticResource Sh.CardShadow}"
                                 StyleClass="ButtonStyle"
                                 Text="+ New Analysis">

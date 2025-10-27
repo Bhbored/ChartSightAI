@@ -28,7 +28,7 @@
                 x:Name="NameEntry"
                 ClearButtonVisibility="WhileEditing"
                 FontSize="14"
-                Text="{Binding Name, Mode=TwoWay}" />
+                Text="{Binding UserName, Mode=TwoWay}" />
         </sf:SfTextInputLayout>
 
         <Grid ColumnDefinitions="*,*" ColumnSpacing="8">

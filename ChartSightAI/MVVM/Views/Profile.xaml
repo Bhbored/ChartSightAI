@@ -142,7 +142,7 @@
                                 VerticalOptions="Center">
                                 <Label
                                     StyleClass="h4"
-                                    Text="{Binding Name}"
+                                    Text="{Binding UserName}"
                                     TextColor="{StaticResource TextDark}" />
                                 <Label
                                     StyleClass="caption"
@@ -291,7 +291,7 @@
                                     VerticalOptions="Center"
                                     WidthRequest="14" />
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding OpenBottomsheetCommand}" />
+                                    <TapGestureRecognizer Command="{Binding OpenDeleteSheetCommand}" />
                                 </Grid.GestureRecognizers>
                             </Grid>
 

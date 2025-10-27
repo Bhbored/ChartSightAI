@@ -34,13 +34,13 @@ namespace ChartSightAI.DTO_S.DB
 
         public static PresetRow FromDomain(Preset p, Guid userId) => new()
         {
-            Id = p.Id,                  // 0 for new inserts (identity)
+            Id = p.Id,                  
             UserId = userId,
             Name = p.Name,
             Description = p.Description,
-            MarketType = p.MarketType.ToString(),
-            TimeFrame = p.TimeFrame.ToString(),
-            TradeDirection = p.TradeDirection.ToString(),
+            MarketType = p.MarketType!.Value.ToString(),
+            TimeFrame = p.TimeFrame!.Value.ToString(),
+            TradeDirection = p.TradeDirection!.Value.ToString(),
         };
     }
 }

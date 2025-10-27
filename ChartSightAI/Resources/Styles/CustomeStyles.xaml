@@ -173,7 +173,7 @@
         <Setter Property="BorderColor" Value="{StaticResource Border}" />
         <Setter Property="TextColor" Value="{StaticResource TextDark}" />
         <Setter Property="BorderWidth" Value="1" />
-        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Padding" Value="14,10" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Margin" Value="0,0,8,8" />

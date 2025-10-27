@@ -216,12 +216,12 @@ namespace ChartSightAI.MVVM.ViewModels
                     Preset = SelectedPreset,
                     TradeDirection = SelectedTradeDirection,
                     CreatedAt = DateTime.Now,
-                    Result = normalized,           // use the normalized object
+                    Result = normalized,           
                     PreviewImage = PreviewImagePath
                 };
 
                 await _analysisSession.InsertAsync(uid.Value, s);
-                System.Diagnostics.Debug.WriteLine("Analysis saved.");
+                Debug.WriteLine("Analysis saved.");
                 await ShowPopupAsync("Analysis saved.");
             }
             catch (Exception ex)
@@ -298,6 +298,7 @@ namespace ChartSightAI.MVVM.ViewModels
             catch (Exception ex)
             {
                 await ShowPopupAsync($"Init failed: {ex.Message}");
+                Debug.WriteLine(ex.Message);
             }
         }
 

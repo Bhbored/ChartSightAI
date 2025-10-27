@@ -36,4 +36,8 @@ public partial class HomePage : ContentPage
         settingsAnimation.Commit(this, "SettingAnimation", length: 1000, easing: Easing.CubicInOut);
     }
 
+    private async void Button_Clicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync($"//{nameof(NewPrediction)}");
+    }
 }
