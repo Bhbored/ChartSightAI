@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using static ChartSightAI.MVVM.Models.Enums;
 
@@ -24,8 +25,13 @@ namespace ChartSightAI.DTO_S.DB
 
         [Column("result_summary")] public string? ResultSummary { get; set; }
         [Column("result_trend_analysis")] public string? ResultTrendAnalysis { get; set; }
+        [Column("result_pattern")] public string? ResultPattern { get; set; }
+        [Column("result_risk")] public string? ResultRisk { get; set; }
         [Column("result_explainability")] public string? ResultExplainability { get; set; }
         [Column("result_indicators")] public string[] ResultIndicators { get; set; } = Array.Empty<string>();
+        [Column("result_support_resistance", (Newtonsoft.Json.NullValueHandling)JsonSerializerDefaults.General)] public List<SupportResistanceLevel>? ResultSupportResistance { get; set; }
+        [Column("result_trade_idea", (Newtonsoft.Json.NullValueHandling)JsonSerializerDefaults.General)] public TradeIdea? ResultTradeIdea { get; set; }
+
 
         public AnalysisSession ToDomain() => new()
         {
@@ -40,14 +46,18 @@ namespace ChartSightAI.DTO_S.DB
             {
                 Summary = ResultSummary ?? "",
                 TrendAnalysis = ResultTrendAnalysis ?? "",
+                Pattern = ResultPattern,
+                Risk = ResultRisk,
                 Explainability = ResultExplainability ?? "",
-                Indicators = ResultIndicators?.ToList() ?? new List<string>()
+                Indicators = ResultIndicators?.ToList() ?? new List<string>(),
+                SupportResistance = ResultSupportResistance ?? new List<SupportResistanceLevel>(),
+                TradeIdea = ResultTradeIdea
             }
         };
 
         public static AnalysisSessionRow FromDomain(AnalysisSession s, Guid userId) => new()
         {
-            Id = s.Id, 
+            Id = s.Id,
             UserId = userId,
             CreatedAt = s.CreatedAt,
             MarketType = s.MarketType.ToString(),
@@ -57,8 +67,12 @@ namespace ChartSightAI.DTO_S.DB
             Hit = s.Hit,
             ResultSummary = s.Result?.Summary,
             ResultTrendAnalysis = s.Result?.TrendAnalysis,
+            ResultPattern = s.Result?.Pattern,
+            ResultRisk = s.Result?.Risk,
             ResultExplainability = s.Result?.Explainability,
-            ResultIndicators = s.Result?.Indicators?.ToArray() ?? Array.Empty<string>()
+            ResultIndicators = s.Result?.Indicators?.ToArray() ?? Array.Empty<string>(),
+            ResultSupportResistance = s.Result?.SupportResistance,
+            ResultTradeIdea = s.Result?.TradeIdea
         };
     }
 }
