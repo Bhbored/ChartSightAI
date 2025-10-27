@@ -24,12 +24,10 @@ public class AuthService
 
     public async Task<UserSession?> GetSession()
     {
-        // Always ensure the client is ready and try to refresh if needed
         await InitializeAsync();
         var ensured = await EnsureSessionAsync();
         if (ensured != null) return ensured;
 
-        // Fallback to cached (not guaranteed valid)
         return await GetCachedSession();
     }
 
@@ -40,13 +38,11 @@ public class AuthService
         var cached = await GetCachedSession();
         if (cached == null) return null;
 
-        // Push cached tokens to Supabase Auth
         if (!string.IsNullOrWhiteSpace(cached.AccessToken) && !string.IsNullOrWhiteSpace(cached.RefreshToken))
             _supabase.Auth.SetSession(cached.AccessToken, cached.RefreshToken);
         else
             return null;
 
-        // If token is near expiry, try to refresh
         if (IsExpiringSoon(cached.ExpiresAt))
         {
             try
@@ -68,7 +64,6 @@ public class AuthService
             }
         }
 
-        // Tokens look fine; return cached snapshot
         return cached;
     }
 
@@ -135,7 +130,6 @@ public class AuthService
         return null;
     }
 
-    // ----- helpers -----
     private static bool IsExpiringSoon(DateTime? expiresAtUtc)
     {
         if (expiresAtUtc == null) return true;
@@ -145,7 +139,6 @@ public class AuthService
 
     private static UserSession ToUserSession(dynamic supaSession)
     {
-        // Works with Supabase .NET typical session shape
         return new UserSession
         {
             AccessToken = supaSession.AccessToken,
