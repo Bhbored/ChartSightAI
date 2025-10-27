@@ -4,18 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static ChartSightAI.MVVM.Models.Enums;
+using System.Text.Json.Serialization;
+using SupportResistanceLevel = ChartSightAI.MVVM.Models.SupportResistanceLevel;
 namespace ChartSightAI.DTO_S.AI_S
 {
     public sealed class AiAnalysisDto
     {
-        [JsonProperty("summary")] public string? Summary { get; set; }
-        [JsonProperty("trend_analysis")] public string? TrendAnalysis { get; set; }
-        [JsonProperty("pattern")] public string? Pattern { get; set; }
-        [JsonProperty("risk")] public string? Risk { get; set; }
-        [JsonProperty("explainability")] public string? Explainability { get; set; }
-        [JsonProperty("indicators")] public List<string>? Indicators { get; set; }
-        [JsonProperty("support_resistance")] public List<SupportResistanceDto>? SupportResistance { get; set; }
-        [JsonProperty("trade_idea")] public TradeIdeaDto? TradeIdea { get; set; }
+        [JsonPropertyName("summary")] public string? Summary { get; set; }
+        [JsonPropertyName("trendAnalysis")] public string? TrendAnalysis { get; set; }
+        [JsonPropertyName("pattern")] public string? Pattern { get; set; }
+        [JsonPropertyName("risk")] public string? Risk { get; set; }
+        [JsonPropertyName("explainability")] public string? Explainability { get; set; }
+
+        [JsonPropertyName("indicators")] public List<string>? Indicators { get; set; }
+
+        [JsonPropertyName("supportResistance")] public List<SupportResistanceDto>? SupportResistance { get; set; }
+        [JsonPropertyName("tradeIdea")] public TradeIdeaDto? TradeIdea { get; set; }
     }
 }

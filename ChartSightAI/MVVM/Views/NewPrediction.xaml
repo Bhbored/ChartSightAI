@@ -724,7 +724,7 @@
                                                             Grid.Column="2"
                                                             Background="{Binding Confidence, Converter={StaticResource ConfidenceToBrush}}"
                                                             StyleClass="ai-badge">
-                                                            <Label StyleClass="ai-caption" Text="{Binding Confidence, StringFormat='{0:F0}%'}" />
+                                                            <Label StyleClass="ai-caption" Text="{Binding Confidence, StringFormat='{0:P0}'}" />
                                                         </Border>
                                                     </Grid>
                                                 </DataTemplate>

@@ -23,6 +23,7 @@ using ChartSightAI.Services;
 using ChartSightAI.Services.Repos;
 // keep if you use those elsewhere
 using ChartSightAI.DTO_S.AI_S;
+using System.Text.Json;
 
 namespace ChartSightAI.MVVM.ViewModels
 {
@@ -201,6 +202,13 @@ namespace ChartSightAI.MVVM.ViewModels
                     return;
                 }
 
+               
+                var normalizedJson = Newtonsoft.Json.JsonConvert.SerializeObject(
+                    Analysis,
+                    new Newtonsoft.Json.JsonSerializerSettings { NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore }
+                );
+                var normalized = Newtonsoft.Json.JsonConvert.DeserializeObject<AiAnalysisResult>(normalizedJson);
+
                 var s = new AnalysisSession
                 {
                     MarketType = SelectedMarketType,
@@ -208,12 +216,12 @@ namespace ChartSightAI.MVVM.ViewModels
                     Preset = SelectedPreset,
                     TradeDirection = SelectedTradeDirection,
                     CreatedAt = DateTime.Now,
-                    Result = Analysis,
+                    Result = normalized,           // use the normalized object
                     PreviewImage = PreviewImagePath
                 };
 
                 await _analysisSession.InsertAsync(uid.Value, s);
-                Debug.WriteLine("Analysis saved.");
+                System.Diagnostics.Debug.WriteLine("Analysis saved.");
                 await ShowPopupAsync("Analysis saved.");
             }
             catch (Exception ex)
@@ -221,6 +229,7 @@ namespace ChartSightAI.MVVM.ViewModels
                 await ShowPopupAsync($"Save failed: {ex.Message}");
             }
         }
+
 
         private async Task ShareAnalysisAsync()
         {
@@ -258,11 +267,6 @@ namespace ChartSightAI.MVVM.ViewModels
             try
             {
                 await _auth.InitializeAsync();
-
-                SelectedMarketType = MT.Crypto;
-                SelectedTimeFrame = TF.Hour1;
-                SelectedTradeDirection = TD.Long;
-                SelectedTimeFrameOption = TimeFrameChoices.FirstOrDefault(o => o.Value.Equals(SelectedTimeFrame));
 
                 IsTechnicalSelected = true;
                 IsPatternSelected = false;
@@ -421,6 +425,7 @@ namespace ChartSightAI.MVVM.ViewModels
                     MarketType = SelectedMarketType,
                     TimeFrame = SelectedTimeFrame,
                     TradeDirection = SelectedTradeDirection,
+                    // ⬇️ Always source indicators from helper (AI output ignored later)
                     Indicators = MarketIndicatorHelper.GetDefaultIndicators(SelectedMarketType),
                     PreviewImage = PreviewImagePath,
                     Notes = SelectedPreset?.Description
@@ -446,6 +451,11 @@ namespace ChartSightAI.MVVM.ViewModels
                 Analysis = result;
                 IsAiSheetOpen = true;
             }
+            catch (JsonException jx)
+            {
+                var at = string.IsNullOrWhiteSpace(jx.Path) ? "$" : jx.Path;
+                await ShowPopupAsync($"Analysis failed: JSON invalid at {at}. {jx.Message}");
+            }
             catch (Exception ex)
             {
                 await ShowPopupAsync($"Analysis failed: {ex.Message}");
@@ -455,6 +465,7 @@ namespace ChartSightAI.MVVM.ViewModels
                 IsAnalyzing = false;
             }
         }
+
 
         #endregion
     }

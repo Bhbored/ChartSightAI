@@ -41,7 +41,8 @@ namespace ChartSightAI.MVVM.Models
         public enum TradeDirection
         {
             Long,
-            Short
+            Short,
+            Neutral
         }
 
     }
