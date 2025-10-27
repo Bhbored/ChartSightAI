@@ -72,4 +72,19 @@ To run ChartSightAI locally, ensure you have the .NET MAUI workload installed.
 | `Utility`       | Helpers, extensions, and shared functions   |
 
 ---
-
+## ❗Notes
+**Supabase setup** -- in Utility Folder create class AppConfig and fill ur url and apikey as follow:
+```
+ public static class AppConfig
+ {
+     public const string SupabaseUrl = "project-Url";
+     public const string SupabaseAnonKey = "Your Api-key";
+ }
+```
+**AI Client** -- in Resources/Raw create ai.settings.json (Exact Name) as follow:
+```
+{
+  "ApiKey": "ur api key",
+  "Model": "open-ai model of ur choice"
+}
+```
