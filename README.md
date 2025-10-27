@@ -2,7 +2,7 @@ Here is your polished README for **ChartSightAI**, enhanced with icons and a cle
 
 ---
 
-# <img src="https://github.com/Bhbored/ChartSightAI/blob/master/ChartSightAI/ScreenShots/logo.png" width="80" height="80" style="vertical-align:middle; margin-right:10px;"> ChartSightAI
+# <img src="https://github.com/Bhbored/ChartSightAI/blob/master/ChartSightAI/ScreenShots/logo.png" width="80" height="80" style="vertical-align:end; margin-right:10px;"> ChartSightAI
 > **AI-Powered Financial Market Analysis & Trade Idea Generator**
 
 
