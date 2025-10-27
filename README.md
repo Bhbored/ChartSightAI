@@ -32,9 +32,11 @@
 ## 🛠️ Technologies Used
 
 - **.NET MAUI** — Cross-platform UI framework using C# and XAML.
-- **Supabase** — Backend-as-a-service for auth, real-time DB, and storage.
-- **Syncfusion** — Rich UI components including charts, gauges, and data grids.
-- **CommunityToolkit.Mvvm** — MVVM pattern implementation for clean architecture.
+- **OpenAI API** — Direct integration via HTTP client for AI-powered market analysis and trade idea generation.
+- **Supabase** — Backend-as-a-service for authentication and database (Postgrest).
+- **Syncfusion** — Rich UI components including Charts, Gauges, Inputs, and Pickers.
+- **CommunityToolkit.Mvvm** — Lightweight MVVM implementation for clean architecture.
+- **CommunityToolkit.Maui** — Official .NET MAUI extensions for behaviors, animations, and utilities.
 - **Newtonsoft.Json** — JSON serialization/deserialization for API communication.
 - **Bogus** — Fake data generation for testing and demos.
 
