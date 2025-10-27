@@ -59,30 +59,21 @@ To run ChartSightAI locally, ensure you have the .NET MAUI workload installed.
 
 ---
 
+
 ## 🗂️ Folder Structure
 
-ChartSightAI/
-├── Animations/           # Custom animations for smooth UX
-├── Controls/             # Reusable custom UI components
-├── Converters/           # Data binding value converters
-├── DTOs/                 # Data Transfer Objects for APIs
-├── MVVM/                 # Models, ViewModels, Views (clean separation)
-│   ├── Models/
-│   ├── ViewModels/
-│   └── Views/
-├── Platforms/            # Platform-specific code (Android, iOS, etc.)
-│   ├── Android/
-│   ├── iOS/
-│   ├── MacCatalyst/
-│   ├── Tizen/
-│   └── Windows/
-├── Popups/               # Modal dialogs and overlays
-├── Resources/            # Fonts, images, styles, app icons
-│   ├── Images/
-│   ├── Raw/
-│   └── Styles/
-├── Services/             # Backend integrations & business logic
-└── Utility/              # Helpers, extensions, and shared functions
-```
+| Folder          | Purpose                                     |
+|-----------------|---------------------------------------------|
+| `Animations`    | Custom animations for smooth UX             |
+| `Controls`      | Reusable custom UI components               |
+| `Converters`    | Data binding value converters               |
+| `DTOs`          | Data Transfer Objects for APIs              |
+| `MVVM`          | Models, ViewModels, Views (clean separation)|
+| `Platforms`     | Platform-specific code                      |
+| `Popups`        | Modal dialogs and overlays                  |
+| `Resources`     | Fonts, images, styles, app icons            |
+| `Services`      | Backend integrations & business logic       |
+| `Utility`       | Helpers, extensions, and shared functions   |
 
+---
 
