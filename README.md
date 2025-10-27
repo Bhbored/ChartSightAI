@@ -2,11 +2,11 @@ Here is your polished README for **ChartSightAI**, enhanced with icons and a cle
 
 ---
 
-# 📈 ChartSightAI
+# <img src="https://github.com/Bhbored/ChartSightAI/blob/master/ChartSightAI/ScreenShots/logo.png" width="80" height="80"> ChartSightAI
 
 > **AI-Powered Financial Market Analysis & Trade Idea Generator**
 
-<img src="https://github.com/Bhbored/ChartSightAI/blob/master/ChartSightAI/ScreenShots/logo.png" width="80" height="80">
+
 **ChartSightAI** is a cross-platform mobile application built with .NET MAUI that provides AI-powered analysis of financial markets. It helps users generate trade ideas, identify support and resistance levels, and get insights into market trends — all from the palm of your hand.
 
 ---
