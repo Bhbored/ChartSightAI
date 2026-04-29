@@ -8,10 +8,9 @@
 ---
 ## 📸 Screenshots
 
-|                                                                                                                    |                                                                                                                    |                                                                                                                    |                                                                                                                    |
-| :----------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
-| ![1](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576368.png) | ![2](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576419.png) | ![3](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576430.png) | ![4](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576452.png) |
-| ![5](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576437.png) | ![6](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576447.png) |                                                                                                 |
+| :----------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
+| ![1](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576368.png) | ![2](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576419.png) | ![3](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576430.png) |
+| ![4](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576452.png) | ![5](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576437.png) | ![6](https://github.com/Bhbored/ChartSightAI/raw/master/ChartSightAI/ScreenShots/Screenshot_1761576447.png) |
 
 ---
 ## ✨ Key Features
